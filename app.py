@@ -10,6 +10,7 @@ def home():
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -29,21 +30,23 @@ def home():
 
         body {
             font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
+            background: #020617;
+            color: #e2e8f0;
         }
+
 
         /* NAVIGATION */
 
         nav {
-            background: #111827;
-            padding: 20px 8%;
+            background: #020617;
+            padding: 18px 7%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-bottom: 1px solid #1e293b;
         }
 
         nav h2 {
@@ -51,54 +54,91 @@ def home():
             font-size: 24px;
         }
 
-        nav a {
+        .menu-button {
+            background: #2563eb;
             color: white;
-            text-decoration: none;
-            margin-left: 22px;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
             font-size: 15px;
+            cursor: pointer;
         }
 
-        nav a:hover {
-            color: #60a5fa;
+        .menu-button:hover {
+            background: #1d4ed8;
+        }
+
+        .nav-menu {
+            display: none;
+            position: absolute;
+            right: 7%;
+            top: 70px;
+            width: 190px;
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #1e293b;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .nav-menu.show {
+            display: block;
+        }
+
+        .nav-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 13px 15px;
+            border-radius: 7px;
+        }
+
+        .nav-menu a:hover {
+            background: #2563eb;
         }
 
 
         /* HERO */
 
         .hero {
-            min-height: 80vh;
-            padding: 60px 8%;
+            min-height: 85vh;
+            padding: 70px 8%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: linear-gradient(135deg, #e0ecff, #f5f7fb);
+            background: linear-gradient(135deg, #020617, #0f172a, #172554);
         }
 
         .hero h1 {
-            font-size: 60px;
-            color: #1d4ed8;
+            font-size: 62px;
+            color: #60a5fa;
             margin-bottom: 20px;
         }
 
         .hero h3 {
-            font-size: 26px;
+            font-size: 27px;
+            color: white;
             margin-bottom: 20px;
         }
 
         .hero p {
             max-width: 700px;
-            font-size: 19px;
-            line-height: 1.7;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #cbd5e1;
             margin-bottom: 30px;
         }
+
+
+        /* BUTTONS */
 
         .button {
             display: inline-block;
             background: #2563eb;
             color: white;
-            padding: 15px 28px;
+            padding: 14px 25px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
@@ -120,7 +160,7 @@ def home():
             text-align: center;
             font-size: 38px;
             margin-bottom: 20px;
-            color: #111827;
+            color: white;
         }
 
         .section-intro {
@@ -128,28 +168,34 @@ def home():
             max-width: 700px;
             margin: 0 auto 45px;
             line-height: 1.7;
+            color: #94a3b8;
         }
 
 
         /* ABOUT */
 
         .about {
-            background: white;
+            background: #0f172a;
             text-align: center;
         }
 
         .about p {
-            max-width: 750px;
+            max-width: 800px;
             margin: auto;
-            line-height: 1.8;
+            line-height: 1.9;
             font-size: 17px;
+            color: #cbd5e1;
+        }
+
+        .about strong {
+            color: #60a5fa;
         }
 
 
         /* SERVICES */
 
         .services {
-            background: #f5f7fb;
+            background: #020617;
         }
 
         .cards {
@@ -160,17 +206,18 @@ def home():
         }
 
         .card {
-            background: white;
+            background: #0f172a;
             width: 270px;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 1px solid #1e293b;
             text-align: center;
             transition: 0.3s;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px);
+            border-color: #2563eb;
         }
 
         .card .icon {
@@ -179,44 +226,46 @@ def home():
         }
 
         .card h3 {
-            color: #2563eb;
+            color: #60a5fa;
             margin-bottom: 15px;
         }
 
         .card p {
-            line-height: 1.6;
+            line-height: 1.7;
+            color: #94a3b8;
         }
 
 
         /* COURSES */
 
         .courses {
-            background: white;
+            background: #0f172a;
         }
 
         .course {
-            background: #f8fafc;
+            background: #020617;
             width: 280px;
             padding: 25px;
             border-radius: 12px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid #1e293b;
         }
 
         .course h3 {
             margin-bottom: 12px;
-            color: #1d4ed8;
+            color: #60a5fa;
         }
 
         .course p {
-            line-height: 1.6;
+            line-height: 1.7;
             margin-bottom: 15px;
+            color: #94a3b8;
         }
 
 
         /* CONTACT */
 
         .contact {
-            background: #eaf2ff;
+            background: #172554;
             text-align: center;
         }
 
@@ -229,38 +278,41 @@ def home():
         }
 
         .contact-box {
-            background: white;
-            width: 260px;
+            background: #0f172a;
+            width: 280px;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+            border: 1px solid #1e293b;
         }
 
         .contact-box h3 {
             margin-bottom: 15px;
+            color: white;
         }
 
         .contact-box p {
             margin-bottom: 20px;
-            word-break: break-word;
+            color: #94a3b8;
+            line-height: 1.6;
         }
 
 
-        /* SOCIAL MEDIA */
+        /* SOCIAL */
 
         .social {
-            background: white;
+            background: #020617;
             text-align: center;
         }
 
         .social a {
             display: inline-block;
             margin: 10px;
-            padding: 14px 25px;
-            background: #111827;
+            padding: 13px 22px;
+            background: #0f172a;
             color: white;
             text-decoration: none;
             border-radius: 8px;
+            border: 1px solid #1e293b;
         }
 
         .social a:hover {
@@ -271,14 +323,15 @@ def home():
         /* FOOTER */
 
         footer {
-            background: #111827;
-            color: white;
+            background: #020617;
+            color: #94a3b8;
             text-align: center;
             padding: 30px;
+            border-top: 1px solid #1e293b;
         }
 
         footer p {
-            margin: 5px;
+            margin: 7px;
         }
 
 
@@ -287,21 +340,20 @@ def home():
         @media (max-width: 700px) {
 
             nav {
-                flex-direction: column;
-                gap: 15px;
+                padding: 16px 5%;
             }
 
-            nav div {
-                text-align: center;
+            .nav-menu {
+                right: 5%;
             }
 
-            nav a {
-                margin: 5px;
-                display: inline-block;
+            .hero {
+                min-height: 80vh;
+                padding: 60px 5%;
             }
 
             .hero h1 {
-                font-size: 42px;
+                font-size: 44px;
             }
 
             .hero h3 {
@@ -309,7 +361,7 @@ def home():
             }
 
             .hero p {
-                font-size: 17px;
+                font-size: 16px;
             }
 
             section {
@@ -317,11 +369,13 @@ def home():
             }
 
             section h2 {
-                font-size: 32px;
+                font-size: 31px;
             }
+
         }
 
     </style>
+
 </head>
 
 
@@ -334,22 +388,25 @@ def home():
 
     <h2>Career Bridge</h2>
 
-    <div>
+    <button class="menu-button" onclick="toggleMenu()">
+        ☰ Navigate
+    </button>
 
-        <a href="#home">Home</a>
+    <div class="nav-menu" id="navMenu">
 
-        <a href="#about">About</a>
+        <a href="#home" onclick="toggleMenu()">🏠 Home</a>
 
-        <a href="#services">Services</a>
+        <a href="#about" onclick="toggleMenu()">👤 About</a>
 
-        <a href="#courses">Courses</a>
+        <a href="#services" onclick="toggleMenu()">💼 Services</a>
 
-        <a href="#contact">Contact</a>
+        <a href="#courses" onclick="toggleMenu()">📚 Courses</a>
+
+        <a href="#contact" onclick="toggleMenu()">📞 Contact</a>
 
     </div>
 
 </nav>
-
 
 
 <!-- HOME -->
@@ -362,7 +419,8 @@ def home():
 
     <p>
         Career Bridge helps students develop practical skills,
-        create professional CVs and prepare for future career opportunities.
+        create professional CVs and prepare for future career
+        opportunities.
     </p>
 
     <div>
@@ -380,7 +438,6 @@ def home():
 </section>
 
 
-
 <!-- ABOUT -->
 
 <section class="about" id="about">
@@ -388,6 +445,7 @@ def home():
     <h2>About Career Bridge</h2>
 
     <p>
+
         Career Bridge is a platform designed to help students
         prepare for the world of work before graduation.
 
@@ -396,11 +454,14 @@ def home():
 
         Our goal is simple:
 
-        <strong>to help students build skills today for the opportunities of tomorrow.</strong>
+        <strong>
+            to help students build skills today for the
+            opportunities of tomorrow.
+        </strong>
+
     </p>
 
 </section>
-
 
 
 <!-- SERVICES -->
@@ -410,8 +471,10 @@ def home():
     <h2>Career Services</h2>
 
     <p class="section-intro">
+
         We provide practical services designed to help students
         become more confident and career-ready.
+
     </p>
 
 
@@ -425,13 +488,14 @@ def home():
             <h3>CV Creation</h3>
 
             <p>
+
                 Get help creating a professional CV that
                 highlights your education, skills, certificates
                 and experience.
+
             </p>
 
         </div>
-
 
 
         <div class="card">
@@ -441,12 +505,13 @@ def home():
             <h3>Python Training</h3>
 
             <p>
+
                 Learn the fundamentals of Python programming
                 and begin developing your digital skills.
+
             </p>
 
         </div>
-
 
 
         <div class="card">
@@ -456,12 +521,13 @@ def home():
             <h3>Career Guidance</h3>
 
             <p>
+
                 Get guidance on career choices, useful skills
                 and preparing for opportunities after school.
+
             </p>
 
         </div>
-
 
 
         <div class="card">
@@ -471,8 +537,10 @@ def home():
             <h3>Career Preparation</h3>
 
             <p>
+
                 Learn how to present yourself professionally
                 and prepare for future internships and jobs.
+
             </p>
 
         </div>
@@ -483,7 +551,6 @@ def home():
 </section>
 
 
-
 <!-- COURSES -->
 
 <section class="courses" id="courses">
@@ -491,8 +558,10 @@ def home():
     <h2>Skills & Courses</h2>
 
     <p class="section-intro">
+
         Learn useful skills that can strengthen your knowledge,
         confidence and future CV.
+
     </p>
 
 
@@ -504,8 +573,10 @@ def home():
             <h3>Python Programming</h3>
 
             <p>
+
                 Learn Python from the basics and build
                 simple projects.
+
             </p>
 
             <a href="#contact" class="button">
@@ -513,7 +584,6 @@ def home():
             </a>
 
         </div>
-
 
 
         <div class="course">
@@ -521,8 +591,10 @@ def home():
             <h3>CV & LinkedIn</h3>
 
             <p>
+
                 Learn how to create a strong CV and develop
                 a professional LinkedIn presence.
+
             </p>
 
             <a href="#contact" class="button">
@@ -530,7 +602,6 @@ def home():
             </a>
 
         </div>
-
 
 
         <div class="course">
@@ -538,8 +609,10 @@ def home():
             <h3>Digital Skills</h3>
 
             <p>
+
                 Develop useful computer and digital skills
                 for school and future work.
+
             </p>
 
             <a href="#contact" class="button">
@@ -547,7 +620,6 @@ def home():
             </a>
 
         </div>
-
 
 
         <div class="course">
@@ -555,8 +627,10 @@ def home():
             <h3>Career Development</h3>
 
             <p>
+
                 Learn how to plan your career and identify
                 skills that can help you grow.
+
             </p>
 
             <a href="#contact" class="button">
@@ -571,57 +645,63 @@ def home():
 </section>
 
 
-
 <!-- CONTACT -->
 
 <section class="contact" id="contact">
 
-    <h2>Reach Me</h2>
+    <h2>Reach Career Bridge</h2>
 
     <p class="section-intro">
+
         Have a question or interested in our services?
-        You can reach me through any of the options below.
+        You can reach us through any of the options below.
+
     </p>
 
 
     <div class="contact-options">
 
 
-        <!-- EMAIL -->
-
         <div class="contact-box">
 
             <h3>📧 Email</h3>
 
             <p>
-                Send me an email for enquiries and business questions.
+
+                Send an email for enquiries,
+                business questions and collaborations.
+
             </p>
 
             <a
                 href="mailto:maxwellamenah11@gmail.com"
                 class="button">
+
                 Send Email
+
             </a>
 
         </div>
 
-
-
-        <!-- WHATSAPP -->
 
         <div class="contact-box">
 
             <h3>💬 WhatsApp</h3>
 
             <p>
-                Chat with me directly on WhatsApp.
+
+                Chat directly with Career Bridge
+                on WhatsApp.
+
             </p>
 
             <a
                 href="https://wa.me/2349026832566"
                 target="_blank"
                 class="button">
+
                 Chat on WhatsApp
+
             </a>
 
         </div>
@@ -630,7 +710,6 @@ def home():
     </div>
 
 </section>
-
 
 
 <!-- SOCIAL MEDIA -->
@@ -640,39 +719,47 @@ def home():
     <h2>Follow Career Bridge</h2>
 
     <p class="section-intro">
-        Follow me for career tips, learning opportunities
+
+        Follow us for career tips, learning opportunities
         and useful student content.
+
     </p>
 
 
     <a
-        href="https://www.tiktok.com/@maxwell6573"
+        href="https://www.tiktok.com/@maxwellamenah"
         target="_blank">
+
         🎵 TikTok
+
     </a>
 
 
-    <a
-        href="mailto:maxwellamenah11@gmail.com">
+    <a href="mailto:maxwellamenah11@gmail.com">
+
         📧 Email
+
     </a>
 
 
     <a
         href="https://wa.me/2349026832566"
         target="_blank">
+
         💬 WhatsApp
+
     </a>
 
 </section>
-
 
 
 <!-- FOOTER -->
 
 <footer>
 
-    <p><strong>Career Bridge</strong></p>
+    <p>
+        <strong>Career Bridge</strong>
+    </p>
 
     <p>
         Building skills. Connecting opportunities.
@@ -685,7 +772,22 @@ def home():
 </footer>
 
 
+<script>
+
+function toggleMenu() {
+
+    document
+        .getElementById("navMenu")
+        .classList
+        .toggle("show");
+
+}
+
+</script>
+
+
 </body>
+
 </html>
 """
 
