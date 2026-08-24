@@ -1,13 +1,343 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{% block title %}Career Bridge{% endblock %}</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #020617;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        /* NAVIGATION */
+
+        nav {
+            background: #020617;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        nav h2 {
+            color: white;
+            font-size: 24px;
+        }
+
+        .menu-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .menu-button:hover {
+            background: #1d4ed8;
+        }
+
+        .nav-menu {
+            display: none;
+            position: absolute;
+            right: 7%;
+            top: 70px;
+            width: 190px;
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #1e293b;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .nav-menu.show {
+            display: block;
+        }
+
+        .nav-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 13px 15px;
+            border-radius: 7px;
+        }
+
+        .nav-menu a:hover {
+            background: #2563eb;
+        }
+
+        /* GENERAL */
+
+        .page {
+            min-height: 80vh;
+            padding: 80px 8%;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            color: #60a5fa;
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            max-width: 700px;
+            margin: auto;
+            color: #94a3b8;
+            font-size: 18px;
+        }
+
+        /* BUTTON */
+
+        .button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 14px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .button:hover {
+            background: #1d4ed8;
+        }
+
+        /* HOME */
+
+        .hero {
+            min-height: 88vh;
+            padding: 70px 8%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(
+                135deg,
+                #020617,
+                #0f172a,
+                #172554
+            );
+        }
+
+        .hero h1 {
+            font-size: 62px;
+            color: #60a5fa;
+            margin-bottom: 20px;
+        }
+
+        .hero h3 {
+            font-size: 27px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            max-width: 700px;
+            font-size: 18px;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
+
+        /* CARDS */
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: #0f172a;
+            width: 280px;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #1e293b;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: #2563eb;
+        }
+
+        .card .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            color: #60a5fa;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #94a3b8;
+        }
+
+        /* CONTACT */
+
+        .contact-box {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 35px;
+            text-align: center;
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+        }
+
+        .contact-box h2 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .contact-box p {
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #020617;
+            color: #94a3b8;
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #1e293b;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            nav {
+                padding: 16px 5%;
+            }
+
+            .nav-menu {
+                right: 5%;
+            }
+
+            .hero {
+                padding: 60px 5%;
+            }
+
+            .hero h1 {
+                font-size: 44px;
+            }
+
+            .hero h3 {
+                font-size: 22px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .page {
+                padding: 60px 5%;
+            }
+
+            .page-header h1 {
+                font-size: 38px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-    {% block content %}
-    {% endblock %}
+<nav>
+
+    <h2>Career Bridge</h2>
+
+    <button class="menu-button" onclick="toggleMenu()">
+        ☰ Navigate
+    </button>
+
+    <div class="nav-menu" id="navMenu">
+
+        <a href="/">🏠 Home</a>
+
+        <a href="/about">👤 About</a>
+
+        <a href="/services">💼 Services</a>
+
+        <a href="/courses">📚 Courses</a>
+
+        <a href="/contact">📞 Contact</a>
+
+    </div>
+
+</nav>
+
+
+{% block content %}
+
+{% endblock %}
+
+
+<footer>
+
+    <p><strong>Career Bridge</strong></p>
+
+    <p>Building skills. Connecting opportunities.</p>
+
+    <p>© 2026 Career Bridge. All rights reserved.</p>
+
+</footer>
+
+
+<script>
+
+function toggleMenu() {
+
+    document
+        .getElementById("navMenu")
+        .classList
+        .toggle("show");
+
+}
+
+</script>
+
 
 </body>
+
 </html>
