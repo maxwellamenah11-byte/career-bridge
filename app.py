@@ -646,7 +646,7 @@ def home():
 
 
     <a
-        href="https://www.tiktok.com/@maxwellamenah"
+        href="https://www.tiktok.com/@maxwell6573"
         target="_blank">
         🎵 TikTok
     </a>
