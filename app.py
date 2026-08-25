@@ -48,5 +48,10 @@ def career_development():
     return render_template("career-development.html")
 
 
+@app.route("/register")
+def register():
+    return render_template("register.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
