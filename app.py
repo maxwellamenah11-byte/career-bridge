@@ -77,5 +77,11 @@ def blog():
 def career_quiz():
     return render_template("career-quiz.html")
 
+
+@app.route("/cv-builder")
+def cv_builder():
+    return render_template("cv-builder.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
