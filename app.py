@@ -63,5 +63,10 @@ def opportunities():
     return render_template("opportunities.html")
 
 
+@app.route("/career-explorer")
+def career_explorer():
+    return render_template("career-explorer.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
