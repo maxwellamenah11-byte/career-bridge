@@ -11,152 +11,212 @@
         <h1>🐍 Python Programming</h1>
 
         <p>
-            Learn Python step by step and develop practical
-            programming skills.
+            Learn Python step by step through lessons, examples
+            and short quizzes.
         </p>
 
-        <div style="margin-top:20px;">
-            <strong>Course Progress</strong>
+        <strong>Course Progress</strong>
 
-            <div style="
-                background:#e5e7eb;
-                border-radius:10px;
-                height:18px;
-                margin-top:10px;
-                overflow:hidden;
-            ">
-
-                <div id="progressBar" style="
-                    width:0%;
-                    height:100%;
-                    background:#2563eb;
-                    transition:0.3s;
-                "></div>
-
-            </div>
-
-            <p id="progressText">0% Complete</p>
+        <div style="
+            background:#e5e7eb;
+            border-radius:10px;
+            height:18px;
+            margin-top:10px;
+            overflow:hidden;
+        ">
+            <div id="progressBar" style="
+                width:0%;
+                height:100%;
+                background:#2563eb;
+                transition:0.3s;
+            "></div>
         </div>
 
-    </div>
-
-
-    <div class="contact-box">
-
-        <h2>📚 Course Lessons</h2>
-
-        <p>
-            Complete each lesson to make progress through
-            the course.
-        </p>
+        <p id="progressText">0% Complete</p>
 
     </div>
 
 
     <!-- LESSON 1 -->
 
-    <div class="contact-box lesson">
+    <div class="contact-box">
 
-        <h2>Lesson 1 — Introduction to Python</h2>
+        <h2>📖 Lesson 1 — Introduction to Python</h2>
+
+        <h3>What is Python?</h3>
 
         <p>
-            Learn what Python is, where it is used and why
-            it is one of the most popular programming languages.
+            Python is a programming language used to give
+            instructions to computers.
         </p>
 
         <p>
-            Python can be used for web development, automation,
-            data analysis, artificial intelligence and many
-            other applications.
+            It is used in areas such as web development,
+            automation, data analysis, artificial intelligence
+            and software development.
         </p>
 
-        <button class="button" onclick="completeLesson(1)">
-            ✅ Mark Lesson Complete
-        </button>
 
-        <p id="status1"></p>
+        <h3>Why learn Python?</h3>
+
+        <ul>
+            <li>It is beginner-friendly.</li>
+            <li>It is widely used in technology.</li>
+            <li>It can be used to build useful projects.</li>
+            <li>It teaches important programming concepts.</li>
+        </ul>
+
+
+        <h3>💻 Your first Python program</h3>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+            overflow-x:auto;
+        "><code>print("Hello, World!")</code></pre>
+
+
+        <p>
+            The <strong>print()</strong> function tells Python
+            to display something on the screen.
+        </p>
+
+
+        <h3>🧠 Key points</h3>
+
+        <ul>
+            <li>Python is a programming language.</li>
+            <li>Python can be used to create many types of programs.</li>
+            <li><code>print()</code> displays information.</li>
+        </ul>
+
+    </div>
+
+
+    <!-- QUIZ -->
+
+    <div class="contact-box">
+
+        <h2>🧠 Lesson 1 Quiz</h2>
+
+        <p>
+            Answer the question correctly to complete this lesson.
+        </p>
+
+        <form id="lessonQuiz">
+
+            <h3>
+                What does the Python
+                <code>print()</code> function do?
+            </h3>
+
+            <label>
+                <input type="radio" name="answer" value="wrong1">
+                It deletes a program
+            </label>
+
+            <br><br>
+
+            <label>
+                <input type="radio" name="answer" value="correct">
+                It displays information on the screen
+            </label>
+
+            <br><br>
+
+            <label>
+                <input type="radio" name="answer" value="wrong2">
+                It shuts down the computer
+            </label>
+
+            <br><br>
+
+            <label>
+                <input type="radio" name="answer" value="wrong3">
+                It creates a new website automatically
+            </label>
+
+            <br><br>
+
+            <button type="submit" class="button">
+                Check Answer
+            </button>
+
+        </form>
+
+        <p id="quizResult"></p>
 
     </div>
 
 
     <!-- LESSON 2 -->
 
-    <div class="contact-box lesson">
+    <div class="contact-box">
 
-        <h2>Lesson 2 — Variables & Data Types</h2>
+        <h2>📚 Lesson 2 — Variables & Data Types</h2>
 
         <p>
-            Learn how to store information using variables
-            and understand common Python data types such as
-            strings, integers and floating-point numbers.
+            Coming next: learn how Python stores information
+            using variables and different data types.
         </p>
 
-        <button class="button" onclick="completeLesson(2)">
-            ✅ Mark Lesson Complete
+        <button class="button" disabled>
+            🔒 Complete Lesson 1 First
         </button>
-
-        <p id="status2"></p>
 
     </div>
 
 
     <!-- LESSON 3 -->
 
-    <div class="contact-box lesson">
+    <div class="contact-box">
 
-        <h2>Lesson 3 — Conditions</h2>
+        <h2>🔀 Lesson 3 — Conditions</h2>
 
         <p>
-            Learn how programs make decisions using
-            <strong>if</strong>, <strong>elif</strong> and
-            <strong>else</strong>.
+            Learn how Python makes decisions using
+            <code>if</code>, <code>elif</code> and <code>else</code>.
         </p>
 
-        <button class="button" onclick="completeLesson(3)">
-            ✅ Mark Lesson Complete
+        <button class="button" disabled>
+            🔒 Coming Soon
         </button>
-
-        <p id="status3"></p>
 
     </div>
 
 
     <!-- LESSON 4 -->
 
-    <div class="contact-box lesson">
+    <div class="contact-box">
 
-        <h2>Lesson 4 — Loops</h2>
+        <h2>🔁 Lesson 4 — Loops</h2>
 
         <p>
-            Learn how loops allow a program to repeat
-            instructions efficiently.
+            Learn how programs repeat instructions using loops.
         </p>
 
-        <button class="button" onclick="completeLesson(4)">
-            ✅ Mark Lesson Complete
+        <button class="button" disabled>
+            🔒 Coming Soon
         </button>
-
-        <p id="status4"></p>
 
     </div>
 
 
     <!-- LESSON 5 -->
 
-    <div class="contact-box lesson">
+    <div class="contact-box">
 
-        <h2>Lesson 5 — Functions</h2>
+        <h2>⚙️ Lesson 5 — Functions</h2>
 
         <p>
-            Learn how functions help you organize your code
-            into reusable blocks.
+            Learn how to create reusable blocks of Python code.
         </p>
 
-        <button class="button" onclick="completeLesson(5)">
-            ✅ Mark Lesson Complete
+        <button class="button" disabled>
+            🔒 Coming Soon
         </button>
-
-        <p id="status5"></p>
 
     </div>
 
@@ -167,21 +227,14 @@
          class="contact-box"
          style="display:none;">
 
-        <h2>🎉 Course Completed!</h2>
+        <h2>🎉 Lesson 1 Completed!</h2>
 
         <p>
-            Congratulations! You have completed all the
-            Python Programming lessons available in this course.
+            Great job! You passed the first Python lesson.
         </p>
 
         <p>
-            Your completion status has been recorded in this
-            browser.
-        </p>
-
-        <p>
-            Certificate functionality can be added after
-            Career Bridge has a proper verified completion system.
+            Your progress has been saved in this browser.
         </p>
 
     </div>
@@ -197,23 +250,6 @@ let completedLessons =
     JSON.parse(localStorage.getItem("pythonProgress")) || [];
 
 
-function completeLesson(lessonNumber) {
-
-    if (!completedLessons.includes(lessonNumber)) {
-
-        completedLessons.push(lessonNumber);
-
-        localStorage.setItem(
-            "pythonProgress",
-            JSON.stringify(completedLessons)
-        );
-
-    }
-
-    updateProgress();
-}
-
-
 function updateProgress() {
 
     const completed = completedLessons.length;
@@ -221,43 +257,66 @@ function updateProgress() {
     const percentage =
         Math.round((completed / totalLessons) * 100);
 
-
     document.getElementById("progressBar").style.width =
         percentage + "%";
 
-
     document.getElementById("progressText").textContent =
         percentage + "% Complete";
+}
 
 
-    for (let i = 1; i <= totalLessons; i++) {
+document.getElementById("lessonQuiz").addEventListener(
+    "submit",
+    function(event) {
 
-        const status =
-            document.getElementById("status" + i);
+        event.preventDefault();
 
-        if (completedLessons.includes(i)) {
+        const answer =
+            document.querySelector(
+                'input[name="answer"]:checked'
+            );
 
-            status.textContent =
-                "✅ Lesson completed";
+        const result =
+            document.getElementById("quizResult");
+
+        if (!answer) {
+
+            result.textContent =
+                "Please select an answer.";
+
+            return;
+        }
+
+
+        if (answer.value === "correct") {
+
+            result.textContent =
+                "✅ Correct! Lesson 1 has been completed.";
+
+            if (!completedLessons.includes(1)) {
+
+                completedLessons.push(1);
+
+                localStorage.setItem(
+                    "pythonProgress",
+                    JSON.stringify(completedLessons)
+                );
+            }
+
+            document.getElementById("completionBox")
+                .style.display = "block";
+
+            updateProgress();
 
         } else {
 
-            status.textContent =
-                "";
+            result.textContent =
+                "❌ Not quite. Review the lesson and try again.";
 
         }
 
     }
-
-
-    if (completed === totalLessons) {
-
-        document.getElementById("completionBox")
-            .style.display = "block";
-
-    }
-
-}
+);
 
 
 updateProgress();
