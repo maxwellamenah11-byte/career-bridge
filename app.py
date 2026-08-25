@@ -73,5 +73,9 @@ def blog():
     return render_template("blog.html")
 
 
+@app.route("/career-quiz")
+def career_quiz():
+    return render_template("career-quiz.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
