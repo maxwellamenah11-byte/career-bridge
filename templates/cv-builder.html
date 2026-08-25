@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}CV Builder - Career Bridge{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+    <div class="page-header">
+
+        <h1>📝 Career Bridge CV Builder</h1>
+
+        <p>
+            Enter your information below to create a simple
+            professional CV.
+        </p>
+
+    </div>
+
+    <div class="contact-box">
+
+        <form id="cvForm">
+
+            <h2>Personal Information</h2>
+
+            <p>
+                <input id="name" type="text"
+                    placeholder="Full Name" required>
+            </p>
+
+            <p>
+                <input id="email" type="email"
+                    placeholder="Email Address" required>
+            </p>
+
+            <p>
+                <input id="phone" type="text"
+                    placeholder="Phone Number">
+            </p>
+
+            <p>
+                <input id="location" type="text"
+                    placeholder="Location">
+            </p>
+
+
+            <h2>Education</h2>
+
+            <p>
+                <textarea id="education"
+                    placeholder="School / University, course and qualifications"
+                    rows="4"></textarea>
+            </p>
+
+
+            <h2>Skills</h2>
+
+            <p>
+                <textarea id="skills"
+                    placeholder="Example: Python, Communication, Teamwork, Microsoft Office"
+                    rows="4"></textarea>
+            </p>
+
+
+            <h2>Certificates</h2>
+
+            <p>
+                <textarea id="certificates"
+                    placeholder="List your certificates and training"
+                    rows="4"></textarea>
+            </p>
+
+
+            <h2>Projects</h2>
+
+            <p>
+                <textarea id="projects"
+                    placeholder="Describe school, personal or professional projects"
+                    rows="4"></textarea>
+            </p>
+
+
+            <h2>Experience</h2>
+
+            <p>
+                <textarea id="experience"
+                    placeholder="Internships, volunteering, work experience or other relevant experience"
+                    rows="4"></textarea>
+            </p>
+
+
+            <button type="submit" class="button">
+                Generate CV
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- CV PREVIEW -->
+
+    <div id="cvPreview"
+         class="contact-box"
+         style="display:none; margin-top:30px;">
+
+        <div id="cvContent">
+
+            <h1 id="cvName"></h1>
+
+            <p id="cvContact"></p>
+
+            <hr>
+
+            <h2>Education</h2>
+            <p id="cvEducation"></p>
+
+            <h2>Skills</h2>
+            <p id="cvSkills"></p>
+
+            <h2>Certificates</h2>
+            <p id="cvCertificates"></p>
+
+            <h2>Projects</h2>
+            <p id="cvProjects"></p>
+
+            <h2>Experience</h2>
+            <p id="cvExperience"></p>
+
+        </div>
+
+        <br>
+
+        <button onclick="window.print()" class="button">
+            🖨️ Print / Save CV
+        </button>
+
+    </div>
+
+</section>
+
+
+<script>
+
+document.getElementById("cvForm").addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    document.getElementById("cvName").textContent =
+        document.getElementById("name").value;
+
+    document.getElementById("cvContact").textContent =
+        document.getElementById("email").value +
+        " | " +
+        document.getElementById("phone").value +
+        " | " +
+        document.getElementById("location").value;
+
+    document.getElementById("cvEducation").textContent =
+        document.getElementById("education").value;
+
+    document.getElementById("cvSkills").textContent =
+        document.getElementById("skills").value;
+
+    document.getElementById("cvCertificates").textContent =
+        document.getElementById("certificates").value;
+
+    document.getElementById("cvProjects").textContent =
+        document.getElementById("projects").value;
+
+    document.getElementById("cvExperience").textContent =
+        document.getElementById("experience").value;
+
+    document.getElementById("cvPreview").style.display = "block";
+
+    document.getElementById("cvPreview").scrollIntoView({
+        behavior: "smooth"
+    });
+
+});
+
+</script>
+
+{% endblock %}
