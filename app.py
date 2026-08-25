@@ -28,5 +28,25 @@ def contact():
     return render_template("contact.html")
 
 
+@app.route("/courses/python")
+def python():
+    return render_template("python.html")
+
+
+@app.route("/courses/cv-linkedin")
+def cv_linkedin():
+    return render_template("cv-linkedin.html")
+
+
+@app.route("/courses/digital-skills")
+def digital_skills():
+    return render_template("digital-skills.html")
+
+
+@app.route("/courses/career-development")
+def career_development():
+    return render_template("career-development.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
