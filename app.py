@@ -38,6 +38,11 @@ def python_module1():
     return render_template("python/module1.html")
 
 
+@app.route("/python/module2")
+def python_module2():
+    return render_template("python/module2.html")
+
+
 @app.route("/courses/cv-linkedin")
 def cv_linkedin():
     return render_template("cv-linkedin.html")
