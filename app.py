@@ -58,5 +58,10 @@ def resources():
     return render_template("resources.html")
 
 
+@app.route("/opportunities")
+def opportunities():
+    return render_template("opportunities.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
