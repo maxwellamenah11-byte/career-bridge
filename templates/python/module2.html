@@ -1,1 +1,799 @@
+{% extends "base.html" %}
 
+{% block title %}Module 2 — Variables & Data Types{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+    <div class="page-header">
+        <h1>📦 Module 2: Variables & Data Types</h1>
+
+        <p>
+            Learn how Python stores, represents and works with
+            different types of information.
+        </p>
+    </div>
+
+
+    <!-- OBJECTIVES -->
+
+    <div class="contact-box">
+
+        <h2>🎯 What You Will Learn</h2>
+
+        <ul>
+            <li>Understand what variables are.</li>
+            <li>Create and name variables correctly.</li>
+            <li>Work with strings, integers and floats.</li>
+            <li>Understand Boolean values.</li>
+            <li>Use <code>type()</code> to identify data types.</li>
+            <li>Convert values between different data types.</li>
+            <li>Work with numbers received through <code>input()</code>.</li>
+        </ul>
+
+    </div>
+
+
+    <!-- LESSON 1 -->
+
+    <div class="contact-box">
+
+        <h2>📖 Lesson 1: What Is a Variable?</h2>
+
+        <p>
+            A variable is a name that refers to a value in a program.
+            Variables allow us to store information and use it later.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+            overflow-x:auto;
+        "><code>name = "Alex"
+age = 16</code></pre>
+
+        <p>
+            Here, <code>name</code> refers to the text
+            <code>"Alex"</code>, while <code>age</code> refers to
+            the number <code>16</code>.
+        </p>
+
+        <h3>Changing a variable</h3>
+
+        <p>
+            A variable can be assigned a new value.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>age = 16
+age = 17
+
+print(age)</code></pre>
+
+        <p>
+            The output will be:
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>17</code></pre>
+
+    </div>
+
+
+    <!-- LESSON 2 -->
+
+    <div class="contact-box">
+
+        <h2>✏️ Lesson 2: Naming Variables</h2>
+
+        <p>
+            Python has rules and conventions for naming variables.
+        </p>
+
+        <h3>Good examples</h3>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>first_name = "Alex"
+student_age = 16
+total_score = 85</code></pre>
+
+        <h3>Important rules</h3>
+
+        <ul>
+            <li>A variable name can contain letters, numbers and underscores.</li>
+            <li>A variable name cannot start with a number.</li>
+            <li>Spaces are not allowed in variable names.</li>
+            <li>Python variable names are case-sensitive.</li>
+            <li>Do not use Python keywords as variable names.</li>
+        </ul>
+
+        <h3>Example</h3>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>name = "Alex"
+Name = "David"
+
+print(name)
+print(Name)</code></pre>
+
+        <p>
+            <code>name</code> and <code>Name</code> are different
+            variables because Python is case-sensitive.
+        </p>
+
+    </div>
+
+
+    <!-- LESSON 3 -->
+
+    <div class="contact-box">
+
+        <h2>🔤 Lesson 3: Strings</h2>
+
+        <p>
+            A string is a sequence of characters, usually used to
+            represent text.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>name = "Maxwell"
+school = "Career Bridge"
+message = "Welcome!"</code></pre>
+
+        <p>
+            Strings can be written using single or double quotation
+            marks.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>name = "Alex"
+
+city = 'Warri'</code></pre>
+
+        <h3>Combining strings</h3>
+
+        <p>
+            You can combine strings using the <code>+</code> operator.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>first_name = "Alex"
+last_name = "John"
+
+full_name = first_name + " " + last_name
+
+print(full_name)</code></pre>
+
+        <p>Output:</p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>Alex John</code></pre>
+
+    </div>
+
+
+    <!-- LESSON 4 -->
+
+    <div class="contact-box">
+
+        <h2>🔢 Lesson 4: Integers</h2>
+
+        <p>
+            An integer is a whole number without a decimal part.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>age = 16
+score = 85
+year = 2026</code></pre>
+
+        <p>
+            Integers can be positive, negative or zero.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>temperature = -5
+balance = 0
+population = 100000</code></pre>
+
+    </div>
+
+
+    <!-- LESSON 5 -->
+
+    <div class="contact-box">
+
+        <h2>🔢 Lesson 5: Floating-Point Numbers</h2>
+
+        <p>
+            A floating-point number, commonly called a float,
+            represents a number containing a decimal part.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>price = 1500.50
+height = 1.75
+temperature = 36.5</code></pre>
+
+        <p>
+            Integers and floats can be used in mathematical
+            calculations.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>price = 1500.50
+quantity = 2
+
+total = price * quantity
+
+print(total)</code></pre>
+
+    </div>
+
+
+    <!-- LESSON 6 -->
+
+    <div class="contact-box">
+
+        <h2>✅ Lesson 6: Boolean Values</h2>
+
+        <p>
+            A Boolean represents one of two values:
+            <strong>True</strong> or <strong>False</strong>.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>is_student = True
+is_logged_in = False</code></pre>
+
+        <p>
+            Booleans are especially useful when programs need to
+            make decisions. We will use them more in
+            <strong>Module 4 — Conditional Statements</strong>.
+        </p>
+
+    </div>
+
+
+    <!-- LESSON 7 -->
+
+    <div class="contact-box">
+
+        <h2>🔍 Lesson 7: Checking Data Types</h2>
+
+        <p>
+            Python provides the <code>type()</code> function to
+            identify the type of a value.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>name = "Alex"
+age = 16
+height = 1.75
+is_student = True
+
+print(type(name))
+print(type(age))
+print(type(height))
+print(type(is_student))</code></pre>
+
+        <p>
+            The results will identify the values as
+            <code>str</code>, <code>int</code>,
+            <code>float</code> and <code>bool</code>.
+        </p>
+
+    </div>
+
+
+    <!-- LESSON 8 -->
+
+    <div class="contact-box">
+
+        <h2>🔄 Lesson 8: Type Conversion</h2>
+
+        <p>
+            Sometimes you need to convert a value from one data type
+            to another.
+        </p>
+
+        <h3>String to integer</h3>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>age = "16"
+
+age = int(age)
+
+print(age)</code></pre>
+
+        <h3>String to float</h3>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>price = "1500.50"
+
+price = float(price)
+
+print(price)</code></pre>
+
+        <h3>Number to string</h3>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>age = 16
+
+age_text = str(age)
+
+print(age_text)</code></pre>
+
+    </div>
+
+
+    <!-- LESSON 9 -->
+
+    <div class="contact-box">
+
+        <h2>⌨️ Lesson 9: Input and Numbers</h2>
+
+        <p>
+            Remember that <code>input()</code> normally gives you
+            the user's response as a string.
+        </p>
+
+        <p>
+            Therefore, if you want to perform mathematical
+            calculations with a number entered by the user, you
+            usually need to convert it.
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>age = input("Enter your age: ")
+
+age = int(age)
+
+print(age + 1)</code></pre>
+
+        <p>
+            You can also convert the input immediately:
+        </p>
+
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+        "><code>age = int(input("Enter your age: "))
+
+print(age + 1)</code></pre>
+
+        <p>
+            This is a very common pattern in Python programs.
+        </p>
+
+    </div>
+
+
+    <!-- PRACTICE -->
+
+    <div class="contact-box">
+
+        <h2>🧪 Practical Exercises</h2>
+
+        <h3>Exercise 1 — Personal Information</h3>
+
+        <p>
+            Create variables for your name, age and school.
+            Then display them.
+        </p>
+
+
+        <h3>Exercise 2 — Simple Calculation</h3>
+
+        <p>
+            Create two number variables and calculate their sum.
+        </p>
+
+        <h3>Exercise 3 — User Age</h3>
+
+        <p>
+            Ask the user for their age and display what their age
+            will be next year.
+        </p>
+
+        <h3>Exercise 4 — Shopping Total</h3>
+
+        <p>
+            Ask the user for the price of an item and the quantity
+            purchased. Convert the values appropriately and calculate
+            the total cost.
+        </p>
+
+        <h3>Challenge ⭐</h3>
+
+        <p>
+            Ask the user for their name, age and favourite subject,
+            then display a sentence containing all three pieces
+            of information.
+        </p>
+
+    </div>
+
+
+    <!-- QUIZ -->
+
+    <div class="contact-box">
+
+        <h2>🧠 Module 2 Quiz</h2>
+
+        <p>
+            Answer all questions. You need at least
+            <strong>8 out of 10</strong> to complete this module.
+        </p>
+
+        <form id="moduleQuiz">
+
+            <h3>1. What is a variable?</h3>
+
+            <label>
+                <input type="radio" name="q1" value="a">
+                A name that refers to a value
+            </label><br>
+
+            <label>
+                <input type="radio" name="q1" value="b">
+                A computer screen
+            </label><br>
+
+            <label>
+                <input type="radio" name="q1" value="c">
+                A Python error
+            </label>
+
+
+            <h3>2. Which is a string?</h3>
+
+            <label>
+                <input type="radio" name="q2" value="a">
+                25
+            </label><br>
+
+            <label>
+                <input type="radio" name="q2" value="b">
+                "Hello"
+            </label><br>
+
+            <label>
+                <input type="radio" name="q2" value="c">
+                True
+            </label>
+
+
+            <h3>3. Which data type represents whole numbers?</h3>
+
+            <label>
+                <input type="radio" name="q3" value="a">
+                str
+            </label><br>
+
+            <label>
+                <input type="radio" name="q3" value="b">
+                float
+            </label><br>
+
+            <label>
+                <input type="radio" name="q3" value="c">
+                int
+            </label>
+
+
+            <h3>4. Which value is a float?</h3>
+
+            <label>
+                <input type="radio" name="q4" value="a">
+                15
+            </label><br>
+
+            <label>
+                <input type="radio" name="q4" value="b">
+                15.5
+            </label><br>
+
+            <label>
+                <input type="radio" name="q4" value="c">
+                "15.5"
+            </label>
+
+
+            <h3>5. Which values are Boolean values?</h3>
+
+            <label>
+                <input type="radio" name="q5" value="a">
+                True and False
+            </label><br>
+
+            <label>
+                <input type="radio" name="q5" value="b">
+                Yes and No
+            </label><br>
+
+            <label>
+                <input type="radio" name="q5" value="c">
+                1 and 2
+            </label>
+
+
+            <h3>6. Which function checks a value's data type?</h3>
+
+            <label>
+                <input type="radio" name="q6" value="a">
+                check()
+            </label><br>
+
+            <label>
+                <input type="radio" name="q6" value="b">
+                type()
+            </label><br>
+
+            <label>
+                <input type="radio" name="q6" value="c">
+                data()
+            </label>
+
+
+            <h3>7. What does <code>int()</code> do?</h3>
+
+            <label>
+                <input type="radio" name="q7" value="a">
+                Converts a value to an integer when possible
+            </label><br>
+
+            <label>
+                <input type="radio" name="q7" value="b">
+                Prints text
+            </label><br>
+
+            <label>
+                <input type="radio" name="q7" value="c">
+                Deletes a variable
+            </label>
+
+
+            <h3>8. What type does <code>input()</code> normally return?</h3>
+
+            <label>
+                <input type="radio" name="q8" value="a">
+                int
+            </label><br>
+
+            <label>
+                <input type="radio" name="q8" value="b">
+                string
+            </label><br>
+
+            <label>
+                <input type="radio" name="q8" value="c">
+                Boolean
+            </label>
+
+
+            <h3>9. Which is a valid variable name?</h3>
+
+            <label>
+                <input type="radio" name="q9" value="a">
+                student_name
+            </label><br>
+
+            <label>
+                <input type="radio" name="q9" value="b">
+                student-name
+            </label><br>
+
+            <label>
+                <input type="radio" name="q9" value="c">
+                2student
+            </label>
+
+
+            <h3>10. Which code converts text into an integer?</h3>
+
+            <label>
+                <input type="radio" name="q10" value="a">
+                str("25")
+            </label><br>
+
+            <label>
+                <input type="radio" name="q10" value="b">
+                float("25")
+            </label><br>
+
+            <label>
+                <input type="radio" name="q10" value="c">
+                int("25")
+            </label>
+
+            <br><br>
+
+            <button type="submit" class="button">
+                Check Quiz
+            </button>
+
+        </form>
+
+        <p id="quizResult"></p>
+
+    </div>
+
+
+    <!-- COMPLETION -->
+
+    <div id="completionBox"
+         class="contact-box"
+         style="display:none;">
+
+        <h2>🎉 Module 2 Completed!</h2>
+
+        <p>
+            Excellent work! You have completed Variables &
+            Data Types.
+        </p>
+
+        <a href="/python/module3" class="button">
+            Continue to Module 3 →
+        </a>
+
+    </div>
+
+</section>
+
+
+<script>
+
+document.getElementById("moduleQuiz").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const answers = {
+            q1: "a",
+            q2: "b",
+            q3: "c",
+            q4: "b",
+            q5: "a",
+            q6: "b",
+            q7: "a",
+            q8: "b",
+            q9: "a",
+            q10: "c"
+        };
+
+        let score = 0;
+
+        for (const question in answers) {
+
+            const selected =
+                document.querySelector(
+                    'input[name="' + question + '"]:checked'
+                );
+
+            if (
+                selected &&
+                selected.value === answers[question]
+            ) {
+                score++;
+            }
+        }
+
+        const result =
+            document.getElementById("quizResult");
+
+        if (score >= 8) {
+
+            result.textContent =
+                "✅ Excellent! You scored " +
+                score + "/10. Module completed!";
+
+            let completedModules =
+                JSON.parse(
+                    localStorage.getItem("pythonModules")
+                ) || [];
+
+            if (!completedModules.includes(2)) {
+
+                completedModules.push(2);
+
+                localStorage.setItem(
+                    "pythonModules",
+                    JSON.stringify(completedModules)
+                );
+            }
+
+            document.getElementById("completionBox")
+                .style.display = "block";
+
+        } else {
+
+            result.textContent =
+                "You scored " + score +
+                "/10. You need at least 8/10. Review the lessons and try again.";
+        }
+
+    }
+);
+
+</script>
+
+{% endblock %}
