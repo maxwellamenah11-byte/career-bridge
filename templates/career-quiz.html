@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block title %}Career Quiz - Career Bridge{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+    <div class="page-header">
+
+        <h1>🧭 Career Quiz</h1>
+
+        <p>
+            Answer a few questions to discover career areas
+            that may match your interests and strengths.
+        </p>
+
+    </div>
+
+    <div class="contact-box">
+
+        <form id="careerQuiz">
+
+            <h3>1. What do you enjoy most?</h3>
+
+            <label>
+                <input type="radio" name="q1" value="technology" required>
+                Working with computers and technology
+            </label><br>
+
+            <label>
+                <input type="radio" name="q1" value="engineering">
+                Building, designing and solving technical problems
+            </label><br>
+
+            <label>
+                <input type="radio" name="q1" value="health">
+                Helping people and learning about health
+            </label><br>
+
+            <label>
+                <input type="radio" name="q1" value="business">
+                Business, money and leadership
+            </label><br>
+
+            <label>
+                <input type="radio" name="q1" value="creative">
+                Art, media and creating things
+            </label>
+
+
+            <h3>2. Which activity sounds most interesting?</h3>
+
+            <label>
+                <input type="radio" name="q2" value="technology" required>
+                Writing computer programs
+            </label><br>
+
+            <label>
+                <input type="radio" name="q2" value="engineering">
+                Designing or building something
+            </label><br>
+
+            <label>
+                <input type="radio" name="q2" value="health">
+                Studying how the human body works
+            </label><br>
+
+            <label>
+                <input type="radio" name="q2" value="business">
+                Starting or managing a business
+            </label><br>
+
+            <label>
+                <input type="radio" name="q2" value="creative">
+                Creating videos, designs or content
+            </label>
+
+
+            <h3>3. Which skill would you most like to develop?</h3>
+
+            <label>
+                <input type="radio" name="q3" value="technology" required>
+                Programming
+            </label><br>
+
+            <label>
+                <input type="radio" name="q3" value="engineering">
+                Technical problem solving
+            </label><br>
+
+            <label>
+                <input type="radio" name="q3" value="health">
+                Scientific and healthcare knowledge
+            </label><br>
+
+            <label>
+                <input type="radio" name="q3" value="business">
+                Leadership and communication
+            </label><br>
+
+            <label>
+                <input type="radio" name="q3" value="creative">
+                Design and creativity
+            </label>
+
+
+            <h3>4. What kind of problem do you enjoy solving?</h3>
+
+            <label>
+                <input type="radio" name="q4" value="technology" required>
+                Digital or computer problems
+            </label><br>
+
+            <label>
+                <input type="radio" name="q4" value="engineering">
+                Practical or technical problems
+            </label><br>
+
+            <label>
+                <input type="radio" name="q4" value="health">
+                Problems involving people and wellbeing
+            </label><br>
+
+            <label>
+                <input type="radio" name="q4" value="business">
+                Business or financial problems
+            </label><br>
+
+            <label>
+                <input type="radio" name="q4" value="creative">
+                Creative or communication problems
+            </label>
+
+
+            <h3>5. Where would you prefer to work?</h3>
+
+            <label>
+                <input type="radio" name="q5" value="technology" required>
+                Technology environment
+            </label><br>
+
+            <label>
+                <input type="radio" name="q5" value="engineering">
+                Engineering or industrial environment
+            </label><br>
+
+            <label>
+                <input type="radio" name="q5" value="health">
+                Hospital or healthcare environment
+            </label><br>
+
+            <label>
+                <input type="radio" name="q5" value="business">
+                Office or business environment
+            </label><br>
+
+            <label>
+                <input type="radio" name="q5" value="creative">
+                Creative or media environment
+            </label>
+
+
+            <br><br>
+
+            <button type="submit" class="button">
+                🔍 See My Result
+            </button>
+
+        </form>
+
+
+        <div id="result" style="display:none; margin-top:30px;">
+
+            <h2 id="resultTitle"></h2>
+
+            <p id="resultText"></p>
+
+            <a href="/career-explorer" class="button">
+                Explore Careers
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<script>
+
+document.getElementById("careerQuiz").addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const answers = document.querySelectorAll(
+        'input[type="radio"]:checked'
+    );
+
+    let scores = {
+        technology: 0,
+        engineering: 0,
+        health: 0,
+        business: 0,
+        creative: 0
+    };
+
+    answers.forEach(function(answer) {
+        scores[answer.value]++;
+    });
+
+    let result = Object.keys(scores).reduce(function(a, b) {
+        return scores[a] >= scores[b] ? a : b;
+    });
+
+    const titles = {
+        technology: "💻 Technology",
+        engineering: "⚙️ Engineering",
+        health: "🩺 Medicine & Health",
+        business: "📊 Business & Finance",
+        creative: "🎨 Creative Careers"
+    };
+
+    const descriptions = {
+        technology:
+            "You may enjoy technology-related careers such as software development, web development, data and cybersecurity.",
+
+        engineering:
+            "You may enjoy engineering careers that involve mathematics, design, technical thinking and problem solving.",
+
+        health:
+            "You may enjoy careers related to medicine, healthcare, biomedical science and public health.",
+
+        business:
+            "You may enjoy careers involving business, finance, entrepreneurship, management and leadership.",
+
+        creative:
+            "You may enjoy careers involving design, media, writing, animation, communication and content creation."
+    };
+
+    document.getElementById("resultTitle").textContent =
+        "Your Result: " + titles[result];
+
+    document.getElementById("resultText").textContent =
+        descriptions[result];
+
+    document.getElementById("result").style.display = "block";
+
+    document.getElementById("result").scrollIntoView({
+        behavior: "smooth"
+    });
+
+});
+
+</script>
+
+{% endblock %}
