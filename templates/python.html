@@ -11,86 +11,257 @@
         <h1>🐍 Python Programming</h1>
 
         <p>
-            Learn the fundamentals of Python and start building
-            practical programming projects.
+            Learn Python step by step and develop practical
+            programming skills.
         </p>
+
+        <div style="margin-top:20px;">
+            <strong>Course Progress</strong>
+
+            <div style="
+                background:#e5e7eb;
+                border-radius:10px;
+                height:18px;
+                margin-top:10px;
+                overflow:hidden;
+            ">
+
+                <div id="progressBar" style="
+                    width:0%;
+                    height:100%;
+                    background:#2563eb;
+                    transition:0.3s;
+                "></div>
+
+            </div>
+
+            <p id="progressText">0% Complete</p>
+        </div>
 
     </div>
 
 
     <div class="contact-box">
 
-        <h2>What is Python?</h2>
+        <h2>📚 Course Lessons</h2>
 
         <p>
-            Python is a popular programming language used in
-            web development, automation, data analysis,
-            artificial intelligence and many other fields.
+            Complete each lesson to make progress through
+            the course.
         </p>
 
     </div>
 
 
-    <div class="contact-box">
+    <!-- LESSON 1 -->
 
-        <h2>What You'll Learn</h2>
+    <div class="contact-box lesson">
+
+        <h2>Lesson 1 — Introduction to Python</h2>
 
         <p>
-            • Variables and data types<br>
-            • Conditions and decision making<br>
-            • Loops<br>
-            • Functions<br>
-            • Lists and dictionaries<br>
-            • Basic file handling<br>
-            • Introduction to web development<br>
-            • Building simple projects
+            Learn what Python is, where it is used and why
+            it is one of the most popular programming languages.
         </p>
+
+        <p>
+            Python can be used for web development, automation,
+            data analysis, artificial intelligence and many
+            other applications.
+        </p>
+
+        <button class="button" onclick="completeLesson(1)">
+            ✅ Mark Lesson Complete
+        </button>
+
+        <p id="status1"></p>
 
     </div>
 
 
-    <div class="contact-box">
+    <!-- LESSON 2 -->
 
-        <h2>Who Is This For?</h2>
+    <div class="contact-box lesson">
+
+        <h2>Lesson 2 — Variables & Data Types</h2>
 
         <p>
-            This course is designed for students and beginners
-            who want to develop programming and digital skills,
-            even if they have never coded before.
+            Learn how to store information using variables
+            and understand common Python data types such as
+            strings, integers and floating-point numbers.
         </p>
+
+        <button class="button" onclick="completeLesson(2)">
+            ✅ Mark Lesson Complete
+        </button>
+
+        <p id="status2"></p>
 
     </div>
 
 
-    <div class="contact-box">
+    <!-- LESSON 3 -->
 
-        <h2>What Can You Build?</h2>
+    <div class="contact-box lesson">
+
+        <h2>Lesson 3 — Conditions</h2>
 
         <p>
-            By practising Python, you can begin creating
-            calculators, simple programs, small websites,
-            school projects and other useful applications.
+            Learn how programs make decisions using
+            <strong>if</strong>, <strong>elif</strong> and
+            <strong>else</strong>.
         </p>
+
+        <button class="button" onclick="completeLesson(3)">
+            ✅ Mark Lesson Complete
+        </button>
+
+        <p id="status3"></p>
 
     </div>
 
 
-    <div class="contact-box">
+    <!-- LESSON 4 -->
 
-        <h2>Start Learning</h2>
+    <div class="contact-box lesson">
+
+        <h2>Lesson 4 — Loops</h2>
 
         <p>
-            Ready to begin your programming journey?
-            Contact Career Bridge to learn more about available
-            learning opportunities.
+            Learn how loops allow a program to repeat
+            instructions efficiently.
         </p>
 
-        <a href="/contact" class="button">
-            Contact Career Bridge
-        </a>
+        <button class="button" onclick="completeLesson(4)">
+            ✅ Mark Lesson Complete
+        </button>
+
+        <p id="status4"></p>
+
+    </div>
+
+
+    <!-- LESSON 5 -->
+
+    <div class="contact-box lesson">
+
+        <h2>Lesson 5 — Functions</h2>
+
+        <p>
+            Learn how functions help you organize your code
+            into reusable blocks.
+        </p>
+
+        <button class="button" onclick="completeLesson(5)">
+            ✅ Mark Lesson Complete
+        </button>
+
+        <p id="status5"></p>
+
+    </div>
+
+
+    <!-- COMPLETION -->
+
+    <div id="completionBox"
+         class="contact-box"
+         style="display:none;">
+
+        <h2>🎉 Course Completed!</h2>
+
+        <p>
+            Congratulations! You have completed all the
+            Python Programming lessons available in this course.
+        </p>
+
+        <p>
+            Your completion status has been recorded in this
+            browser.
+        </p>
+
+        <p>
+            Certificate functionality can be added after
+            Career Bridge has a proper verified completion system.
+        </p>
 
     </div>
 
 </section>
+
+
+<script>
+
+const totalLessons = 5;
+
+let completedLessons =
+    JSON.parse(localStorage.getItem("pythonProgress")) || [];
+
+
+function completeLesson(lessonNumber) {
+
+    if (!completedLessons.includes(lessonNumber)) {
+
+        completedLessons.push(lessonNumber);
+
+        localStorage.setItem(
+            "pythonProgress",
+            JSON.stringify(completedLessons)
+        );
+
+    }
+
+    updateProgress();
+}
+
+
+function updateProgress() {
+
+    const completed = completedLessons.length;
+
+    const percentage =
+        Math.round((completed / totalLessons) * 100);
+
+
+    document.getElementById("progressBar").style.width =
+        percentage + "%";
+
+
+    document.getElementById("progressText").textContent =
+        percentage + "% Complete";
+
+
+    for (let i = 1; i <= totalLessons; i++) {
+
+        const status =
+            document.getElementById("status" + i);
+
+        if (completedLessons.includes(i)) {
+
+            status.textContent =
+                "✅ Lesson completed";
+
+        } else {
+
+            status.textContent =
+                "";
+
+        }
+
+    }
+
+
+    if (completed === totalLessons) {
+
+        document.getElementById("completionBox")
+            .style.display = "block";
+
+    }
+
+}
+
+
+updateProgress();
+
+</script>
 
 {% endblock %}
