@@ -68,5 +68,9 @@ def career_explorer():
     return render_template("career-explorer.html")
 
 
+@app.route("/blog")
+def blog():
+    return render_template("blog.html")
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
