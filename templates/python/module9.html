@@ -1,1 +1,491 @@
+{% extends "base.html" %}
 
+{% block title %}Module 9 - File Handling{% endblock %}
+
+{% block content %}
+
+<section class="page"><div class="page-header">
+    <h1>📁 Module 9: File Handling</h1>
+    <p>
+        Learn how Python can create, read, write and manage files.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🎯 Learning Objectives</h2>
+    <ul>
+        <li>Understand what file handling is.</li>
+        <li>Open files using Python.</li>
+        <li>Read information from files.</li>
+        <li>Write information to files.</li>
+        <li>Add information to existing files.</li>
+        <li>Understand file modes.</li>
+        <li>Use <code>with open()</code> safely.</li>
+        <li>Handle basic file errors.</li>
+        <li>Build a practical file-handling project.</li>
+    </ul>
+</div>
+
+<div class="contact-box">
+    <h2>📖 1. What Is File Handling?</h2>
+
+    <p>
+        File handling means using a program to work with files
+        stored on a computer.
+    </p>
+
+    <p>
+        Python can be used to read information from files, create
+        new files, add information to files and modify existing
+        files.
+    </p>
+
+    <p>
+        This is useful when a program needs to save information
+        permanently instead of keeping it only in memory.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>📂 2. Opening a File</h2>
+
+    <p>
+        Python uses the <code>open()</code> function to open a file.
+    </p>
+
+    <pre><code>file = open("example.txt", "r")</code></pre>
+
+    <p>
+        Here, <code>example.txt</code> is the file name and
+        <code>"r"</code> means read mode.
+    </p>
+
+    <p>
+        When working with files, it is generally better to use
+        <code>with open()</code>, which automatically handles closing
+        the file.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>📖 3. Reading a File</h2>
+
+    <p>
+        The <code>read()</code> method reads the contents of a file.
+    </p>
+
+    <pre><code>with open("example.txt", "r") as file:
+content = file.read()
+
+print(content)</code></pre>
+
+    <p>
+        The contents of the file are stored in the
+        <code>content</code> variable.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>📄 4. Reading One Line</h2>
+
+    <p>
+        The <code>readline()</code> method reads one line from a file.
+    </p>
+
+    <pre><code>with open("example.txt", "r") as file:
+line = file.readline()
+
+print(line)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>📚 5. Reading All Lines</h2>
+
+    <p>
+        The <code>readlines()</code> method reads the lines and
+        returns them as a list.
+    </p>
+
+    <pre><code>with open("example.txt", "r") as file:
+lines = file.readlines()
+
+print(lines)</code></pre>
+
+    <p>
+        You can also loop through the file directly.
+    </p>
+
+    <pre><code>with open("example.txt", "r") as file:
+
+for line in file:
+    print(line.strip())</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>✍️ 6. Writing to a File</h2>
+
+    <p>
+        The <code>"w"</code> mode allows you to write to a file.
+    </p>
+
+    <pre><code>with open("notes.txt", "w") as file:
+file.write("Welcome to Python!")</code></pre>
+
+    <p>
+        If the file does not exist, Python can create it.
+    </p>
+
+    <p>
+        Be careful with <code>"w"</code>: writing to an existing
+        file can replace its previous contents.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>➕ 7. Adding to an Existing File</h2>
+
+    <p>
+        The <code>"a"</code> mode means append. It adds new content
+        to the end of an existing file.
+    </p>
+
+    <pre><code>with open("notes.txt", "a") as file:
+file.write("\nLearning Python is fun!")</code></pre>
+
+    <p>
+        The existing contents remain, and the new text is added
+        after them.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>⚙️ 8. File Modes</h2>
+
+    <ul>
+        <li><strong>r</strong> — Read an existing file.</li>
+        <li><strong>w</strong> — Write to a file.</li>
+        <li><strong>a</strong> — Append to a file.</li>
+        <li><strong>x</strong> — Create a new file.</li>
+    </ul>
+
+    <p>
+        Understanding file modes helps you choose the correct
+        operation for your program.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🔒 9. Why Use with open()?</h2>
+
+    <p>
+        Using <code>with open()</code> is recommended because Python
+        automatically closes the file when the block finishes.
+    </p>
+
+    <pre><code>with open("example.txt", "r") as file:
+content = file.read()
+
+print(content)</code></pre>
+
+    <p>
+        This makes your code cleaner and reduces the chance of
+        leaving files open unnecessarily.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>⚠️ 10. Handling File Errors</h2>
+
+    <p>
+        A program may try to open a file that doesn't exist.
+        You can handle this using <code>try</code> and
+        <code>except</code>.
+    </p>
+
+    <pre><code>try:
+
+with open("missing.txt", "r") as file:
+    content = file.read()
+
+print(content)
+
+except FileNotFoundError:
+
+print("The file was not found.")</code></pre>
+
+    <p>
+        This prevents the program from stopping unexpectedly when
+        the file cannot be found.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>📝 11. Writing Multiple Lines</h2>
+
+    <p>
+        You can write multiple lines to a file.
+    </p>
+
+    <pre><code>with open("students.txt", "w") as file:
+
+file.write("Alex\n")
+file.write("David\n")
+file.write("Sarah\n")</code></pre>
+
+    <p>
+        The <code>\n</code> creates a new line.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🔄 12. Combining File Handling With Lists</h2>
+
+    <p>
+        Files can work together with lists and loops.
+    </p>
+
+    <pre><code>students = ["Alex", "David", "Sarah"]
+
+with open("students.txt", "w") as file:
+
+for student in students:
+    file.write(student + "\n")</code></pre>
+
+    <p>
+        This program saves every name from the list into a file.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>💻 13. Mini Project: Student Notes</h2>
+
+    <p>
+        Let's create a simple program that allows a user to enter
+        a note and save it to a file.
+    </p>
+
+    <pre><code>note = input("Enter your note: ")
+
+with open("notes.txt", "a") as file:
+file.write(note + "\n")
+
+print("Your note has been saved.")</code></pre>
+
+    <p>
+        Every time the program runs, the new note is added to the
+        file.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🛠️ 14. Mini Project Challenge</h2>
+
+    <p>
+        Build a simple student record program.
+    </p>
+
+    <p>Your program should:</p>
+
+    <ul>
+        <li>Ask for a student's name.</li>
+        <li>Ask for their course.</li>
+        <li>Ask for their score.</li>
+        <li>Save the information to a text file.</li>
+        <li>Allow another student to be added later.</li>
+    </ul>
+
+    <p>
+        Try to combine <code>input()</code>,
+        <code>with open()</code> and append mode.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🧪 15. Practical Exercises</h2>
+
+    <h3>Exercise 1</h3>
+    <p>
+        Create a file called <code>hello.txt</code> and write
+        "Hello Python!" into it.
+    </p>
+
+    <h3>Exercise 2</h3>
+    <p>
+        Create a program that reads and displays the contents of
+        a text file.
+    </p>
+
+    <h3>Exercise 3</h3>
+    <p>
+        Create a program that asks the user for their name and
+        appends it to a file.
+    </p>
+
+    <h3>Exercise 4</h3>
+    <p>
+        Use <code>try</code> and <code>except</code> to handle a
+        missing file.
+    </p>
+
+    <h3>Challenge ⭐</h3>
+    <p>
+        Create a simple notes application that allows the user
+        to continuously add notes to a text file.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🧠 Module 9 Quiz</h2>
+
+    <p>
+        Answer all 10 questions. You need at least
+        <strong>8/10</strong> to pass.
+    </p>
+
+    <form id="moduleQuiz">
+
+        <p><strong>1. Which function is used to open a file?</strong></p>
+        <label><input type="radio" name="q1" value="a"> open()</label><br>
+        <label><input type="radio" name="q1" value="b"> file()</label><br>
+        <label><input type="radio" name="q1" value="c"> open_file()</label>
+
+        <p><strong>2. Which mode is used to read a file?</strong></p>
+        <label><input type="radio" name="q2" value="a"> w</label><br>
+        <label><input type="radio" name="q2" value="b"> r</label><br>
+        <label><input type="radio" name="q2" value="c"> a</label>
+
+        <p><strong>3. Which mode is used to append information?</strong></p>
+        <label><input type="radio" name="q3" value="a"> r</label><br>
+        <label><input type="radio" name="q3" value="b"> w</label><br>
+        <label><input type="radio" name="q3" value="c"> a</label>
+
+        <p><strong>4. Which method reads the entire file?</strong></p>
+        <label><input type="radio" name="q4" value="a"> read()</label><br>
+        <label><input type="radio" name="q4" value="b"> get()</label><br>
+        <label><input type="radio" name="q4" value="c"> read_all()</label>
+
+        <p><strong>5. What does the "w" mode do?</strong></p>
+        <label><input type="radio" name="q5" value="a"> Reads only</label><br>
+        <label><input type="radio" name="q5" value="b"> Writes to a file</label><br>
+        <label><input type="radio" name="q5" value="c"> Deletes Python</label>
+
+        <p><strong>6. What is one advantage of using with open()?</strong></p>
+        <label><input type="radio" name="q6" value="a"> It automatically handles closing the file</label><br>
+        <label><input type="radio" name="q6" value="b"> It makes files larger</label><br>
+        <label><input type="radio" name="q6" value="c"> It prevents reading</label>
+
+        <p><strong>7. Which method reads one line?</strong></p>
+        <label><input type="radio" name="q7" value="a"> readline()</label><br>
+        <label><input type="radio" name="q7" value="b"> line()</label><br>
+        <label><input type="radio" name="q7" value="c"> read_one()</label>
+
+        <p><strong>8. Which error can occur when trying to read a file that doesn't exist?</strong></p>
+        <label><input type="radio" name="q8" value="a"> FileNotFoundError</label><br>
+        <label><input type="radio" name="q8" value="b"> PythonFileError</label><br>
+        <label><input type="radio" name="q8" value="c"> MissingFileError</label>
+
+        <p><strong>9. What does \n represent in a string?</strong></p>
+        <label><input type="radio" name="q9" value="a"> A space</label><br>
+        <label><input type="radio" name="q9" value="b"> A new line</label><br>
+        <label><input type="radio" name="q9" value="c"> A tab</label>
+
+        <p><strong>10. Which block is commonly used to handle errors?</strong></p>
+        <label><input type="radio" name="q10" value="a"> if/else</label><br>
+        <label><input type="radio" name="q10" value="b"> try/except</label><br>
+        <label><input type="radio" name="q10" value="c"> for/while</label>
+
+        <br>
+
+        <button type="submit" class="button">
+            Check Quiz
+        </button>
+
+    </form>
+
+    <p id="quizResult"></p>
+</div>
+
+<div id="completionBox"
+     class="contact-box"
+     style="display:none;">
+
+    <h2>🎉 Module 9 Completed!</h2>
+
+    <p>
+        Excellent work! You have completed File Handling.
+    </p>
+
+    <a href="/python/module10" class="button">
+        Continue to Module 10 →
+    </a>
+
+</div>
+
+</section><script>
+
+document.getElementById("moduleQuiz").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const answers = {
+            q1: "a",
+            q2: "b",
+            q3: "c",
+            q4: "a",
+            q5: "b",
+            q6: "a",
+            q7: "a",
+            q8: "a",
+            q9: "b",
+            q10: "b"
+        };
+
+        let score = 0;
+
+        for (const question in answers) {
+
+            const selected = document.querySelector(
+                'input[name="' + question + '"]:checked'
+            );
+
+            if (selected && selected.value === answers[question]) {
+                score++;
+            }
+        }
+
+        const result = document.getElementById("quizResult");
+
+        if (score >= 8) {
+
+            result.textContent =
+                "Excellent! You scored " + score + "/10. Module completed!";
+
+            let completedModules =
+                JSON.parse(localStorage.getItem("pythonModules")) || [];
+
+            if (!completedModules.includes(9)) {
+
+                completedModules.push(9);
+
+                localStorage.setItem(
+                    "pythonModules",
+                    JSON.stringify(completedModules)
+                );
+            }
+
+            document.getElementById("completionBox").style.display = "block";
+
+        } else {
+
+            result.textContent =
+                "You scored " + score +
+                "/10. You need at least 8/10. Review the lessons and try again.";
+
+        }
+
+    }
+);
+
+</script>{% endblock %}
