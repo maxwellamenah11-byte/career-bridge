@@ -1,1 +1,472 @@
+{% extends "base.html" %}
 
+{% block title %}Module 6 - Functions{% endblock %}
+
+{% block content %}
+
+<section class="page"><div class="page-header">
+    <h1>⚙️ Module 6: Functions</h1>
+    <p>
+        Learn how to create reusable blocks of Python code using
+        functions.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🎯 Learning Objectives</h2>
+    <ul>
+        <li>Understand what functions are.</li>
+        <li>Create functions using <code>def</code>.</li>
+        <li>Call functions.</li>
+        <li>Use parameters and arguments.</li>
+        <li>Use default parameters.</li>
+        <li>Return values from functions.</li>
+        <li>Understand local and global variables.</li>
+        <li>Build practical programs using functions.</li>
+    </ul>
+</div>
+
+<div class="contact-box">
+    <h2>📖 1. What Is a Function?</h2>
+
+    <p>
+        A function is a reusable block of code designed to perform
+        a particular task.
+    </p>
+
+    <p>
+        Functions help programmers avoid repeating the same code
+        many times.
+    </p>
+
+    <pre><code>def greet():
+print("Hello!")
+
+greet()</code></pre>
+
+    <p>
+        The keyword <code>def</code> is used to create a function.
+        The function is then called using its name followed by
+        parentheses.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🔨 2. Creating a Function</h2>
+
+    <p>
+        A basic Python function follows this structure:
+    </p>
+
+    <pre><code>def function_name():
+# code goes here</code></pre>
+
+    <p>For example:</p>
+
+    <pre><code>def welcome():
+print("Welcome to Career Bridge!")
+
+welcome()</code></pre>
+
+    <p>
+        The code inside the function only runs when the function
+        is called.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>📞 3. Calling a Function</h2>
+
+    <p>
+        Creating a function does not automatically execute it.
+        You need to call it.
+    </p>
+
+    <pre><code>def say_hello():
+print("Hello!")
+
+say_hello()</code></pre>
+
+    <p>
+        You can call the same function multiple times.
+    </p>
+
+    <pre><code>def say_hello():
+print("Hello!")
+
+say_hello()
+say_hello()
+say_hello()</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>📦 4. Parameters and Arguments</h2>
+
+    <p>
+        A parameter allows a function to receive information.
+    </p>
+
+    <pre><code>def greet(name):
+print("Hello", name)
+
+greet("Alex")</code></pre>
+
+    <p>
+        Here, <code>name</code> is the parameter and
+        <code>"Alex"</code> is the argument.
+    </p>
+
+    <h3>Another example</h3>
+
+    <pre><code>def square(number):
+print(number * number)
+
+square(5)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>👥 5. Multiple Parameters</h2>
+
+    <p>
+        A function can accept more than one parameter.
+    </p>
+
+    <pre><code>def add_numbers(a, b):
+print(a + b)
+
+add_numbers(10, 5)</code></pre>
+
+    <p>
+        The first argument is assigned to <code>a</code> and the
+        second argument is assigned to <code>b</code>.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>⚙️ 6. Default Parameters</h2>
+
+    <p>
+        You can give a parameter a default value.
+    </p>
+
+    <pre><code>def greet(name="Student"):
+print("Hello", name)
+
+greet()
+greet("David")</code></pre>
+
+    <p>
+        If no argument is provided, Python uses the default value.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>↩️ 7. Returning Values</h2>
+
+    <p>
+        A function can send a result back to the part of the program
+        that called it using <code>return</code>.
+    </p>
+
+    <pre><code>def add(a, b):
+return a + b
+
+result = add(10, 5)
+
+print(result)</code></pre>
+
+    <p>
+        The returned value can be stored in a variable and used
+        elsewhere in the program.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>➗ 8. Practical Calculator Function</h2>
+
+    <p>
+        Functions can be used to organize a calculator program.
+    </p>
+
+    <pre><code>def add(a, b):
+return a + b
+
+def subtract(a, b):
+return a - b
+
+def multiply(a, b):
+return a * b
+
+def divide(a, b):
+return a / b
+
+print(add(10, 5))
+print(subtract(10, 5))
+print(multiply(10, 5))
+print(divide(10, 5))</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🌍 9. Local and Global Variables</h2>
+
+    <p>
+        A variable created inside a function is normally local to
+        that function.
+    </p>
+
+    <pre><code>def show_name():
+name = "Alex"
+print(name)
+
+show_name()</code></pre>
+
+    <p>
+        A variable created outside a function can be accessed from
+        different parts of the program.
+    </p>
+
+    <pre><code>school = "Career Bridge"
+
+def show_school():
+print(school)
+
+show_school()</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>⌨️ 10. Functions With User Input</h2>
+
+    <p>
+        Functions can work together with user input.
+    </p>
+
+    <pre><code>def greet_user(name):
+print("Welcome", name)
+
+name = input("Enter your name: ")
+
+greet_user(name)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>💻 11. Mini Project: Student Average</h2>
+
+    <p>
+        Let's create a function that calculates the average of
+        three scores.
+    </p>
+
+    <pre><code>def calculate_average(math, english, physics):
+total = math + english + physics
+average = total / 3
+return average
+
+math = float(input("Enter Mathematics score: "))
+english = float(input("Enter English score: "))
+physics = float(input("Enter Physics score: "))
+
+average = calculate_average(math, english, physics)
+
+print("Average:", average)</code></pre>
+
+    <p>
+        This program separates the calculation into its own
+        reusable function.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🧪 12. Practical Exercises</h2>
+
+    <h3>Exercise 1</h3>
+    <p>
+        Create a function called <code>greet()</code> that prints
+        a welcome message.
+    </p>
+
+    <h3>Exercise 2</h3>
+    <p>
+        Create a function that accepts two numbers and returns
+        their sum.
+    </p>
+
+    <h3>Exercise 3</h3>
+    <p>
+        Create a function that accepts a person's age and tells
+        whether they are an adult.
+    </p>
+
+    <h3>Exercise 4</h3>
+    <p>
+        Create a function that accepts a number and returns its
+        square.
+    </p>
+
+    <h3>Challenge ⭐</h3>
+    <p>
+        Create a simple calculator using separate functions for
+        addition, subtraction, multiplication and division.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🧠 Module 6 Quiz</h2>
+
+    <p>
+        Answer all 10 questions. You need at least
+        <strong>8/10</strong> to pass.
+    </p>
+
+    <form id="moduleQuiz">
+
+        <p><strong>1. Which keyword is used to create a function?</strong></p>
+        <label><input type="radio" name="q1" value="a"> def</label><br>
+        <label><input type="radio" name="q1" value="b"> function</label><br>
+        <label><input type="radio" name="q1" value="c"> create</label>
+
+        <p><strong>2. How do you call a function called greet?</strong></p>
+        <label><input type="radio" name="q2" value="a"> call greet</label><br>
+        <label><input type="radio" name="q2" value="b"> greet()</label><br>
+        <label><input type="radio" name="q2" value="c"> run greet</label>
+
+        <p><strong>3. What is a parameter?</strong></p>
+        <label><input type="radio" name="q3" value="a"> Information a function can receive</label><br>
+        <label><input type="radio" name="q3" value="b"> A Python error</label><br>
+        <label><input type="radio" name="q3" value="c"> A loop</label>
+
+        <p><strong>4. Which keyword sends a value back from a function?</strong></p>
+        <label><input type="radio" name="q4" value="a"> send</label><br>
+        <label><input type="radio" name="q4" value="b"> return</label><br>
+        <label><input type="radio" name="q4" value="c"> output</label>
+
+        <p><strong>5. Can a function have more than one parameter?</strong></p>
+        <label><input type="radio" name="q5" value="a"> Yes</label><br>
+        <label><input type="radio" name="q5" value="b"> No</label><br>
+        <label><input type="radio" name="q5" value="c"> Only two</label>
+
+        <p><strong>6. What is a default parameter?</strong></p>
+        <label><input type="radio" name="q6" value="a"> A parameter with a default value</label><br>
+        <label><input type="radio" name="q6" value="b"> A parameter that cannot change</label><br>
+        <label><input type="radio" name="q6" value="c"> A parameter that causes an error</label>
+
+        <p><strong>7. What happens when a function uses return?</strong></p>
+        <label><input type="radio" name="q7" value="a"> It sends a value back</label><br>
+        <label><input type="radio" name="q7" value="b"> It creates a loop</label><br>
+        <label><input type="radio" name="q7" value="c"> It deletes the function</label>
+
+        <p><strong>8. Which variable is normally accessible only inside its function?</strong></p>
+        <label><input type="radio" name="q8" value="a"> Local variable</label><br>
+        <label><input type="radio" name="q8" value="b"> Global variable</label><br>
+        <label><input type="radio" name="q8" value="c"> Public variable</label>
+
+        <p><strong>9. What does this return?</strong></p>
+
+        <pre><code>def add(a, b):
+return a + b
+
+add(2, 3)</code></pre>
+
+        <label><input type="radio" name="q9" value="a"> 2</label><br>
+        <label><input type="radio" name="q9" value="b"> 3</label><br>
+        <label><input type="radio" name="q9" value="c"> 5</label>
+
+        <p><strong>10. What is one major advantage of functions?</strong></p>
+        <label><input type="radio" name="q10" value="a"> They make code reusable</label><br>
+        <label><input type="radio" name="q10" value="b"> They remove Python</label><br>
+        <label><input type="radio" name="q10" value="c"> They prevent variables</label>
+
+        <br>
+
+        <button type="submit" class="button">
+            Check Quiz
+        </button>
+
+    </form>
+
+    <p id="quizResult"></p>
+</div>
+
+<div id="completionBox"
+     class="contact-box"
+     style="display:none;">
+
+    <h2>🎉 Module 6 Completed!</h2>
+
+    <p>
+        Excellent work! You have completed the Functions module.
+    </p>
+
+    <a href="/python/module7" class="button">
+        Continue to Module 7 →
+    </a>
+
+</div>
+
+</section><script>
+
+document.getElementById("moduleQuiz").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const answers = {
+            q1: "a",
+            q2: "b",
+            q3: "a",
+            q4: "b",
+            q5: "a",
+            q6: "a",
+            q7: "a",
+            q8: "a",
+            q9: "c",
+            q10: "a"
+        };
+
+        let score = 0;
+
+        for (const question in answers) {
+
+            const selected = document.querySelector(
+                'input[name="' + question + '"]:checked'
+            );
+
+            if (selected && selected.value === answers[question]) {
+                score++;
+            }
+        }
+
+        const result = document.getElementById("quizResult");
+
+        if (score >= 8) {
+
+            result.textContent =
+                "Excellent! You scored " + score + "/10. Module completed!";
+
+            let completedModules =
+                JSON.parse(localStorage.getItem("pythonModules")) || [];
+
+            if (!completedModules.includes(6)) {
+
+                completedModules.push(6);
+
+                localStorage.setItem(
+                    "pythonModules",
+                    JSON.stringify(completedModules)
+                );
+            }
+
+            document.getElementById("completionBox").style.display = "block";
+
+        } else {
+
+            result.textContent =
+                "You scored " + score +
+                "/10. You need at least 8/10. Review the lessons and try again.";
+
+        }
+
+    }
+);
+
+</script>{% endblock %}
