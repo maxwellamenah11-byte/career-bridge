@@ -1,1 +1,97 @@
+{% extends "base.html" %}
 
+{% block title %}Module 4 - Conditional Statements{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+    <div class="page-header">
+        <h1>🧠 Module 4: Conditional Statements</h1>
+
+        <p>
+            Learn how to make Python programs make decisions using
+            <code>if</code>, <code>elif</code>, and <code>else</code>.
+        </p>
+    </div>
+
+    <div class="contact-box">
+        <h2>🎯 Learning Objectives</h2>
+
+        <ul>
+            <li>Understand conditional statements.</li>
+            <li>Use <code>if</code> statements.</li>
+            <li>Use <code>else</code> statements.</li>
+            <li>Use <code>elif</code> for multiple conditions.</li>
+            <li>Combine conditions with logical operators.</li>
+            <li>Build simple decision-making programs.</li>
+        </ul>
+    </div>
+
+    <div class="contact-box">
+        <h2>📖 1. What Are Conditional Statements?</h2>
+
+        <p>
+            A conditional statement allows a program to make a decision
+            based on whether a condition is true or false.
+        </p>
+
+        <p>For example, a program can check whether someone is old enough to vote.</p>
+
+        <pre><code>age = 20
+
+if age &gt;= 18:
+    print("You can vote.")</code></pre>
+
+        <p>
+            Because the condition is true, Python runs the code inside
+            the <code>if</code> block.
+        </p>
+    </div>
+
+    <div class="contact-box">
+        <h2>🔹 2. The if Statement</h2>
+
+        <p>
+            The <code>if</code> statement runs a block of code only when
+            its condition is true.
+        </p>
+
+        <pre><code>temperature = 30
+
+if temperature &gt; 25:
+    print("It is hot.")</code></pre>
+
+        <h3>Important: Indentation</h3>
+
+        <p>
+            Python uses indentation to determine which statements belong
+            to an <code>if</code> block.
+        </p>
+
+        <pre><code>age = 18
+
+if age &gt;= 18:
+    print("Adult")</code></pre>
+
+        <p>
+            The spaces before <code>print()</code> are important.
+        </p>
+    </div>
+
+    <div class="contact-box">
+        <h2>🔹 3. The else Statement</h2>
+
+        <p>
+            <code>else</code> runs when the <code>if</code> condition
+            is false.
+        </p>
+
+        <pre><code>age = 15
+
+if age &gt;= 18:
+    print("You are an adult.")
+else:
+    print("You are under 18.")</code></pre>
+
+        <p>
