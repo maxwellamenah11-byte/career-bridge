@@ -83,11 +83,6 @@ def python_module10():
     return render_template("python/module10.html")
 
 
-@app.route("/python/playground")
-def python_playground():
-    return render_template("python/playground.html")
-
-
 @app.route("/courses/cv-linkedin")
 def cv_linkedin():
     return render_template("cv-linkedin.html")
@@ -136,6 +131,10 @@ def career_quiz():
 @app.route("/cv-builder")
 def cv_builder():
     return render_template("cv-builder.html")
+
+@app.route("/python/playground")
+def python_playground():
+    return render_template("python/playground.html")
 
 
 if __name__ == "__main__":
