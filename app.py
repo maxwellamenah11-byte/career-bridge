@@ -78,6 +78,11 @@ def python_module9():
     return render_template("python/module9.html")
 
 
+@app.route("/python/module10")
+def python_module10():
+    return render_template("python/module10.html")
+
+
 @app.route("/courses/cv-linkedin")
 def cv_linkedin():
     return render_template("cv-linkedin.html")
