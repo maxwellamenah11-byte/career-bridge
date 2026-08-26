@@ -1,1 +1,491 @@
+{% extends "base.html" %}
 
+{% block title %}Module 7 - Lists & Tuples{% endblock %}
+
+{% block content %}
+
+<section class="page"><div class="page-header">
+    <h1>📋 Module 7: Lists & Tuples</h1>
+    <p>
+        Learn how Python stores multiple pieces of data using lists
+        and tuples.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🎯 Learning Objectives</h2>
+    <ul>
+        <li>Understand what lists are.</li>
+        <li>Create and access list items.</li>
+        <li>Change, add and remove list items.</li>
+        <li>Use list methods.</li>
+        <li>Loop through lists.</li>
+        <li>Understand tuples.</li>
+        <li>Know the difference between lists and tuples.</li>
+        <li>Build a practical program using lists.</li>
+    </ul>
+</div>
+
+<div class="contact-box">
+    <h2>📖 1. What Is a List?</h2>
+
+    <p>
+        A list is a collection that allows you to store multiple
+        values in a single variable.
+    </p>
+
+    <pre><code>fruits = ["apple", "banana", "orange"]
+
+print(fruits)</code></pre>
+
+    <p>
+        Lists are written using square brackets
+        <code>[ ]</code>.
+    </p>
+
+    <p>
+        A list can contain strings, numbers, or even different
+        types of data.
+    </p>
+
+    <pre><code>student = ["Alex", 16, 85.5, True]
+
+print(student)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🔢 2. Accessing List Items</h2>
+
+    <p>
+        Python uses indexes to access items in a list.
+        Indexing starts from <strong>0</strong>.
+    </p>
+
+    <pre><code>fruits = ["apple", "banana", "orange"]
+
+print(fruits[0])
+print(fruits[1])
+print(fruits[2])</code></pre>
+
+    <p>
+        The first item is at index <code>0</code>, the second is at
+        index <code>1</code>, and so on.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🔙 3. Negative Indexing</h2>
+
+    <p>
+        Python also allows negative indexes.
+    </p>
+
+    <pre><code>fruits = ["apple", "banana", "orange"]
+
+print(fruits[-1])
+print(fruits[-2])</code></pre>
+
+    <p>
+        <code>-1</code> refers to the last item,
+        while <code>-2</code> refers to the second-to-last item.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>✏️ 4. Changing List Items</h2>
+
+    <p>
+        Lists are changeable. You can replace an item using its
+        index.
+    </p>
+
+    <pre><code>fruits = ["apple", "banana", "orange"]
+
+fruits[1] = "mango"
+
+print(fruits)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>➕ 5. Adding Items</h2>
+
+    <h3>Using append()</h3>
+
+    <p>
+        <code>append()</code> adds an item to the end of a list.
+    </p>
+
+    <pre><code>fruits = ["apple", "banana"]
+
+fruits.append("orange")
+
+print(fruits)</code></pre>
+
+    <h3>Using insert()</h3>
+
+    <p>
+        <code>insert()</code> adds an item at a specific position.
+    </p>
+
+    <pre><code>fruits = ["apple", "orange"]
+
+fruits.insert(1, "banana")
+
+print(fruits)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>➖ 6. Removing Items</h2>
+
+    <h3>remove()</h3>
+
+    <pre><code>fruits = ["apple", "banana", "orange"]
+
+fruits.remove("banana")
+
+print(fruits)</code></pre>
+
+    <h3>pop()</h3>
+
+    <p>
+        <code>pop()</code> removes an item using its index.
+    </p>
+
+    <pre><code>fruits = ["apple", "banana", "orange"]
+
+fruits.pop(1)
+
+print(fruits)</code></pre>
+
+    <p>
+        Calling <code>pop()</code> without an index removes the
+        last item.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>📏 7. Finding the Length of a List</h2>
+
+    <p>
+        The <code>len()</code> function tells you how many items
+        are inside a list.
+    </p>
+
+    <pre><code>fruits = ["apple", "banana", "orange"]
+
+print(len(fruits))</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🔍 8. Checking if an Item Exists</h2>
+
+    <p>
+        You can use <code>in</code> to check whether an item is
+        inside a list.
+    </p>
+
+    <pre><code>fruits = ["apple", "banana", "orange"]
+
+if "banana" in fruits:
+print("Banana is available.")</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🔄 9. Looping Through a List</h2>
+
+    <p>
+        A <code>for</code> loop can be used to go through every
+        item in a list.
+    </p>
+
+    <pre><code>fruits = ["apple", "banana", "orange"]
+
+for fruit in fruits:
+print(fruit)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🔢 10. Sorting Lists</h2>
+
+    <p>
+        The <code>sort()</code> method can arrange items in order.
+    </p>
+
+    <pre><code>numbers = [5, 2, 8, 1, 3]
+
+numbers.sort()
+
+print(numbers)</code></pre>
+
+    <p>
+        You can also sort numbers in descending order.
+    </p>
+
+    <pre><code>numbers = [5, 2, 8, 1, 3]
+
+numbers.sort(reverse=True)
+
+print(numbers)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>📦 11. Tuples</h2>
+
+    <p>
+        A tuple is another way to store multiple values.
+        Tuples use parentheses <code>( )</code>.
+    </p>
+
+    <pre><code>colors = ("red", "green", "blue")
+
+print(colors)</code></pre>
+
+    <p>
+        Unlike lists, tuples cannot normally be changed after they
+        are created.
+    </p>
+
+    <pre><code>coordinates = (10, 20)
+
+print(coordinates[0])
+print(coordinates[1])</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>⚖️ 12. Lists vs Tuples</h2>
+
+    <ul>
+        <li>
+            <strong>List:</strong> uses <code>[ ]</code> and can be
+            changed.
+        </li>
+        <li>
+            <strong>Tuple:</strong> uses <code>( )</code> and cannot
+            normally be changed.
+        </li>
+    </ul>
+
+    <pre><code>my_list = ["Python", "Java", "C++"]
+
+my_tuple = ("Python", "Java", "C++")</code></pre>
+
+    <p>
+        Use a list when your collection needs to change.
+        Use a tuple when the values should remain fixed.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>💻 13. Mini Project: Student Score Manager</h2>
+
+    <p>
+        Let's create a simple program that stores student scores
+        and calculates the average.
+    </p>
+
+    <pre><code>scores = [80, 75, 90, 85, 70]
+
+total = 0
+
+for score in scores:
+total += score
+
+average = total / len(scores)
+
+print("Scores:", scores)
+print("Average:", average)</code></pre>
+
+    <p>
+        This demonstrates how lists, loops, variables and
+        <code>len()</code> can work together.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🧪 14. Practical Exercises</h2>
+
+    <h3>Exercise 1</h3>
+    <p>
+        Create a list containing five of your favourite foods and
+        print the list.
+    </p>
+
+    <h3>Exercise 2</h3>
+    <p>
+        Create a list of five numbers and print the largest number.
+    </p>
+
+    <h3>Exercise 3</h3>
+    <p>
+        Create a list of three names. Add another name using
+        <code>append()</code>.
+    </p>
+
+    <h3>Exercise 4</h3>
+    <p>
+        Create a list of numbers and use <code>sort()</code> to
+        arrange them from smallest to largest.
+    </p>
+
+    <h3>Challenge ⭐</h3>
+    <p>
+        Create a program that stores five student scores in a list
+        and calculates the highest, lowest and average score.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🧠 Module 7 Quiz</h2>
+
+    <p>
+        Answer all 10 questions. You need at least
+        <strong>8/10</strong> to pass.
+    </p>
+
+    <form id="moduleQuiz">
+
+        <p><strong>1. Which brackets are used to create a list?</strong></p>
+        <label><input type="radio" name="q1" value="a"> [ ]</label><br>
+        <label><input type="radio" name="q1" value="b"> ( )</label><br>
+        <label><input type="radio" name="q1" value="c"> { }</label>
+
+        <p><strong>2. What index does the first list item have?</strong></p>
+        <label><input type="radio" name="q2" value="a"> 1</label><br>
+        <label><input type="radio" name="q2" value="b"> 0</label><br>
+        <label><input type="radio" name="q2" value="c"> -1</label>
+
+        <p><strong>3. Which method adds an item to the end of a list?</strong></p>
+        <label><input type="radio" name="q3" value="a"> add()</label><br>
+        <label><input type="radio" name="q3" value="b"> append()</label><br>
+        <label><input type="radio" name="q3" value="c"> insertEnd()</label>
+
+        <p><strong>4. Which function tells you the number of items in a list?</strong></p>
+        <label><input type="radio" name="q4" value="a"> count()</label><br>
+        <label><input type="radio" name="q4" value="b"> size()</label><br>
+        <label><input type="radio" name="q4" value="c"> len()</label>
+
+        <p><strong>5. Which method removes a specific item by value?</strong></p>
+        <label><input type="radio" name="q5" value="a"> remove()</label><br>
+        <label><input type="radio" name="q5" value="b"> delete()</label><br>
+        <label><input type="radio" name="q5" value="c"> erase()</label>
+
+        <p><strong>6. Which brackets are normally used for a tuple?</strong></p>
+        <label><input type="radio" name="q6" value="a"> [ ]</label><br>
+        <label><input type="radio" name="q6" value="b"> ( )</label><br>
+        <label><input type="radio" name="q6" value="c"> { }</label>
+
+        <p><strong>7. Which one can normally be changed after creation?</strong></p>
+        <label><input type="radio" name="q7" value="a"> List</label><br>
+        <label><input type="radio" name="q7" value="b"> Tuple</label><br>
+        <label><input type="radio" name="q7" value="c"> Neither</label>
+
+        <p><strong>8. What does <code>fruits[-1]</code> usually access?</strong></p>
+        <label><input type="radio" name="q8" value="a"> First item</label><br>
+        <label><input type="radio" name="q8" value="b"> Last item</label><br>
+        <label><input type="radio" name="q8" value="c"> Second item</label>
+
+        <p><strong>9. Which method can arrange a list in order?</strong></p>
+        <label><input type="radio" name="q9" value="a"> order()</label><br>
+        <label><input type="radio" name="q9" value="b"> arrange()</label><br>
+        <label><input type="radio" name="q9" value="c"> sort()</label>
+
+        <p><strong>10. Which keyword can be used to loop through a list?</strong></p>
+        <label><input type="radio" name="q10" value="a"> for</label><br>
+        <label><input type="radio" name="q10" value="b"> repeat</label><br>
+        <label><input type="radio" name="q10" value="c"> loop</label>
+
+        <br>
+
+        <button type="submit" class="button">
+            Check Quiz
+        </button>
+
+    </form>
+
+    <p id="quizResult"></p>
+</div>
+
+<div id="completionBox"
+     class="contact-box"
+     style="display:none;">
+
+    <h2>🎉 Module 7 Completed!</h2>
+
+    <p>
+        Excellent work! You have completed Lists & Tuples.
+    </p>
+
+    <a href="/python/module8" class="button">
+        Continue to Module 8 →
+    </a>
+
+</div>
+
+</section><script>
+
+document.getElementById("moduleQuiz").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const answers = {
+            q1: "a",
+            q2: "b",
+            q3: "b",
+            q4: "c",
+            q5: "a",
+            q6: "b",
+            q7: "a",
+            q8: "b",
+            q9: "c",
+            q10: "a"
+        };
+
+        let score = 0;
+
+        for (const question in answers) {
+
+            const selected = document.querySelector(
+                'input[name="' + question + '"]:checked'
+            );
+
+            if (selected && selected.value === answers[question]) {
+                score++;
+            }
+        }
+
+        const result = document.getElementById("quizResult");
+
+        if (score >= 8) {
+
+            result.textContent =
+                "Excellent! You scored " + score + "/10. Module completed!";
+
+            let completedModules =
+                JSON.parse(localStorage.getItem("pythonModules")) || [];
+
+            if (!completedModules.includes(7)) {
+
+                completedModules.push(7);
+
+                localStorage.setItem(
+                    "pythonModules",
+                    JSON.stringify(completedModules)
+                );
+            }
+
+            document.getElementById("completionBox").style.display = "block";
+
+        } else {
+
+            result.textContent =
+                "You scored " + score +
+                "/10. You need at least 8/10. Review the lessons and try again.";
+
+        }
+
+    }
+);
+
+</script>{% endblock %}
