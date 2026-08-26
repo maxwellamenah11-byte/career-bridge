@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Module 3 — Operators{% endblock %}
+{% block title %}Module 3 - Operators{% endblock %}
 
 {% block content %}
 
@@ -8,117 +8,386 @@
 
     <div class="page-header">
         <h1>➕ Module 3: Operators</h1>
-
         <p>
             Learn how Python uses operators to perform calculations,
-            compare values, assign information and build logical
-            expressions.
+            compare values, assign values, and create logical expressions.
         </p>
     </div>
 
-
-    <!-- OBJECTIVES -->
-
     <div class="contact-box">
-
-        <h2>🎯 What You Will Learn</h2>
-
+        <h2>🎯 Learning Objectives</h2>
         <ul>
             <li>Understand arithmetic operators.</li>
             <li>Use assignment operators.</li>
-            <li>Compare values using comparison operators.</li>
-            <li>Understand logical operators.</li>
+            <li>Compare values.</li>
+            <li>Use logical operators.</li>
             <li>Understand operator precedence.</li>
-            <li>Use operators in practical Python programs.</li>
+            <li>Use operators in simple Python programs.</li>
         </ul>
-
     </div>
 
-
-    <!-- LESSON 1 -->
-
     <div class="contact-box">
-
-        <h2>📖 Lesson 1: What Is an Operator?</h2>
+        <h2>📖 1. What Is an Operator?</h2>
 
         <p>
             An operator is a symbol or keyword that tells Python
-            to perform an operation on one or more values.
+            to perform an operation.
         </p>
 
-        <p>For example:</p>
+        <pre><code>result = 10 + 5
+print(result)</code></pre>
 
-        <pre style="
-            background:#111827;
-            color:white;
-            padding:20px;
-            border-radius:8px;
-            overflow-x:auto;
-        "><code>result = 10 + 5
+        <p>The answer is:</p>
+
+        <pre><code>15</code></pre>
+    </div>
+
+    <div class="contact-box">
+        <h2>➗ 2. Arithmetic Operators</h2>
+
+        <p>Arithmetic operators are used for calculations.</p>
+
+        <ul>
+            <li><strong>+</strong> Addition</li>
+            <li><strong>-</strong> Subtraction</li>
+            <li><strong>*</strong> Multiplication</li>
+            <li><strong>/</strong> Division</li>
+            <li><strong>//</strong> Floor division</li>
+            <li><strong>%</strong> Remainder</li>
+            <li><strong>**</strong> Exponentiation</li>
+        </ul>
+
+        <pre><code>a = 10
+b = 3
+
+print(a + b)
+print(a - b)
+print(a * b)
+print(a / b)
+print(a // b)
+print(a % b)
+print(a ** b)</code></pre>
+
+        <h3>The remainder operator (%)</h3>
+
+        <p>
+            The percentage symbol gives the remainder after division.
+        </p>
+
+        <pre><code>print(10 % 3)</code></pre>
+
+        <p>The answer is:</p>
+
+        <pre><code>1</code></pre>
+    </div>
+
+    <div class="contact-box">
+        <h2>🟰 3. Assignment Operators</h2>
+
+        <p>
+            Assignment operators are used to store and update values.
+        </p>
+
+        <pre><code>score = 50
+
+score += 10
+
+print(score)</code></pre>
+
+        <p>The answer is:</p>
+
+        <pre><code>60</code></pre>
+
+        <p>Other examples include:</p>
+
+        <pre><code>score -= 5
+score *= 2
+score /= 2</code></pre>
+    </div>
+
+    <div class="contact-box">
+        <h2>🔍 4. Comparison Operators</h2>
+
+        <p>
+            Comparison operators compare two values and return
+            either True or False.
+        </p>
+
+        <ul>
+            <li><strong>==</strong> Equal to</li>
+            <li><strong>!=</strong> Not equal to</li>
+            <li><strong>&gt;</strong> Greater than</li>
+            <li><strong>&lt;</strong> Less than</li>
+            <li><strong>&gt;=</strong> Greater than or equal to</li>
+            <li><strong>&lt;=</strong> Less than or equal to</li>
+        </ul>
+
+        <pre><code>age = 16
+
+print(age == 16)
+print(age &gt; 18)
+print(age &lt; 18)
+print(age != 20)</code></pre>
+    </div>
+
+    <div class="contact-box">
+        <h2>🧠 5. Logical Operators</h2>
+
+        <h3>and</h3>
+
+        <p>
+            <code>and</code> requires both conditions to be True.
+        </p>
+
+        <pre><code>age = 20
+
+print(age &gt;= 18 and age &lt;= 30)</code></pre>
+
+        <h3>or</h3>
+
+        <p>
+            <code>or</code> is True when at least one condition is True.
+        </p>
+
+        <pre><code>day = "Saturday"
+
+print(day == "Saturday" or day == "Sunday")</code></pre>
+
+        <h3>not</h3>
+
+        <p>
+            <code>not</code> reverses a Boolean value.
+        </p>
+
+        <pre><code>is_raining = False
+
+print(not is_raining)</code></pre>
+    </div>
+
+    <div class="contact-box">
+        <h2>📐 6. Operator Precedence</h2>
+
+        <p>
+            Python follows an order when several operators appear
+            in the same expression.
+        </p>
+
+        <pre><code>result = 2 + 3 * 4
 
 print(result)</code></pre>
 
+        <p>The answer is <strong>14</strong> because multiplication
+        happens before addition.</p>
+
+        <p>You can use parentheses to change the order:</p>
+
+        <pre><code>result = (2 + 3) * 4
+
+print(result)</code></pre>
+
+        <p>This gives <strong>20</strong>.</p>
+    </div>
+
+    <div class="contact-box">
+        <h2>💻 7. Operators With User Input</h2>
+
         <p>
-            The <code>+</code> operator tells Python to add
-            <code>10</code> and <code>5</code>.
+            Operators become more useful when combined with input.
         </p>
+
+        <pre><code>first = float(input("Enter first number: "))
+second = float(input("Enter second number: "))
+
+total = first + second
+
+print("Result:", total)</code></pre>
+
+        <p>
+            This program asks the user for two numbers and adds them.
+        </p>
+    </div>
+
+    <div class="contact-box">
+        <h2>🧪 8. Practical Exercises</h2>
+
+        <h3>Exercise 1</h3>
+        <p>
+            Create a program that asks for two numbers and displays
+            their sum, difference, and product.
+        </p>
+
+        <h3>Exercise 2</h3>
+        <p>
+            Ask the user for two numbers and display the remainder
+            after division.
+        </p>
+
+        <h3>Exercise 3</h3>
+        <p>
+            Create an age variable and check whether the person is
+            18 or older.
+        </p>
+
+        <h3>Challenge ⭐</h3>
+        <p>
+            Ask for a student's Mathematics and English scores and
+            calculate their average.
+        </p>
+    </div>
+
+    <div class="contact-box">
+        <h2>🧠 Module 3 Quiz</h2>
+
+        <p>
+            Answer all 10 questions. You need at least 8/10 to pass.
+        </p>
+
+        <form id="moduleQuiz">
+
+            <p><strong>1. Which operator performs addition?</strong></p>
+            <label><input type="radio" name="q1" value="a"> +</label><br>
+            <label><input type="radio" name="q1" value="b"> *</label><br>
+            <label><input type="radio" name="q1" value="c"> %</label>
+
+            <p><strong>2. What does % return?</strong></p>
+            <label><input type="radio" name="q2" value="a"> The remainder</label><br>
+            <label><input type="radio" name="q2" value="b"> The quotient</label><br>
+            <label><input type="radio" name="q2" value="c"> The square</label>
+
+            <p><strong>3. Which operator means equal to?</strong></p>
+            <label><input type="radio" name="q3" value="a"> =</label><br>
+            <label><input type="radio" name="q3" value="b"> ==</label><br>
+            <label><input type="radio" name="q3" value="c"> !=</label>
+
+            <p><strong>4. Which operator means not equal?</strong></p>
+            <label><input type="radio" name="q4" value="a"> ==</label><br>
+            <label><input type="radio" name="q4" value="b"> =</label><br>
+            <label><input type="radio" name="q4" value="c"> !=</label>
+
+            <p><strong>5. Which operator requires both conditions to be True?</strong></p>
+            <label><input type="radio" name="q5" value="a"> or</label><br>
+            <label><input type="radio" name="q5" value="b"> and</label><br>
+            <label><input type="radio" name="q5" value="c"> not</label>
+
+            <p><strong>6. Which operator reverses a Boolean?</strong></p>
+            <label><input type="radio" name="q6" value="a"> not</label><br>
+            <label><input type="radio" name="q6" value="b"> and</label><br>
+            <label><input type="radio" name="q6" value="c"> or</label>
+
+            <p><strong>7. What is 2 + 3 * 4?</strong></p>
+            <label><input type="radio" name="q7" value="a"> 20</label><br>
+            <label><input type="radio" name="q7" value="b"> 14</label><br>
+            <label><input type="radio" name="q7" value="c"> 24</label>
+
+            <p><strong>8. Which operator performs exponentiation?</strong></p>
+            <label><input type="radio" name="q8" value="a"> //</label><br>
+            <label><input type="radio" name="q8" value="b"> **</label><br>
+            <label><input type="radio" name="q8" value="c"> %%</label>
+
+            <p><strong>9. What does += do?</strong></p>
+            <label><input type="radio" name="q9" value="a"> Adds and assigns</label><br>
+            <label><input type="radio" name="q9" value="b"> Compares values</label><br>
+            <label><input type="radio" name="q9" value="c"> Deletes a variable</label>
+
+            <p><strong>10. Which operator means greater than?</strong></p>
+            <label><input type="radio" name="q10" value="a"> &lt;</label><br>
+            <label><input type="radio" name="q10" value="b"> &gt;</label><br>
+            <label><input type="radio" name="q10" value="c"> ==</label>
+
+            <br>
+
+            <button type="submit" class="button">
+                Check Quiz
+            </button>
+
+        </form>
+
+        <p id="quizResult"></p>
+    </div>
+
+    <div id="completionBox"
+         class="contact-box"
+         style="display:none;">
+
+        <h2>🎉 Module 3 Completed!</h2>
+
+        <p>
+            Excellent work! You have completed the Operators module.
+        </p>
+
+        <a href="/python/module4" class="button">
+            Continue to Module 4 →
+        </a>
 
     </div>
 
+</section>
 
-    <!-- LESSON 2 -->
+<script>
 
-    <div class="contact-box">
+document.getElementById("moduleQuiz").addEventListener(
+    "submit",
+    function(event) {
 
-        <h2>➗ Lesson 2: Arithmetic Operators</h2>
+        event.preventDefault();
 
-        <p>
-            Arithmetic operators are used for mathematical
-            calculations.
-        </p>
+        const answers = {
+            q1: "a",
+            q2: "a",
+            q3: "b",
+            q4: "c",
+            q5: "b",
+            q6: "a",
+            q7: "b",
+            q8: "b",
+            q9: "a",
+            q10: "b"
+        };
 
-        <table style="width:100%; border-collapse:collapse;">
+        let score = 0;
 
-            <tr>
-                <th style="padding:10px; border:1px solid #ccc;">Operator</th>
-                <th style="padding:10px; border:1px solid #ccc;">Meaning</th>
-                <th style="padding:10px; border:1px solid #ccc;">Example</th>
-            </tr>
+        for (const question in answers) {
 
-            <tr>
-                <td style="padding:10px; border:1px solid #ccc;">+</td>
-                <td style="padding:10px; border:1px solid #ccc;">Addition</td>
-                <td style="padding:10px; border:1px solid #ccc;">10 + 5</td>
-            </tr>
+            const selected = document.querySelector(
+                'input[name="' + question + '"]:checked'
+            );
 
-            <tr>
-                <td style="padding:10px; border:1px solid #ccc;">-</td>
-                <td style="padding:10px; border:1px solid #ccc;">Subtraction</td>
-                <td style="padding:10px; border:1px solid #ccc;">10 - 5</td>
-            </tr>
+            if (selected && selected.value === answers[question]) {
+                score++;
+            }
+        }
 
-            <tr>
-                <td style="padding:10px; border:1px solid #ccc;">*</td>
-                <td style="padding:10px; border:1px solid #ccc;">Multiplication</td>
-                <td style="padding:10px; border:1px solid #ccc;">10 * 5</td>
-            </tr>
+        const result = document.getElementById("quizResult");
 
-            <tr>
-                <td style="padding:10px; border:1px solid #ccc;">/</td>
-                <td style="padding:10px; border:1px solid #ccc;">Division</td>
-                <td style="padding:10px; border:1px solid #ccc;">10 / 5</td>
-            </tr>
+        if (score >= 8) {
 
-            <tr>
-                <td style="padding:10px; border:1px solid #ccc;">//</td>
-                <td style="padding:10px; border:1px solid #ccc;">Floor division</td>
-                <td style="padding:10px; border:1px solid #ccc;">10 // 3</td>
-            </tr>
+            result.textContent =
+                "Excellent! You scored " + score + "/10. Module completed!";
 
-            <tr>
-                <td style="padding:10px; border:1px solid #ccc;">%</td>
-                <td style="padding:10px; border:1px solid #ccc;">Remainder</td>
-                <td style="padding:10px; border:1px solid #ccc;">10 % 3</td>
-            </tr>
+            let completedModules =
+                JSON.parse(localStorage.getItem("pythonModules")) || [];
 
-            <
+            if (!completedModules.includes(3)) {
+                completedModules.push(3);
+
+                localStorage.setItem(
+                    "pythonModules",
+                    JSON.stringify(completedModules)
+                );
+            }
+
+            document.getElementById("completionBox").style.display = "block";
+
+        } else {
+
+            result.textContent =
+                "You scored " + score +
+                "/10. You need at least 8/10. Review the lessons and try again.";
+
+        }
+    }
+);
+
+</script>
+
+{% endblock %}
