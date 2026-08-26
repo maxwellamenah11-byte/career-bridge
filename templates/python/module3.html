@@ -1,60 +1,124 @@
 {% extends "base.html" %}
 
-{% block title %}Module 3 - Operators{% endblock %}
+{% block title %}Module 3 — Operators{% endblock %}
 
 {% block content %}
 
-<div class="page">
+<section class="page">
 
-    <h1>Module 3: Operators</h1>
+    <div class="page-header">
+        <h1>➕ Module 3: Operators</h1>
 
-    <p>Welcome to Module 3 of the Python Programming course.</p>
+        <p>
+            Learn how Python uses operators to perform calculations,
+            compare values, assign information and build logical
+            expressions.
+        </p>
+    </div>
 
-    <h2>What You Will Learn</h2>
 
-    <ul>
-        <li>Arithmetic operators</li>
-        <li>Assignment operators</li>
-        <li>Comparison operators</li>
-        <li>Logical operators</li>
-        <li>Operator precedence</li>
-    </ul>
+    <!-- OBJECTIVES -->
 
-    <h2>Arithmetic Operators</h2>
+    <div class="contact-box">
 
-    <p>Python can perform mathematical calculations using operators.</p>
+        <h2>🎯 What You Will Learn</h2>
 
-    <pre><code>addition = 10 + 5
-subtraction = 10 - 5
-multiplication = 10 * 5
-division = 10 / 5
+        <ul>
+            <li>Understand arithmetic operators.</li>
+            <li>Use assignment operators.</li>
+            <li>Compare values using comparison operators.</li>
+            <li>Understand logical operators.</li>
+            <li>Understand operator precedence.</li>
+            <li>Use operators in practical Python programs.</li>
+        </ul>
 
-print(addition)
-print(subtraction)
-print(multiplication)
-print(division)</code></pre>
+    </div>
 
-    <h2>Comparison Operators</h2>
 
-    <pre><code>age = 16
+    <!-- LESSON 1 -->
 
-print(age == 16)
-print(age &gt; 18)
-print(age &lt; 18)</code></pre>
+    <div class="contact-box">
 
-    <h2>Logical Operators</h2>
+        <h2>📖 Lesson 1: What Is an Operator?</h2>
 
-    <pre><code>age = 20
+        <p>
+            An operator is a symbol or keyword that tells Python
+            to perform an operation on one or more values.
+        </p>
 
-print(age &gt;= 18 and age &lt;= 30)</code></pre>
+        <p>For example:</p>
 
-    <h2>Practice</h2>
+        <pre style="
+            background:#111827;
+            color:white;
+            padding:20px;
+            border-radius:8px;
+            overflow-x:auto;
+        "><code>result = 10 + 5
 
-    <p>
-        Create a Python program that asks the user for two numbers
-        and calculates their sum.
-    </p>
+print(result)</code></pre>
 
-</div>
+        <p>
+            The <code>+</code> operator tells Python to add
+            <code>10</code> and <code>5</code>.
+        </p>
 
-{% endblock %}
+    </div>
+
+
+    <!-- LESSON 2 -->
+
+    <div class="contact-box">
+
+        <h2>➗ Lesson 2: Arithmetic Operators</h2>
+
+        <p>
+            Arithmetic operators are used for mathematical
+            calculations.
+        </p>
+
+        <table style="width:100%; border-collapse:collapse;">
+
+            <tr>
+                <th style="padding:10px; border:1px solid #ccc;">Operator</th>
+                <th style="padding:10px; border:1px solid #ccc;">Meaning</th>
+                <th style="padding:10px; border:1px solid #ccc;">Example</th>
+            </tr>
+
+            <tr>
+                <td style="padding:10px; border:1px solid #ccc;">+</td>
+                <td style="padding:10px; border:1px solid #ccc;">Addition</td>
+                <td style="padding:10px; border:1px solid #ccc;">10 + 5</td>
+            </tr>
+
+            <tr>
+                <td style="padding:10px; border:1px solid #ccc;">-</td>
+                <td style="padding:10px; border:1px solid #ccc;">Subtraction</td>
+                <td style="padding:10px; border:1px solid #ccc;">10 - 5</td>
+            </tr>
+
+            <tr>
+                <td style="padding:10px; border:1px solid #ccc;">*</td>
+                <td style="padding:10px; border:1px solid #ccc;">Multiplication</td>
+                <td style="padding:10px; border:1px solid #ccc;">10 * 5</td>
+            </tr>
+
+            <tr>
+                <td style="padding:10px; border:1px solid #ccc;">/</td>
+                <td style="padding:10px; border:1px solid #ccc;">Division</td>
+                <td style="padding:10px; border:1px solid #ccc;">10 / 5</td>
+            </tr>
+
+            <tr>
+                <td style="padding:10px; border:1px solid #ccc;">//</td>
+                <td style="padding:10px; border:1px solid #ccc;">Floor division</td>
+                <td style="padding:10px; border:1px solid #ccc;">10 // 3</td>
+            </tr>
+
+            <tr>
+                <td style="padding:10px; border:1px solid #ccc;">%</td>
+                <td style="padding:10px; border:1px solid #ccc;">Remainder</td>
+                <td style="padding:10px; border:1px solid #ccc;">10 % 3</td>
+            </tr>
+
+            <
