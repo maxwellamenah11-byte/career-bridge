@@ -1,1 +1,119 @@
+{% extends "base.html" %}
 
+{% block title %}Python Practice Lab{% endblock %}
+
+{% block content %}
+
+<section class="page"><div class="page-header">
+    <h1>🐍 Python Practice Lab</h1>
+    <p>
+        Write Python code, experiment with ideas, and practise
+        what you've learned in the course.
+    </p>
+</div>
+
+<div class="contact-box">
+
+    <h2>💻 Your Code</h2>
+
+    <textarea id="codeEditor"
+              rows="18"
+              style="width:100%; box-sizing:border-box; font-family:monospace; font-size:16px; padding:15px;"
+              spellcheck="false">print("Hello, Career Bridge!")</textarea>
+
+    <br><br>
+
+    <button id="runButton" class="button">
+        ▶️ Run Code
+    </button>
+
+    <button id="clearButton" class="button">
+        🧹 Clear
+    </button>
+
+</div>
+
+<div class="contact-box">
+
+    <h2>🖥️ Output</h2>
+
+    <pre id="output"
+         style="min-height:150px; padding:15px; overflow:auto;">Your output will appear here...</pre>
+
+</div>
+
+<div class="contact-box">
+
+    <h2>💡 Practice Challenges</h2>
+
+    <h3>Challenge 1 — Greeting</h3>
+    <p>
+        Write a program that asks the user for their name and
+        prints a greeting.
+    </p>
+
+    <h3>Challenge 2 — Calculator</h3>
+    <p>
+        Ask the user for two numbers and calculate their sum.
+    </p>
+
+    <h3>Challenge 3 — Even or Odd</h3>
+    <p>
+        Ask the user for a number and determine whether it is
+        even or odd.
+    </p>
+
+    <h3>Challenge 4 — Student Grade</h3>
+    <p>
+        Ask for a student's score and display their grade.
+    </p>
+
+    <h3>Challenge 5 — Mini Project ⭐</h3>
+    <p>
+        Create a simple student management program using the
+        Python concepts you learned throughout the course.
+    </p>
+
+</div>
+
+<div class="contact-box">
+
+    <h2>📚 What You Can Practise</h2>
+
+    <ul>
+        <li>Variables</li>
+        <li>Input and output</li>
+        <li>Conditions</li>
+        <li>Loops</li>
+        <li>Lists</li>
+        <li>Dictionaries</li>
+        <li>Functions</li>
+        <li>File handling</li>
+        <li>Modules</li>
+        <li>Mini projects</li>
+    </ul>
+
+</div>
+
+</section><script>
+
+const editor = document.getElementById("codeEditor");
+const output = document.getElementById("output");
+const runButton = document.getElementById("runButton");
+const clearButton = document.getElementById("clearButton");
+
+runButton.addEventListener("click", function() {
+
+    output.textContent =
+        "Code execution will be connected in the next step.";
+
+});
+
+clearButton.addEventListener("click", function() {
+
+    editor.value = "";
+    output.textContent = "Your output will appear here...";
+
+});
+
+</script>{% endblock %}
