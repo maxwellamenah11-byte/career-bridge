@@ -101,4 +101,114 @@ else:
 
 </section>
 
+<div class="contact-box">
+    <h2>Module 4 Quiz</h2>
+
+    <form>
+        <p><strong>1. Which statement is used to make a decision in Python?</strong></p>
+
+        <label>
+            <input type="radio" name="q1" value="a">
+            A. if
+        </label><br>
+
+        <label>
+            <input type="radio" name="q1" value="b">
+            B. print
+        </label><br>
+
+        <label>
+            <input type="radio" name="q1" value="c">
+            C. input
+        </label><br>
+
+        <label>
+            <input type="radio" name="q1" value="d">
+            D. import
+        </label>
+
+        <br><br>
+
+        <p><strong>2. What does the else statement do?</strong></p>
+
+        <label>
+            <input type="radio" name="q2" value="a">
+            A. Runs when the if condition is false
+        </label><br>
+
+        <label>
+            <input type="radio" name="q2" value="b">
+            B. Always runs first
+        </label><br>
+
+        <label>
+            <input type="radio" name="q2" value="c">
+            C. Prints text
+        </label><br>
+
+        <label>
+            <input type="radio" name="q2" value="d">
+            D. Stops Python
+        </label>
+
+        <br><br>
+
+        <p><strong>3. What will this code print?</strong></p>
+
+        <pre><code>age = 18
+
+if age >= 18:
+    print("Adult")
+else:
+    print("Minor")</code></pre>
+
+        <label>
+            <input type="radio" name="q3" value="a">
+            A. Minor
+        </label><br>
+
+        <label>
+            <input type="radio" name="q3" value="b">
+            B. Adult
+        </label><br>
+
+        <label>
+            <input type="radio" name="q3" value="c">
+            C. 18
+        </label><br>
+
+        <label>
+            <input type="radio" name="q3" value="d">
+            D. Nothing
+        </label>
+
+        <br><br>
+
+        <button type="button" onclick="checkQuiz()">Submit Quiz</button>
+
+        <p id="quiz-result"></p>
+    </form>
+</div>
+
+<script>
+function checkQuiz() {
+    let score = 0;
+
+    if (document.querySelector('input[name="q1"]:checked')?.value === "a") {
+        score++;
+    }
+
+    if (document.querySelector('input[name="q2"]:checked')?.value === "a") {
+        score++;
+    }
+
+    if (document.querySelector('input[name="q3"]:checked')?.value === "b") {
+        score++;
+    }
+
+    document.getElementById("quiz-result").innerHTML =
+        "You scored " + score + " out of 3.";
+}
+</script>
+
 {% endblock %}
