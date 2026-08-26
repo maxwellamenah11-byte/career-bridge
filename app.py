@@ -60,7 +60,7 @@ def python_module5():
 
 @app.route("/python/module6")
 def python_module6():
-return render_template("python/module6.html")
+    return render_template("python/module6.html")
 
 
 @app.route("/courses/cv-linkedin")
