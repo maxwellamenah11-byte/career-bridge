@@ -1,1 +1,555 @@
+{% extends "base.html" %}
 
+{% block title %}Module 8 - Dictionaries & Sets{% endblock %}
+
+{% block content %}
+
+<section class="page"><div class="page-header">
+    <h1>🗂️ Module 8: Dictionaries & Sets</h1>
+    <p>
+        Learn how to organize data using Python dictionaries and sets.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🎯 Learning Objectives</h2>
+    <ul>
+        <li>Understand dictionaries and key-value pairs.</li>
+        <li>Create and access dictionary data.</li>
+        <li>Add, update and remove dictionary items.</li>
+        <li>Loop through dictionaries.</li>
+        <li>Use useful dictionary methods.</li>
+        <li>Understand sets.</li>
+        <li>Add and remove items from sets.</li>
+        <li>Understand set operations.</li>
+        <li>Build a practical program using dictionaries and sets.</li>
+    </ul>
+</div>
+
+<div class="contact-box">
+    <h2>📖 1. What Is a Dictionary?</h2>
+
+    <p>
+        A dictionary stores information as <strong>key-value pairs</strong>.
+        Instead of accessing information using numerical indexes,
+        you use a key.
+    </p>
+
+    <pre><code>student = {
+"name": "Alex",
+"age": 16,
+"course": "Python"
+
+}
+
+print(student)</code></pre>
+
+    <p>
+        In this example, <code>name</code>, <code>age</code> and
+        <code>course</code> are keys.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🔑 2. Accessing Dictionary Values</h2>
+
+    <p>
+        You can access a value using its key.
+    </p>
+
+    <pre><code>student = {
+"name": "Alex",
+"age": 16,
+"course": "Python"
+
+}
+
+print(student["name"])
+print(student["course"])</code></pre>
+
+    <p>
+        You can also use <code>get()</code>.
+    </p>
+
+    <pre><code>print(student.get("age"))</code></pre>
+
+    <p>
+        Using <code>get()</code> can be useful when a key might not
+        exist.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>➕ 3. Adding Dictionary Items</h2>
+
+    <p>
+        You can add a new key-value pair by assigning a value to a
+        new key.
+    </p>
+
+    <pre><code>student = {
+"name": "Alex",
+"age": 16
+
+}
+
+student["course"] = "Python"
+
+print(student)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>✏️ 4. Updating Dictionary Items</h2>
+
+    <p>
+        Assigning a new value to an existing key changes that value.
+    </p>
+
+    <pre><code>student = {
+"name": "Alex",
+"age": 16
+
+}
+
+student["age"] = 17
+
+print(student)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🗑️ 5. Removing Dictionary Items</h2>
+
+    <h3>Using pop()</h3>
+
+    <pre><code>student = {
+"name": "Alex",
+"age": 16,
+"course": "Python"
+
+}
+
+student.pop("age")
+
+print(student)</code></pre>
+
+    <h3>Using del</h3>
+
+    <pre><code>del student["course"]
+
+print(student)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🔄 6. Looping Through a Dictionary</h2>
+
+    <p>
+        You can loop through dictionary keys.
+    </p>
+
+    <pre><code>student = {
+"name": "Alex",
+"age": 16,
+"course": "Python"
+
+}
+
+for key in student:
+print(key)</code></pre>
+
+    <p>
+        You can also access both keys and values using
+        <code>items()</code>.
+    </p>
+
+    <pre><code>for key, value in student.items():
+print(key, ":", value)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>📋 7. Useful Dictionary Methods</h2>
+
+    <p><code>keys()</code> returns the dictionary keys.</p>
+
+    <pre><code>print(student.keys())</code></pre>
+
+    <p><code>values()</code> returns the dictionary values.</p>
+
+    <pre><code>print(student.values())</code></pre>
+
+    <p><code>items()</code> returns key-value pairs.</p>
+
+    <pre><code>print(student.items())</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>📏 8. Dictionary Length</h2>
+
+    <p>
+        You can use <code>len()</code> to find the number of
+        key-value pairs.
+    </p>
+
+    <pre><code>student = {
+"name": "Alex",
+"age": 16,
+"course": "Python"
+
+}
+
+print(len(student))</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🧩 9. Nested Dictionaries</h2>
+
+    <p>
+        A dictionary can contain another dictionary.
+    </p>
+
+    <pre><code>students = {
+"student1": {
+    "name": "Alex",
+    "score": 85
+},
+
+"student2": {
+    "name": "David",
+    "score": 90
+}
+
+}
+
+print(students["student1"]["name"])
+print(students["student2"]["score"])</code></pre>
+
+    <p>
+        Nested dictionaries are useful for organizing more complex
+        information.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🔵 10. What Is a Set?</h2>
+
+    <p>
+        A set is a collection of unique items.
+        Sets are written using curly brackets.
+    </p>
+
+    <pre><code>numbers = {1, 2, 3, 4, 5}
+
+print(numbers)</code></pre>
+
+    <p>
+        Sets automatically remove duplicate values.
+    </p>
+
+    <pre><code>numbers = {1, 2, 2, 3, 3, 4}
+
+print(numbers)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>➕ 11. Adding Items to a Set</h2>
+
+    <p>
+        Use <code>add()</code> to add an item.
+    </p>
+
+    <pre><code>skills = {"Python", "HTML"}
+
+skills.add("CSS")
+
+print(skills)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🗑️ 12. Removing Set Items</h2>
+
+    <p>
+        You can use <code>remove()</code> to remove an item.
+    </p>
+
+    <pre><code>skills = {"Python", "HTML", "CSS"}
+
+skills.remove("HTML")
+
+print(skills)</code></pre>
+
+    <p>
+        You can also use <code>discard()</code>. Unlike
+        <code>remove()</code>, <code>discard()</code> does not
+        raise an error if the item isn't present.
+    </p>
+
+    <pre><code>skills.discard("JavaScript")</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🔗 13. Set Operations</h2>
+
+    <h3>Union</h3>
+
+    <p>
+        Union combines items from two sets.
+    </p>
+
+    <pre><code>a = {1, 2, 3}
+
+b = {3, 4, 5}
+
+print(a | b)</code></pre>
+
+    <h3>Intersection</h3>
+
+    <p>
+        Intersection returns items that exist in both sets.
+    </p>
+
+    <pre><code>print(a &amp; b)</code></pre>
+
+    <p>
+        In this example, the common item is <code>3</code>.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>⚖️ 14. Dictionary vs Set</h2>
+
+    <ul>
+        <li>
+            <strong>Dictionary:</strong> stores key-value pairs.
+        </li>
+        <li>
+            <strong>Set:</strong> stores unique values.
+        </li>
+        <li>
+            Dictionaries use keys to access values.
+        </li>
+        <li>
+            Sets are useful when duplicate values should be removed.
+        </li>
+    </ul>
+
+    <pre><code>student = {
+"name": "Alex",
+"age": 16
+
+}
+
+skills = {"Python", "HTML", "CSS"}</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>💻 15. Mini Project: Student Profile</h2>
+
+    <p>
+        Let's combine dictionaries, lists and loops to create a
+        simple student profile.
+    </p>
+
+    <pre><code>student = {
+"name": "Alex",
+"age": 16,
+"skills": ["Python", "HTML", "CSS"]
+
+}
+
+print("Name:", student["name"])
+print("Age:", student["age"])
+
+print("Skills:")
+
+for skill in student["skills"]:
+print("-", skill)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🧪 16. Practical Exercises</h2>
+
+    <h3>Exercise 1</h3>
+    <p>
+        Create a dictionary containing your name, age and favourite
+        subject. Print each value.
+    </p>
+
+    <h3>Exercise 2</h3>
+    <p>
+        Create a dictionary containing five students and their
+        scores. Print the dictionary.
+    </p>
+
+    <h3>Exercise 3</h3>
+    <p>
+        Create a set containing several numbers, including some
+        duplicates. Print the set and observe what happens.
+    </p>
+
+    <h3>Exercise 4</h3>
+    <p>
+        Create two sets and find their union and intersection.
+    </p>
+
+    <h3>Challenge ⭐</h3>
+    <p>
+        Create a student database using dictionaries. Each student
+        should have a name, age, course and score. Display the
+        information using a loop.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🧠 Module 8 Quiz</h2>
+
+    <p>
+        Answer all 10 questions. You need at least
+        <strong>8/10</strong> to pass.
+    </p>
+
+    <form id="moduleQuiz">
+
+        <p><strong>1. What does a dictionary store?</strong></p>
+        <label><input type="radio" name="q1" value="a"> Key-value pairs</label><br>
+        <label><input type="radio" name="q1" value="b"> Only numbers</label><br>
+        <label><input type="radio" name="q1" value="c"> Only strings</label>
+
+        <p><strong>2. How do you access a dictionary value?</strong></p>
+        <label><input type="radio" name="q2" value="a"> Using its key</label><br>
+        <label><input type="radio" name="q2" value="b"> Using only an index</label><br>
+        <label><input type="radio" name="q2" value="c"> Using a loop only</label>
+
+        <p><strong>3. Which method safely gets a dictionary value?</strong></p>
+        <label><input type="radio" name="q3" value="a"> find()</label><br>
+        <label><input type="radio" name="q3" value="b"> get()</label><br>
+        <label><input type="radio" name="q3" value="c"> value()</label>
+
+        <p><strong>4. Which method returns dictionary key-value pairs?</strong></p>
+        <label><input type="radio" name="q4" value="a"> pairs()</label><br>
+        <label><input type="radio" name="q4" value="b"> keys()</label><br>
+        <label><input type="radio" name="q4" value="c"> items()</label>
+
+        <p><strong>5. What is a set mainly useful for?</strong></p>
+        <label><input type="radio" name="q5" value="a"> Storing unique values</label><br>
+        <label><input type="radio" name="q5" value="b"> Storing only text</label><br>
+        <label><input type="radio" name="q5" value="c"> Creating functions</label>
+
+        <p><strong>6. Which method adds an item to a set?</strong></p>
+        <label><input type="radio" name="q6" value="a"> append()</label><br>
+        <label><input type="radio" name="q6" value="b"> add()</label><br>
+        <label><input type="radio" name="q6" value="c"> insert()</label>
+
+        <p><strong>7. What happens to duplicate values in a set?</strong></p>
+        <label><input type="radio" name="q7" value="a"> They are automatically kept twice</label><br>
+        <label><input type="radio" name="q7" value="b"> They are automatically removed</label><br>
+        <label><input type="radio" name="q7" value="c"> They cause Python to close</label>
+
+        <p><strong>8. What does the &amp; operator represent between sets?</strong></p>
+        <label><input type="radio" name="q8" value="a"> Union</label><br>
+        <label><input type="radio" name="q8" value="b"> Intersection</label><br>
+        <label><input type="radio" name="q8" value="c"> Addition</label>
+
+        <p><strong>9. Which structure stores key-value pairs?</strong></p>
+        <label><input type="radio" name="q9" value="a"> Set</label><br>
+        <label><input type="radio" name="q9" value="b"> Dictionary</label><br>
+        <label><input type="radio" name="q9" value="c"> Tuple</label>
+
+        <p><strong>10. Which method can remove an item from a set without raising an error if it isn't present?</strong></p>
+        <label><input type="radio" name="q10" value="a"> discard()</label><br>
+        <label><input type="radio" name="q10" value="b"> delete()</label><br>
+        <label><input type="radio" name="q10" value="c"> erase()</label>
+
+        <br>
+
+        <button type="submit" class="button">
+            Check Quiz
+        </button>
+
+    </form>
+
+    <p id="quizResult"></p>
+</div>
+
+<div id="completionBox"
+     class="contact-box"
+     style="display:none;">
+
+    <h2>🎉 Module 8 Completed!</h2>
+
+    <p>
+        Excellent work! You have completed Dictionaries &amp; Sets.
+    </p>
+
+    <a href="/python/module9" class="button">
+        Continue to Module 9 →
+    </a>
+
+</div>
+
+</section><script>
+
+document.getElementById("moduleQuiz").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const answers = {
+            q1: "a",
+            q2: "a",
+            q3: "b",
+            q4: "c",
+            q5: "a",
+            q6: "b",
+            q7: "b",
+            q8: "b",
+            q9: "b",
+            q10: "a"
+        };
+
+        let score = 0;
+
+        for (const question in answers) {
+
+            const selected = document.querySelector(
+                'input[name="' + question + '"]:checked'
+            );
+
+            if (selected && selected.value === answers[question]) {
+                score++;
+            }
+        }
+
+        const result = document.getElementById("quizResult");
+
+        if (score >= 8) {
+
+            result.textContent =
+                "Excellent! You scored " + score + "/10. Module completed!";
+
+            let completedModules =
+                JSON.parse(localStorage.getItem("pythonModules")) || [];
+
+            if (!completedModules.includes(8)) {
+
+                completedModules.push(8);
+
+                localStorage.setItem(
+                    "pythonModules",
+                    JSON.stringify(completedModules)
+                );
+            }
+
+            document.getElementById("completionBox").style.display = "block";
+
+        } else {
+
+            result.textContent =
+                "You scored " + score +
+                "/10. You need at least 8/10. Review the lessons and try again.";
+
+        }
+
+    }
+);
+
+</script>{% endblock %}
