@@ -1,1 +1,568 @@
+{% extends "base.html" %}
 
+{% block title %}Module 10 - Functions & Modules{% endblock %}
+
+{% block content %}
+
+<section class="page"><div class="page-header">
+    <h1>⚙️ Module 10: Functions & Modules</h1>
+    <p>
+        Learn how to organize Python programs using functions and modules.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🎯 Learning Objectives</h2>
+    <ul>
+        <li>Understand what functions are.</li>
+        <li>Create and call functions.</li>
+        <li>Use parameters and arguments.</li>
+        <li>Return values from functions.</li>
+        <li>Use default parameters.</li>
+        <li>Understand variable scope.</li>
+        <li>Understand Python modules.</li>
+        <li>Import and use modules.</li>
+        <li>Create your own module.</li>
+        <li>Build a practical final project.</li>
+    </ul>
+</div>
+
+<div class="contact-box">
+    <h2>📖 1. What Is a Function?</h2>
+
+    <p>
+        A function is a reusable block of code designed to perform
+        a particular task.
+    </p>
+
+    <p>
+        Functions help you avoid repeating the same code many times.
+    </p>
+
+    <pre><code>def greet():
+print("Hello, welcome to Python!")
+
+greet()</code></pre>
+
+    <p>
+        The <code>def</code> keyword is used to define a function.
+        The function is then called using its name followed by
+        parentheses.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>📥 2. Parameters and Arguments</h2>
+
+    <p>
+        A function can receive information through parameters.
+    </p>
+
+    <pre><code>def greet(name):
+print("Hello", name)
+
+greet("Alex")</code></pre>
+
+    <p>
+        Here, <code>name</code> is the parameter and
+        <code>"Alex"</code> is the argument passed to the function.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>➕ 3. Multiple Parameters</h2>
+
+    <p>
+        A function can have more than one parameter.
+    </p>
+
+    <pre><code>def add_numbers(a, b):
+print(a + b)
+
+add_numbers(10, 5)</code></pre>
+
+    <p>
+        The values are matched with the parameters in the order
+        they are supplied.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>↩️ 4. Returning Values</h2>
+
+    <p>
+        Instead of printing a result, a function can return a value
+        using <code>return</code>.
+    </p>
+
+    <pre><code>def add_numbers(a, b):
+return a + b
+
+result = add_numbers(10, 5)
+
+print(result)</code></pre>
+
+    <p>
+        The returned value can then be stored in a variable or used
+        in another calculation.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>⚙️ 5. Default Parameters</h2>
+
+    <p>
+        You can give a parameter a default value.
+    </p>
+
+    <pre><code>def greet(name="Student"):
+print("Hello", name)
+
+greet()
+greet("Alex")</code></pre>
+
+    <p>
+        If no argument is supplied, Python uses the default value.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🌍 6. Variable Scope</h2>
+
+    <p>
+        A variable created inside a function is normally local to
+        that function.
+    </p>
+
+    <pre><code>def show_message():
+message = "Hello Python"
+print(message)
+
+show_message()</code></pre>
+
+    <p>
+        The <code>message</code> variable belongs to the function's
+        local scope.
+    </p>
+
+    <p>
+        Variables created outside functions can have a wider scope.
+        Understanding scope helps prevent unexpected changes to
+        data in larger programs.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🔁 7. Functions With Loops</h2>
+
+    <p>
+        Functions can contain loops and other Python statements.
+    </p>
+
+    <pre><code>def print_numbers():
+for number in range(1, 6):
+    print(number)
+
+print_numbers()</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🧠 8. Functions With Lists</h2>
+
+    <p>
+        Functions can also receive lists as arguments.
+    </p>
+
+    <pre><code>def show_students(students):
+
+for student in students:
+    print(student)
+
+names = ["Alex", "David", "Sarah"]
+
+show_students(names)</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>📦 9. What Is a Module?</h2>
+
+    <p>
+        A module is a Python file containing code that can be
+        reused in another Python program.
+    </p>
+
+    <p>
+        Python comes with many built-in modules.
+    </p>
+
+    <p>
+        For example, the <code>math</code> module provides useful
+        mathematical functions.
+    </p>
+
+    <pre><code>import math
+
+print(math.sqrt(25))</code></pre>
+
+    <p>
+        The answer is <code>5.0</code>.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>📐 10. Using the Math Module</h2>
+
+    <pre><code>import math
+
+print(math.pi)
+print(math.sqrt(64))
+print(math.ceil(4.2))
+print(math.floor(4.8))</code></pre>
+
+    <p>
+        Modules allow programmers to use code that has already been
+        written instead of creating everything from scratch.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🎲 11. The Random Module</h2>
+
+    <p>
+        Python's <code>random</code> module can generate random
+        values.
+    </p>
+
+    <pre><code>import random
+
+number = random.randint(1, 10)
+
+print(number)</code></pre>
+
+    <p>
+        This generates a random whole number between 1 and 10.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🛠️ 12. Creating Your Own Module</h2>
+
+    <p>
+        You can create your own module by putting Python functions
+        inside another <code>.py</code> file.
+    </p>
+
+    <p>
+        For example, create a file called
+        <code>calculator.py</code>.
+    </p>
+
+    <pre><code>def add(a, b):
+return a + b
+
+def subtract(a, b):
+return a - b</code></pre>
+
+    <p>
+        Another Python file can import it.
+    </p>
+
+    <pre><code>import calculator
+
+print(calculator.add(10, 5))
+print(calculator.subtract(10, 5))</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🏗️ 13. Why Functions Matter</h2>
+
+    <ul>
+        <li>They reduce repeated code.</li>
+        <li>They make programs easier to understand.</li>
+        <li>They make debugging easier.</li>
+        <li>They allow code to be reused.</li>
+        <li>They make large programs easier to organize.</li>
+    </ul>
+
+    <p>
+        Professional Python programs often contain many functions
+        working together.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>💻 14. Final Mini Project: Student Grade Calculator</h2>
+
+    <p>
+        Let's combine functions, lists, loops and calculations.
+    </p>
+
+    <pre><code>def calculate_average(scores):
+
+total = 0
+
+for score in scores:
+    total += score
+
+return total / len(scores)
+
+def get_grade(average):
+
+if average >= 70:
+    return "A"
+
+elif average >= 60:
+    return "B"
+
+elif average >= 50:
+    return "C"
+
+elif average >= 45:
+    return "D"
+
+elif average >= 40:
+    return "E"
+
+else:
+    return "F"
+
+scores = [75, 68, 82, 70, 90]
+
+average = calculate_average(scores)
+grade = get_grade(average)
+
+print("Scores:", scores)
+print("Average:", average)
+print("Grade:", grade)</code></pre>
+
+    <p>
+        This project demonstrates how multiple functions can work
+        together to solve a real problem.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🏆 15. Final Project Challenge</h2>
+
+    <p>
+        Build your own simple <strong>Student Management System</strong>.
+    </p>
+
+    <p>Your program should:</p>
+
+    <ul>
+        <li>Store student names.</li>
+        <li>Store student scores.</li>
+        <li>Calculate averages.</li>
+        <li>Assign grades.</li>
+        <li>Display the results.</li>
+        <li>Use at least three functions.</li>
+    </ul>
+
+    <p>
+        Try to design the program yourself before looking for a
+        solution. This is your opportunity to demonstrate what
+        you've learned throughout the course.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🧪 16. Practical Exercises</h2>
+
+    <h3>Exercise 1</h3>
+    <p>
+        Create a function that takes two numbers and returns their
+        product.
+    </p>
+
+    <h3>Exercise 2</h3>
+    <p>
+        Create a function that takes a person's name and prints a
+        greeting.
+    </p>
+
+    <h3>Exercise 3</h3>
+    <p>
+        Create a function that receives a list of numbers and
+        returns the largest number.
+    </p>
+
+    <h3>Exercise 4</h3>
+    <p>
+        Import the <code>math</code> module and use it to calculate
+        the square root of a number.
+    </p>
+
+    <h3>Challenge ⭐</h3>
+    <p>
+        Create a calculator program using separate functions for
+        addition, subtraction, multiplication and division.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🧠 Module 10 Quiz</h2>
+
+    <p>
+        Answer all 10 questions. You need at least
+        <strong>8/10</strong> to pass.
+    </p>
+
+    <form id="moduleQuiz">
+
+        <p><strong>1. Which keyword is used to create a function?</strong></p>
+        <label><input type="radio" name="q1" value="a"> function</label><br>
+        <label><input type="radio" name="q1" value="b"> def</label><br>
+        <label><input type="radio" name="q1" value="c"> create</label>
+
+        <p><strong>2. What does return do?</strong></p>
+        <label><input type="radio" name="q2" value="a"> Stops Python completely</label><br>
+        <label><input type="radio" name="q2" value="b"> Sends a value back from a function</label><br>
+        <label><input type="radio" name="q2" value="c"> Creates a module</label>
+
+        <p><strong>3. What is an argument?</strong></p>
+        <label><input type="radio" name="q3" value="a"> A value passed to a function</label><br>
+        <label><input type="radio" name="q3" value="b"> A Python error</label><br>
+        <label><input type="radio" name="q3" value="c"> A file extension</label>
+
+        <p><strong>4. Which keyword is used to import a module?</strong></p>
+        <label><input type="radio" name="q4" value="a"> include</label><br>
+        <label><input type="radio" name="q4" value="b"> import</label><br>
+        <label><input type="radio" name="q4" value="c"> module</label>
+
+        <p><strong>5. Which module provides mathematical functions?</strong></p>
+        <label><input type="radio" name="q5" value="a"> math</label><br>
+        <label><input type="radio" name="q5" value="b"> numbers</label><br>
+        <label><input type="radio" name="q5" value="c"> calculation</label>
+
+        <p><strong>6. Which module can generate random values?</strong></p>
+        <label><input type="radio" name="q6" value="a"> random</label><br>
+        <label><input type="radio" name="q6" value="b"> chance</label><br>
+        <label><input type="radio" name="q6" value="c"> number</label>
+
+        <p><strong>7. What is one major benefit of functions?</strong></p>
+        <label><input type="radio" name="q7" value="a"> They make code reusable</label><br>
+        <label><input type="radio" name="q7" value="b"> They delete variables</label><br>
+        <label><input type="radio" name="q7" value="c"> They prevent loops</label>
+
+        <p><strong>8. What is a module?</strong></p>
+        <label><input type="radio" name="q8" value="a"> A Python file containing reusable code</label><br>
+        <label><input type="radio" name="q8" value="b"> A type of loop</label><br>
+        <label><input type="radio" name="q8" value="c"> A type of variable</label>
+
+        <p><strong>9. What happens when a function has a default parameter?</strong></p>
+        <label><input type="radio" name="q9" value="a"> It cannot be called</label><br>
+        <label><input type="radio" name="q9" value="b"> A default value is used when no argument is supplied</label><br>
+        <label><input type="radio" name="q9" value="c"> Python deletes the parameter</label>
+
+        <p><strong>10. Which is a good reason to use functions?</strong></p>
+        <label><input type="radio" name="q10" value="a"> To make programs harder to understand</label><br>
+        <label><input type="radio" name="q10" value="b"> To organize and reuse code</label><br>
+        <label><input type="radio" name="q10" value="c"> To remove all variables</label>
+
+        <br>
+
+        <button type="submit" class="button">
+            Check Quiz
+        </button>
+
+    </form>
+
+    <p id="quizResult"></p>
+</div>
+
+<div id="completionBox"
+     class="contact-box"
+     style="display:none;">
+
+    <h2>🎉 Python Course Completed!</h2>
+
+    <p>
+        Congratulations! You have completed all 10 modules of the
+        Python Programming course.
+    </p>
+
+    <p>
+        You can now continue practising and building your own
+        Python projects.
+    </p>
+
+    <a href="/python" class="button">
+        Back to Python Course →
+    </a>
+
+</div>
+
+</section><script>
+
+document.getElementById("moduleQuiz").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const answers = {
+            q1: "b",
+            q2: "b",
+            q3: "a",
+            q4: "b",
+            q5: "a",
+            q6: "a",
+            q7: "a",
+            q8: "a",
+            q9: "b",
+            q10: "b"
+        };
+
+        let score = 0;
+
+        for (const question in answers) {
+
+            const selected = document.querySelector(
+                'input[name="' + question + '"]:checked'
+            );
+
+            if (selected && selected.value === answers[question]) {
+                score++;
+            }
+        }
+
+        const result = document.getElementById("quizResult");
+
+        if (score >= 8) {
+
+            result.textContent =
+                "Excellent! You scored " + score + "/10. Python course completed!";
+
+            let completedModules =
+                JSON.parse(localStorage.getItem("pythonModules")) || [];
+
+            if (!completedModules.includes(10)) {
+
+                completedModules.push(10);
+
+                localStorage.setItem(
+                    "pythonModules",
+                    JSON.stringify(completedModules)
+                );
+            }
+
+            localStorage.setItem(
+                "pythonCourseCompleted",
+                "true"
+            );
+
+            document.getElementById("completionBox").style.display = "block";
+
+        } else {
+
+            result.textContent =
+                "You scored " + score +
+                "/10. You need at least 8/10. Review the lessons and try again.";
+
+        }
+
+    }
+);
+
+</script>{% endblock %}
