@@ -1,1 +1,472 @@
+{% extends "base.html" %}
 
+{% block title %}Module 5 - Loops{% endblock %}
+
+{% block content %}
+
+<section class="page"><div class="page-header">
+    <h1>🔁 Module 5: Loops</h1>
+    <p>
+        Learn how to repeat instructions efficiently using
+        Python's <code>for</code> and <code>while</code> loops.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🎯 Learning Objectives</h2>
+    <ul>
+        <li>Understand why loops are useful.</li>
+        <li>Use <code>for</code> loops.</li>
+        <li>Use the <code>range()</code> function.</li>
+        <li>Use <code>while</code> loops.</li>
+        <li>Understand infinite loops.</li>
+        <li>Use <code>break</code> and <code>continue</code>.</li>
+        <li>Build practical programs using loops.</li>
+    </ul>
+</div>
+
+<div class="contact-box">
+    <h2>📖 1. What Is a Loop?</h2>
+
+    <p>
+        A loop allows a program to repeat a section of code.
+        This is useful when you need to perform the same action
+        multiple times.
+    </p>
+
+    <p>Without a loop:</p>
+
+    <pre><code>print("Hello")
+
+print("Hello")
+print("Hello")
+print("Hello")
+print("Hello")</code></pre>
+
+    <p>
+        A loop lets us accomplish the same task more efficiently.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🔄 2. The for Loop</h2>
+
+    <p>
+        A <code>for</code> loop is commonly used when you want
+        to repeat something for each item in a sequence.
+    </p>
+
+    <pre><code>for number in [1, 2, 3, 4, 5]:
+print(number)</code></pre>
+
+    <p>The program prints:</p>
+
+    <pre><code>1
+
+2
+3
+4
+5</code></pre>
+</div>
+
+<div class="contact-box">
+    <h2>🔢 3. The range() Function</h2>
+
+    <p>
+        The <code>range()</code> function is commonly used with
+        <code>for</code> loops to generate a sequence of numbers.
+    </p>
+
+    <pre><code>for number in range(5):
+print(number)</code></pre>
+
+    <p>This prints:</p>
+
+    <pre><code>0
+
+1
+2
+3
+4</code></pre>
+
+    <p>
+        Notice that <code>range(5)</code> starts at 0 and stops
+        before 5.
+    </p>
+
+    <h3>Starting from another number</h3>
+
+    <pre><code>for number in range(1, 6):
+print(number)</code></pre>
+
+    <p>This prints numbers from 1 through 5.</p>
+</div>
+
+<div class="contact-box">
+    <h2>➕ 4. Using a Step</h2>
+
+    <p>
+        You can provide a third value to <code>range()</code>
+        to control the step.
+    </p>
+
+    <pre><code>for number in range(0, 11, 2):
+print(number)</code></pre>
+
+    <p>This prints:</p>
+
+    <pre><code>0
+
+2
+4
+6
+8
+10</code></pre>
+
+    <p>
+        The loop increases by 2 each time.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🔤 5. Looping Through Strings</h2>
+
+    <p>
+        A <code>for</code> loop can also go through the individual
+        characters in a string.
+    </p>
+
+    <pre><code>name = "Python"
+
+for letter in name:
+print(letter)</code></pre>
+
+    <p>
+        Each character is printed on a separate line.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>📋 6. Looping Through Lists</h2>
+
+    <p>
+        You can loop through a list and work with each item.
+    </p>
+
+    <pre><code>courses = ["Python", "CV", "LinkedIn"]
+
+for course in courses:
+print(course)</code></pre>
+
+    <p>
+        This is useful when a program needs to process many items.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>⏳ 7. The while Loop</h2>
+
+    <p>
+        A <code>while</code> loop repeats code while a condition
+        remains true.
+    </p>
+
+    <pre><code>number = 1
+
+while number <= 5:
+print(number)
+number += 1</code></pre>
+
+    <p>
+        The variable changes each time the loop runs, eventually
+        making the condition false.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>⚠️ 8. Infinite Loops</h2>
+
+    <p>
+        Be careful when using <code>while</code> loops. If the
+        condition never becomes false, the loop can continue
+        indefinitely.
+    </p>
+
+    <p>For example, avoid creating a loop where the condition
+    never changes:</p>
+
+    <pre><code>number = 1
+
+while number <= 5:
+print(number)</code></pre>
+
+    <p>
+        In this example, <code>number</code> never changes, so
+        the condition remains true.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🛑 9. The break Statement</h2>
+
+    <p>
+        <code>break</code> immediately stops a loop.
+    </p>
+
+    <pre><code>for number in range(1, 11):
+
+if number == 6:
+    break
+
+print(number)</code></pre>
+
+    <p>
+        The loop stops when the number reaches 6.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>⏭️ 10. The continue Statement</h2>
+
+    <p>
+        <code>continue</code> skips the current iteration and
+        moves to the next one.
+    </p>
+
+    <pre><code>for number in range(1, 6):
+
+if number == 3:
+    continue
+
+print(number)</code></pre>
+
+    <p>
+        The number 3 is skipped.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🔁 11. Nested Loops</h2>
+
+    <p>
+        A loop can be placed inside another loop. This is called
+        a nested loop.
+    </p>
+
+    <pre><code>for row in range(3):
+
+for column in range(3):
+    print(row, column)</code></pre>
+
+    <p>
+        Nested loops are useful for working with grids,
+        tables and other repeated structures.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>💻 12. Practical Example</h2>
+
+    <p>
+        Let's create a simple multiplication table.
+    </p>
+
+    <pre><code>number = int(input("Enter a number: "))
+
+for i in range(1, 11):
+print(number, "x", i, "=", number * i)</code></pre>
+
+    <p>
+        If the user enters 5, the program produces the
+        multiplication table for 5.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🧪 13. Practical Exercises</h2>
+
+    <h3>Exercise 1</h3>
+    <p>
+        Write a <code>for</code> loop that prints the numbers
+        from 1 to 20.
+    </p>
+
+    <h3>Exercise 2</h3>
+    <p>
+        Write a loop that prints only even numbers from 2 to 20.
+    </p>
+
+    <h3>Exercise 3</h3>
+    <p>
+        Ask the user for a number and print its multiplication
+        table from 1 to 10.
+    </p>
+
+    <h3>Exercise 4</h3>
+    <p>
+        Create a <code>while</code> loop that counts from 10
+        down to 1.
+    </p>
+
+    <h3>Challenge ⭐</h3>
+    <p>
+        Create a program that asks the user for a number and
+        calculates the sum of all numbers from 1 up to that number.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🧠 Module 5 Quiz</h2>
+
+    <p>
+        Answer all 10 questions. You need at least
+        <strong>8/10</strong> to pass.
+    </p>
+
+    <form id="moduleQuiz">
+
+        <p><strong>1. What is a loop used for?</strong></p>
+        <label><input type="radio" name="q1" value="a"> Repeating code</label><br>
+        <label><input type="radio" name="q1" value="b"> Deleting code</label><br>
+        <label><input type="radio" name="q1" value="c"> Installing Python</label>
+
+        <p><strong>2. Which keyword creates a for loop?</strong></p>
+        <label><input type="radio" name="q2" value="a"> repeat</label><br>
+        <label><input type="radio" name="q2" value="b"> for</label><br>
+        <label><input type="radio" name="q2" value="c"> loop</label>
+
+        <p><strong>3. What does range(5) normally produce?</strong></p>
+        <label><input type="radio" name="q3" value="a"> 1 to 5</label><br>
+        <label><input type="radio" name="q3" value="b"> 0 to 4</label><br>
+        <label><input type="radio" name="q3" value="c"> 0 to 5</label>
+
+        <p><strong>4. Which loop repeats while a condition is true?</strong></p>
+        <label><input type="radio" name="q4" value="a"> for</label><br>
+        <label><input type="radio" name="q4" value="b"> while</label><br>
+        <label><input type="radio" name="q4" value="c"> repeat</label>
+
+        <p><strong>5. What does break do?</strong></p>
+        <label><input type="radio" name="q5" value="a"> Stops the loop</label><br>
+        <label><input type="radio" name="q5" value="b"> Starts the loop</label><br>
+        <label><input type="radio" name="q5" value="c"> Repeats the loop</label>
+
+        <p><strong>6. What does continue do?</strong></p>
+        <label><input type="radio" name="q6" value="a"> Stops the entire program</label><br>
+        <label><input type="radio" name="q6" value="b"> Skips the current iteration</label><br>
+        <label><input type="radio" name="q6" value="c"> Deletes the loop</label>
+
+        <p><strong>7. What is an infinite loop?</strong></p>
+        <label><input type="radio" name="q7" value="a"> A loop that never runs</label><br>
+        <label><input type="radio" name="q7" value="b"> A loop that eventually stops</label><br>
+        <label><input type="radio" name="q7" value="c"> A loop that does not reach its stopping condition</label>
+
+        <p><strong>8. What is a nested loop?</strong></p>
+        <label><input type="radio" name="q8" value="a"> A loop inside another loop</label><br>
+        <label><input type="radio" name="q8" value="b"> A broken loop</label><br>
+        <label><input type="radio" name="q8" value="c"> A loop without a condition</label>
+
+        <p><strong>9. Which function is commonly used to generate numbers for a for loop?</strong></p>
+        <label><input type="radio" name="q9" value="a"> numbers()</label><br>
+        <label><input type="radio" name="q9" value="b"> range()</label><br>
+        <label><input type="radio" name="q9" value="c"> count()</label>
+
+        <p><strong>10. Which loop is commonly useful when you don't know exactly how many iterations are needed?</strong></p>
+        <label><input type="radio" name="q10" value="a"> while</label><br>
+        <label><input type="radio" name="q10" value="b"> print</label><br>
+        <label><input type="radio" name="q10" value="c"> input</label>
+
+        <br>
+
+        <button type="submit" class="button">
+            Check Quiz
+        </button>
+
+    </form>
+
+    <p id="quizResult"></p>
+</div>
+
+<div id="completionBox"
+     class="contact-box"
+     style="display:none;">
+
+    <h2>🎉 Module 5 Completed!</h2>
+
+    <p>
+        Excellent work! You have completed the Loops module.
+    </p>
+
+    <a href="/python/module6" class="button">
+        Continue to Module 6 →
+    </a>
+
+</div>
+
+</section><script>
+
+document.getElementById("moduleQuiz").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const answers = {
+            q1: "a",
+            q2: "b",
+            q3: "b",
+            q4: "b",
+            q5: "a",
+            q6: "b",
+            q7: "c",
+            q8: "a",
+            q9: "b",
+            q10: "a"
+        };
+
+        let score = 0;
+
+        for (const question in answers) {
+
+            const selected = document.querySelector(
+                'input[name="' + question + '"]:checked'
+            );
+
+            if (selected && selected.value === answers[question]) {
+                score++;
+            }
+        }
+
+        const result = document.getElementById("quizResult");
+
+        if (score >= 8) {
+
+            result.textContent =
+                "Excellent! You scored " + score + "/10. Module completed!";
+
+            let completedModules =
+                JSON.parse(localStorage.getItem("pythonModules")) || [];
+
+            if (!completedModules.includes(5)) {
+
+                completedModules.push(5);
+
+                localStorage.setItem(
+                    "pythonModules",
+                    JSON.stringify(completedModules)
+                );
+            }
+
+            document.getElementById("completionBox").style.display = "block";
+
+        } else {
+
+            result.textContent =
+                "You scored " + score +
+                "/10. You need at least 8/10. Review the lessons and try again.";
+
+        }
+
+    }
+);
+
+</script>{% endblock %}
