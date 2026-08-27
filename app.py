@@ -92,6 +92,22 @@ def cv_linkedin():
 def cv_linkedin_module1():
     return render_template("cv-linkedin/module1.html")
 
+@app.route("/cv-linkedin/module2")
+def cv_linkedin_module2():
+    return render_template("cv-linkedin/module2.html")
+
+@app.route("/cv-linkedin/module3")
+def cv_linkedin_module3():
+    return render_template("cv-linkedin/module3.html")
+
+@app.route("/cv-linkedin/module4")
+def cv_linkedin_module4():
+    return render_template("cv-linkedin/module4.html")
+
+@app.route("/cv-linkedin/module5")
+def cv_linkedin_module5():
+    return render_template("cv-linkedin/module5.html")
+
 
 @app.route("/courses/digital-skills")
 def digital_skills():
