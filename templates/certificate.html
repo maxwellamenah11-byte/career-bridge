@@ -1,1 +1,289 @@
+{% extends "base.html" %}
 
+{% block title %}Career Bridge Certificate{% endblock %}
+
+{% block content %}
+
+<section class="certificate-page"><div class="certificate" id="certificate">
+
+    <div class="certificate-border">
+
+        <div class="certificate-header">
+            <p class="small-title">CAREER BRIDGE</p>
+
+            <h1>Certificate of Completion</h1>
+
+            <p class="subtitle">
+                This certificate is proudly presented to
+            </p>
+        </div>
+
+        <div class="student-name" id="studentName">
+            Student Name
+        </div>
+
+        <p class="completion-text">
+            for successfully completing the
+        </p>
+
+        <h2 id="courseName">
+            Career Bridge Course
+        </h2>
+
+        <p class="certificate-description">
+            This certificate recognizes the successful completion
+            of the required learning modules and assessments.
+        </p>
+
+        <div class="certificate-details">
+
+            <div>
+                <strong>Certificate ID</strong>
+                <span id="certificateId"></span>
+            </div>
+
+            <div>
+                <strong>Date</strong>
+                <span id="certificateDate"></span>
+            </div>
+
+        </div>
+
+        <div class="signature-section">
+
+            <div class="signature">
+                <div class="signature-line"></div>
+                <p>Career Bridge</p>
+                <small>Course Platform</small>
+            </div>
+
+            <div class="signature">
+                <div class="signature-line"></div>
+                <p>Certificate of Completion</p>
+                <small>Career Development</small>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="certificate-actions">
+
+    <button onclick="window.print()" class="button">
+        🖨️ Print / Save Certificate
+    </button>
+
+    <a href="/dashboard" class="button">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+</section><style>
+
+.certificate-page {
+    padding: 30px 15px;
+}
+
+.certificate {
+    max-width: 950px;
+    margin: auto;
+    padding: 15px;
+    background: white;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+}
+
+.certificate-border {
+    border: 8px double #222;
+    padding: 55px 45px;
+    text-align: center;
+    min-height: 580px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.small-title {
+    letter-spacing: 5px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.certificate-header h1 {
+    font-size: 42px;
+    margin: 10px 0;
+}
+
+.subtitle {
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.student-name {
+    font-size: 38px;
+    font-weight: bold;
+    margin: 25px 0 10px;
+}
+
+.completion-text {
+    font-size: 17px;
+}
+
+#courseName {
+    font-size: 28px;
+    margin: 15px 0;
+}
+
+.certificate-description {
+    max-width: 650px;
+    margin: 15px auto 30px;
+    line-height: 1.6;
+}
+
+.certificate-details {
+    display: flex;
+    justify-content: space-around;
+    margin: 25px auto;
+    max-width: 650px;
+    gap: 40px;
+}
+
+.certificate-details div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.certificate-details strong {
+    font-size: 14px;
+}
+
+.certificate-details span {
+    font-size: 14px;
+}
+
+.signature-section {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 35px;
+    gap: 60px;
+}
+
+.signature {
+    width: 220px;
+}
+
+.signature-line {
+    border-top: 1px solid #222;
+    margin-bottom: 8px;
+}
+
+.signature p {
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+.signature small {
+    font-size: 12px;
+}
+
+.certificate-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px auto;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+
+    .certificate-border {
+        padding: 30px 15px;
+        min-height: 500px;
+    }
+
+    .certificate-header h1 {
+        font-size: 28px;
+    }
+
+    .student-name {
+        font-size: 28px;
+    }
+
+    #courseName {
+        font-size: 22px;
+    }
+
+    .certificate-details,
+    .signature-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+    }
+}
+
+
+@media print {
+
+    body * {
+        visibility: hidden;
+    }
+
+    #certificate,
+    #certificate * {
+        visibility: visible;
+    }
+
+    #certificate {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none;
+    }
+
+    .certificate-actions {
+        display: none;
+    }
+
+}
+
+</style><script>
+
+const params = new URLSearchParams(window.location.search);
+
+const course = params.get("course") || "Career Bridge Course";
+
+const student =
+    localStorage.getItem("studentName") || "Student Name";
+
+document.getElementById("studentName").textContent =
+    student;
+
+document.getElementById("courseName").textContent =
+    course + " Course";
+
+
+// Create certificate ID
+
+const certificateId =
+    "CB-" +
+    Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase();
+
+document.getElementById("certificateId").textContent =
+    certificateId;
+
+
+// Current date
+
+const today = new Date();
+
+document.getElementById("certificateDate").textContent =
+    today.toLocaleDateString();
+
+</script>{% endblock %}
