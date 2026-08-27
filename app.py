@@ -18,6 +18,11 @@ def dashboard():
     return render_template("dashboard.html")
 
 
+@app.route("/certificate")
+def certificate():
+    return render_template("certificate.html")
+
+
 @app.route("/services")
 def services():
     return render_template("services.html")
