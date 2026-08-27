@@ -8,133 +8,306 @@
 
     <div class="page-header">
 
-        <h1>💼 Career Opportunities</h1>
+        <h1>💼 Opportunity Hub</h1>
 
         <p>
-            Discover internships, scholarships, competitions,
-            training programmes and other opportunities that can
-            help you grow.
+            Discover scholarships, internships, competitions,
+            courses, volunteering opportunities and career programmes.
         </p>
 
     </div>
 
 
-    <div class="cards">
+    <!-- Search -->
 
+    <div class="opportunity-search">
 
-        <div class="card">
-
-            <div class="icon">🎓</div>
-
-            <h3>Scholarships</h3>
-
-            <p>
-                Discover scholarship opportunities that can
-                support your education and academic development.
-            </p>
-
-            <a href="#" class="button">
-                View Opportunities
-            </a>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="icon">💼</div>
-
-            <h3>Internships</h3>
-
-            <p>
-                Explore internship opportunities that can help
-                you gain practical experience and develop
-                workplace skills.
-            </p>
-
-            <a href="#" class="button">
-                View Opportunities
-            </a>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="icon">🏆</div>
-
-            <h3>Competitions</h3>
-
-            <p>
-                Find student competitions, challenges and
-                programmes where you can develop your skills
-                and showcase your abilities.
-            </p>
-
-            <a href="#" class="button">
-                View Opportunities
-            </a>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="icon">💻</div>
-
-            <h3>Free Courses</h3>
-
-            <p>
-                Discover learning opportunities that can help
-                you develop practical and digital skills.
-            </p>
-
-            <a href="/courses" class="button">
-                Explore Courses
-            </a>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="icon">🌍</div>
-
-            <h3>Volunteer Opportunities</h3>
-
-            <p>
-                Explore volunteering opportunities that can
-                help you gain experience, develop skills and
-                contribute to your community.
-            </p>
-
-            <a href="#" class="button">
-                View Opportunities
-            </a>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="icon">🚀</div>
-
-            <h3>Career Programmes</h3>
-
-            <p>
-                Discover programmes designed to help students
-                develop professional skills and prepare for
-                future careers.
-            </p>
-
-            <a href="#" class="button">
-                View Opportunities
-            </a>
-
-        </div>
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="🔎 Search opportunities..."
+            onkeyup="filterOpportunities()"
+        >
 
     </div>
 
+
+    <!-- Category Filters -->
+
+    <div class="filters">
+
+        <button onclick="filterCategory('All')">
+            All
+        </button>
+
+        <button onclick="filterCategory('Scholarships')">
+            🎓 Scholarships
+        </button>
+
+        <button onclick="filterCategory('Internships')">
+            💼 Internships
+        </button>
+
+        <button onclick="filterCategory('Competitions')">
+            🏆 Competitions
+        </button>
+
+        <button onclick="filterCategory('Free Courses')">
+            💻 Free Courses
+        </button>
+
+        <button onclick="filterCategory('Volunteering')">
+            🌍 Volunteering
+        </button>
+
+        <button onclick="filterCategory('Career Programmes')">
+            🚀 Career Programmes
+        </button>
+
+    </div>
+
+
+    <!-- Opportunities -->
+
+    <div class="opportunity-grid" id="opportunityGrid">
+
+        {% for opportunity in opportunities %}
+
+        <div
+            class="opportunity-card"
+            data-category="{{ opportunity.category }}"
+        >
+
+            <span class="opportunity-category">
+                {{ opportunity.category }}
+            </span>
+
+            <h2>
+                {{ opportunity.title }}
+            </h2>
+
+            <p class="organization">
+                🏢 {{ opportunity.organization }}
+            </p>
+
+            <p>
+                {{ opportunity.description }}
+            </p>
+
+            <div class="opportunity-info">
+
+                <span>
+                    📍 {{ opportunity.location }}
+                </span>
+
+                <span>
+                    ⏰ {{ opportunity.deadline }}
+                </span>
+
+            </div>
+
+            <a
+                href="{{ opportunity.link }}"
+                class="button"
+            >
+                View Opportunity →
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <p id="noResults" style="display:none;">
+        😕 No opportunities found.
+    </p>
+
+
 </section>
+
+
+<style>
+
+.opportunity-search {
+    max-width: 700px;
+    margin: 25px auto;
+}
+
+.opportunity-search input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 25px 0;
+}
+
+.filters button {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background: transparent;
+    cursor: pointer;
+}
+
+
+.opportunity-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(280px, 1fr));
+
+    gap: 20px;
+}
+
+
+.opportunity-card {
+    padding: 25px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    background: white;
+    transition: transform 0.2s ease;
+}
+
+
+.opportunity-card:hover {
+    transform: translateY(-5px);
+}
+
+
+.opportunity-card h2 {
+    margin: 15px 0 8px;
+    font-size: 22px;
+}
+
+
+.organization {
+    font-weight: bold;
+}
+
+
+.opportunity-category {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 15px;
+    font-size: 13px;
+    font-weight: bold;
+    background: #eee;
+}
+
+
+.opportunity-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 20px 0;
+    font-size: 14px;
+}
+
+
+.opportunity-card .button {
+    display: inline-block;
+}
+
+
+@media (max-width: 600px) {
+
+    .opportunity-card {
+        padding: 20px;
+    }
+
+    .filters button {
+        font-size: 13px;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+let currentCategory = "All";
+
+
+function filterCategory(category) {
+
+    currentCategory = category;
+
+    filterOpportunities();
+
+}
+
+
+function filterOpportunities() {
+
+    const search =
+        document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase();
+
+    const cards =
+        document.querySelectorAll(
+            ".opportunity-card"
+        );
+
+    let visible = 0;
+
+
+    cards.forEach(card => {
+
+        const text =
+            card.textContent.toLowerCase();
+
+        const category =
+            card.dataset.category;
+
+
+        const matchesSearch =
+            text.includes(search);
+
+        const matchesCategory =
+            currentCategory === "All" ||
+            category === currentCategory;
+
+
+        if (
+            matchesSearch &&
+            matchesCategory
+        ) {
+
+            card.style.display = "block";
+
+            visible++;
+
+        } else {
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "noResults"
+    ).style.display =
+        visible === 0
+            ? "block"
+            : "none";
+
+}
+
+</script>
 
 {% endblock %}
