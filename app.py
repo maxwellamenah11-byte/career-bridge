@@ -259,43 +259,7 @@ def opportunities():
 
     ]
 
-    return render_template(
-        "opportunities.html",
-        opportunities=opportunities
-    )
-        },
-
-        {
-            "title": "Youth Volunteer Programme",
-            "organization": "Career Bridge",
-            "category": "Volunteering",
-            "description": "A sample volunteer programme designed to help young people gain experience and contribute to their communities.",
-            "deadline": "Open",
-            "location": "Nigeria",
-            "type": "Volunteer",
-            "link": "#"
-        },
-
-        {
-            "title": "Career Development Programme",
-            "organization": "Career Bridge",
-            "category": "Career Programmes",
-            "description": "A sample programme focused on career preparation, professional skills and workplace readiness.",
-            "deadline": "10 November 2026",
-            "location": "Online",
-            "type": "Career Programme",
-            "link": "#"
-        }
-
-    ]
-
-    return render_template(
-        "opportunities.html",
-        opportunities=opportunities
-    )
-]
-
-
+ 
 @app.route("/career-explorer")
 def career_explorer():
     return render_template("career-explorer.html")
