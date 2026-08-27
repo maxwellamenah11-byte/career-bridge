@@ -142,130 +142,52 @@ def register():
 @app.route("/opportunities")
 def opportunities():
 
-    
     opportunities = [
-
         {
-            "title": "Student Scholarship Programme",
-            "organization": "Career Bridge",
+            "title": "Nigerian Scholarship Award",
+            "organization": "Federal Scholarship Board",
             "category": "Scholarships",
-            "description": "A sample scholarship opportunity for students seeking financial support for their education.",
-            "deadline": "30 September 2026",
+            "description": "Federal scholarship support for eligible Nigerian students.",
+            "deadline": "Check official portal",
             "location": "Nigeria",
-            "type": "Scholarship",
-            "link": "#"
+            "link": "https://scholarship.education.gov.ng/"
         },
 
         {
-            "title": "Technology Internship Programme",
-            "organization": "Career Bridge",
-            "category": "Internships",
-            "description": "A sample internship opportunity designed to help students gain practical technology experience.",
-            "deadline": "15 October 2026",
-            "location": "Nigeria",
-            "type": "Internship",
-            "link": "#"
-        },
-
-        {
-            "title": "Student Innovation Challenge",
-            "organization": "Career Bridge",
-            "category": "Competitions",
-            "description": "A sample competition where students can develop ideas and showcase their creativity.",
-            "deadline": "20 October 2026",
-            "location": "Online",
-            "type": "Competition",
-            "link": "#"
-        },
-
-        {
-            "title": "Digital Skills Training",
-            "organization": "Career Bridge",
-            "category": "Free Courses",
-            "description": "A sample learning programme focused on developing practical digital skills.",
-            "deadline": "Open",
-            "location": "Online",
-            "type": "Training",
-            "link": "/courses"@app.route("/opportunities")
-def opportunities():
-
-    opportunities = [
-
-        {
-            "title": "Student Scholarship Programme",
-            "organization": "Career Bridge",
-            "category": "Scholarships",
-            "description": "A sample scholarship opportunity for students seeking financial support for their education.",
-            "deadline": "30 September 2026",
-            "location": "Nigeria",
-            "type": "Scholarship",
-            "link": "#"
-        },
-
-        {
-            "title": "Technology Internship Programme",
-            "organization": "Career Bridge",
-            "category": "Internships",
-            "description": "A sample internship opportunity designed to help students gain practical technology experience.",
-            "deadline": "15 October 2026",
-            "location": "Nigeria",
-            "type": "Internship",
-            "link": "#"
-        },
-
-        {
-            "title": "Student Innovation Challenge",
-            "organization": "Career Bridge",
-            "category": "Competitions",
-            "description": "A sample competition where students can develop ideas and showcase their creativity.",
-            "deadline": "20 October 2026",
-            "location": "Online",
-            "type": "Competition",
-            "link": "#"
-        },
-
-        {
-            "title": "Digital Skills Training",
-            "organization": "Career Bridge",
-            "category": "Free Courses",
-            "description": "A sample learning programme focused on developing practical digital skills.",
-            "deadline": "Open",
-            "location": "Online",
-            "type": "Training",
-            "link": "/courses"
-        },
-
-        {
-            "title": "Youth Volunteer Programme",
-            "organization": "Career Bridge",
-            "category": "Volunteering",
-            "description": "A sample volunteer programme designed to help young people gain experience and contribute to their communities.",
-            "deadline": "Open",
-            "location": "Nigeria",
-            "type": "Volunteer",
-            "link": "#"
-        },
-
-        {
-            "title": "Career Development Programme",
-            "organization": "Career Bridge",
+            "title": "Student Venture Capital Grant",
+            "organization": "Federal Ministry of Education",
             "category": "Career Programmes",
-            "description": "A sample programme focused on career preparation, professional skills and workplace readiness.",
-            "deadline": "10 November 2026",
-            "location": "Online",
-            "type": "Career Programme",
-            "link": "#"
-        }
+            "description": "Support for eligible student-led businesses and innovative projects.",
+            "deadline": "Check official portal",
+            "location": "Nigeria",
+            "link": "https://svcg.education.gov.ng/"
+        },
 
+        {
+            "title": "Presidential Amnesty Programme Scholarship",
+            "organization": "Presidential Amnesty Programme",
+            "category": "Scholarships",
+            "description": "Scholarship support for eligible students from the Niger Delta.",
+            "deadline": "Applications closed",
+            "location": "Niger Delta, Nigeria",
+            "link": "https://osapnd.gov.ng/scholarship/"
+        },
+
+        {
+            "title": "3MTT",
+            "organization": "Federal Government of Nigeria",
+            "category": "Free Courses",
+            "description": "A national programme for developing practical digital and technology skills.",
+            "deadline": "Check official portal",
+            "location": "Nigeria",
+            "link": "https://3mtt.nitda.gov.ng/"
+        }
     ]
 
- return render_template(
-        "opportunities.html",
-        opportunities=opportunities
-    )
-
+    return render_template("opportunities.html", opportunities=opportunities)
             
-            @app.route("/career-explorer")
+            
+@app.route("/career-explorer")
 def career_explorer():
     return render_template("career-explorer.html")
 
