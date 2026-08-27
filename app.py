@@ -121,7 +121,7 @@ def career_development():
 
 @app.route("/library")
 def library():
-return render_template("library.html")
+    return render_template("library.html")
 
 
 @app.route("/register")
