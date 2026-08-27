@@ -88,6 +88,11 @@ def cv_linkedin():
     return render_template("cv-linkedin.html")
 
 
+@app.route("/cv-linkedin/module1")
+def cv_linkedin_module1():
+    return render_template("cv-linkedin/module1.html")
+
+
 @app.route("/courses/digital-skills")
 def digital_skills():
     return render_template("digital-skills.html")
