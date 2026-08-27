@@ -168,4 +168,22 @@
     </a>
 </div>
 
+<div class="contact-box" style="margin-top:40px;">
+    <h2>📚 CV & LinkedIn Course Progress</h2><p id="progressText">Course Progress: 0/5 modules completed</p>
+
+<div style="margin:20px 0;">
+    <a href="/cv-linkedin/module1" class="button">Module 1</a>
+    <a href="/cv-linkedin/module2" class="button">Module 2</a>
+    <a href="/cv-linkedin/module3" class="button">Module 3</a>
+    <a href="/cv-linkedin/module4" class="button">Module 4</a>
+    <a href="/cv-linkedin/module5" class="button">Module 5</a>
+</div>
+
+</div><script>
+    let completedModules =
+        JSON.parse(localStorage.getItem("cvLinkedinModules")) || [];
+
+    document.getElementById("progressText").textContent =
+        "Course Progress: " + completedModules.length + "/5 modules completed";
+</script>
 {% endblock %}
