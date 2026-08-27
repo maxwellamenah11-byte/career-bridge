@@ -1,1 +1,284 @@
+{% extends "base.html" %}
 
+{% block title %}Career Bridge Library{% endblock %}
+
+{% block content %}
+
+<section class="page"><div class="page-header">
+    <h1>📚 Career Bridge Library</h1>
+    <p>
+        Discover books that can help you learn, grow your skills,
+        understand new ideas and explore different careers.
+    </p>
+</div>
+
+<div class="contact-box">
+    <h2>🔎 Find a Book</h2>
+
+    <input
+        type="text"
+        id="bookSearch"
+        placeholder="Search for a book, author or topic..."
+        style="width:100%; padding:14px; border-radius:8px;
+               border:1px solid #ccc; font-size:16px;"
+    >
+
+    <button onclick="searchBooks()" class="button"
+            style="margin-top:12px;">
+        Search Books
+    </button>
+</div>
+
+<div class="contact-box">
+    <h2>📖 Popular Categories</h2>
+
+    <div class="library-categories">
+
+        <button onclick="searchCategory('business')" class="button">
+            💼 Business & Strategy
+        </button>
+
+        <button onclick="searchCategory('technology')" class="button">
+            💻 Technology
+        </button>
+
+        <button onclick="searchCategory('career development')" class="button">
+            🎯 Career Development
+        </button>
+
+        <button onclick="searchCategory('personal development')" class="button">
+            🌱 Personal Development
+        </button>
+
+        <button onclick="searchCategory('science')" class="button">
+            🔬 Science
+        </button>
+
+        <button onclick="searchCategory('engineering')" class="button">
+            ⚙️ Engineering
+        </button>
+
+        <button onclick="searchCategory('health')" class="button">
+            ❤️ Health
+        </button>
+
+        <button onclick="searchCategory('finance')" class="button">
+            💰 Finance
+        </button>
+
+    </div>
+</div>
+
+<div class="contact-box">
+
+    <h2 id="resultsTitle">📚 Explore Books</h2>
+
+    <div id="loading" style="display:none;">
+        Searching for books...
+    </div>
+
+    <div id="bookResults" class="book-grid"></div>
+
+</div>
+
+</section><style>
+
+.library-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.book-card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.book-card img {
+    width: 100%;
+    height: 240px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #f5f5f5;
+}
+
+.book-card h3 {
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+
+.book-card p {
+    margin: 5px 0;
+}
+
+.book-button {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 10px 15px;
+    border-radius: 7px;
+    text-decoration: none;
+    background: #333;
+    color: white;
+}
+
+</style><script>
+
+function searchBooks() {
+
+    const search =
+        document.getElementById("bookSearch").value.trim();
+
+    if (!search) {
+        alert("Please enter a book title, author or topic.");
+        return;
+    }
+
+    searchOpenLibrary(search);
+}
+
+
+function searchCategory(category) {
+
+    document.getElementById("bookSearch").value = category;
+
+    searchOpenLibrary(category);
+}
+
+
+async function searchOpenLibrary(query) {
+
+    const results =
+        document.getElementById("bookResults");
+
+    const loading =
+        document.getElementById("loading");
+
+    const title =
+        document.getElementById("resultsTitle");
+
+    results.innerHTML = "";
+
+    loading.style.display = "block";
+
+    title.textContent = "🔎 Search Results";
+
+    try {
+
+        const response = await fetch(
+            "https://openlibrary.org/search.json?q=" +
+            encodeURIComponent(query) +
+            "&limit=12"
+        );
+
+        const data = await response.json();
+
+        loading.style.display = "none";
+
+        if (!data.docs || data.docs.length === 0) {
+
+            results.innerHTML =
+                "<p>No books found. Try another search.</p>";
+
+            return;
+        }
+
+        data.docs.forEach(book => {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "book-card";
+
+            const coverId = book.cover_i;
+
+            const coverUrl = coverId
+                ? "https://covers.openlibrary.org/b/id/" +
+                  coverId + "-M.jpg"
+                : "https://via.placeholder.com/200x250?text=No+Cover";
+
+            const author =
+                book.author_name
+                ? book.author_name.slice(0, 2).join(", ")
+                : "Unknown author";
+
+            const year =
+                book.first_publish_year || "Year unavailable";
+
+            const workKey =
+                book.key || "";
+
+            const bookUrl =
+                "https://openlibrary.org" + workKey;
+
+            card.innerHTML = `
+
+                <img
+                    src="${coverUrl}"
+                    alt="Book cover"
+                >
+
+                <h3>
+                    ${escapeHTML(book.title || "Untitled")}
+                </h3>
+
+                <p>
+                    <strong>Author:</strong>
+                    ${escapeHTML(author)}
+                </p>
+
+                <p>
+                    <strong>First published:</strong>
+                    ${year}
+                </p>
+
+                <a
+                    href="${bookUrl}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="book-button"
+                >
+                    View Book →
+                </a>
+
+            `;
+
+            results.appendChild(card);
+
+        });
+
+    } catch (error) {
+
+        loading.style.display = "none";
+
+        results.innerHTML =
+            "<p>Unable to search books right now. Please try again later.</p>";
+
+        console.error(error);
+    }
+}
+
+
+function escapeHTML(text) {
+
+    const div = document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+}
+
+
+// Show some books when the page first opens.
+searchOpenLibrary("popular business books");
+
+</script>{% endblock %}
