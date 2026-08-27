@@ -1,119 +1,153 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Playground - Career Bridge</title>
 
-{% block title %}Python Practice Lab{% endblock %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111827;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
 
-{% block content %}
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
 
-<section class="page"><div class="page-header">
-    <h1>🐍 Python Practice Lab</h1>
+        h1 {
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            box-sizing: border-box;
+            background: #1f2937;
+            color: white;
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .output-box {
+            margin-top: 20px;
+        }
+
+        pre {
+            background: #000;
+            color: #00ff88;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 100px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🐍 Python Playground</h1>
+
     <p>
-        Write Python code, experiment with ideas, and practise
-        what you've learned in the course.
+        Write your Python code below and click <b>Run Code</b>.
     </p>
+
+    <textarea id="code">name = "Student"
+print("Hello", name)
+
+for i in range(5):
+    print(i)</textarea>
+
+    <br>
+
+    <button onclick="runPython()">▶ Run Code</button>
+
+    <div class="output-box">
+        <h2>Output</h2>
+        <pre id="output">Your output will appear here...</pre>
+    </div>
+
 </div>
 
-<div class="contact-box">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
 
-    <h2>💻 Your Code</h2>
+<script>
+    let pyodide;
 
-    <textarea id="codeEditor"
-              rows="18"
-              style="width:100%; box-sizing:border-box; font-family:monospace; font-size:16px; padding:15px;"
-              spellcheck="false">print("Hello, Career Bridge!")</textarea>
+    async function loadPython() {
+        document.getElementById("output").textContent =
+            "Loading Python...";
 
-    <br><br>
+        pyodide = await loadPyodide();
 
-    <button id="runButton" class="button">
-        ▶️ Run Code
-    </button>
+        document.getElementById("output").textContent =
+            "Python is ready. Write your code and click Run Code.";
+    }
 
-    <button id="clearButton" class="button">
-        🧹 Clear
-    </button>
+    async function runPython() {
 
-</div>
+        if (!pyodide) {
+            document.getElementById("output").textContent =
+                "Python is still loading. Please wait a moment.";
+            return;
+        }
 
-<div class="contact-box">
+        const code = document.getElementById("code").value;
+        const output = document.getElementById("output");
 
-    <h2>🖥️ Output</h2>
+        try {
 
-    <pre id="output"
-         style="min-height:150px; padding:15px; overflow:auto;">Your output will appear here...</pre>
+            pyodide.runPython(`
+import sys
+from io import StringIO
 
-</div>
+_output = StringIO()
+sys.stdout = _output
+sys.stderr = _output
+`);
 
-<div class="contact-box">
+            pyodide.runPython(code);
 
-    <h2>💡 Practice Challenges</h2>
+            const result = pyodide.runPython(
+                "_output.getvalue()"
+            );
 
-    <h3>Challenge 1 — Greeting</h3>
-    <p>
-        Write a program that asks the user for their name and
-        prints a greeting.
-    </p>
+            output.textContent = result || "Code ran successfully with no output.";
 
-    <h3>Challenge 2 — Calculator</h3>
-    <p>
-        Ask the user for two numbers and calculate their sum.
-    </p>
+        } catch (error) {
 
-    <h3>Challenge 3 — Even or Odd</h3>
-    <p>
-        Ask the user for a number and determine whether it is
-        even or odd.
-    </p>
+            output.textContent =
+                "Error:\\n" + error;
+        }
+    }
 
-    <h3>Challenge 4 — Student Grade</h3>
-    <p>
-        Ask for a student's score and display their grade.
-    </p>
+    loadPython();
+</script>
 
-    <h3>Challenge 5 — Mini Project ⭐</h3>
-    <p>
-        Create a simple student management program using the
-        Python concepts you learned throughout the course.
-    </p>
-
-</div>
-
-<div class="contact-box">
-
-    <h2>📚 What You Can Practise</h2>
-
-    <ul>
-        <li>Variables</li>
-        <li>Input and output</li>
-        <li>Conditions</li>
-        <li>Loops</li>
-        <li>Lists</li>
-        <li>Dictionaries</li>
-        <li>Functions</li>
-        <li>File handling</li>
-        <li>Modules</li>
-        <li>Mini projects</li>
-    </ul>
-
-</div>
-
-</section><script>
-
-const editor = document.getElementById("codeEditor");
-const output = document.getElementById("output");
-const runButton = document.getElementById("runButton");
-const clearButton = document.getElementById("clearButton");
-
-runButton.addEventListener("click", function() {
-
-    output.textContent =
-        "Code execution will be connected in the next step.";
-
-});
-
-clearButton.addEventListener("click", function() {
-
-    editor.value = "";
-    output.textContent = "Your output will appear here...";
-
-});
-
-</script>{% endblock %}
+</body>
+</html>
