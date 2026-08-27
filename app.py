@@ -23,9 +23,77 @@ class Student(db.Model):
     password = db.Column(db.String(200), nullable=False)
 
 
-@app.route("/")
-def home():
-    return render_template("home.html")
+@app.route("/register", methods=["GET", "POST"])
+def register():
+
+    if request.method == "POST":
+
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        if not name or not email or not password:
+            return "Please fill in all fields."
+
+        existing_student = Student.query.filter_by(
+            email=email
+        ).first()
+
+        if existing_student:
+            return "An account with this email already exists."
+
+        hashed_password = generate_password_hash(password)
+
+        student = Student(
+            name=name,
+            email=email,
+            password=hashed_password
+        )
+
+        db.session.add(student)
+        db.session.commit()
+
+        session["student_id"] = student.id
+        session["student_name"] = student.name
+
+        return redirect(url_for("dashboard"))
+
+    return render_template("register.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        student = Student.query.filter_by(
+            email=email
+        ).first()
+
+        if student and check_password_hash(
+            student.password,
+            password
+        ):
+
+            session["student_id"] = student.id
+            session["student_name"] = student.name
+
+            return redirect(url_for("dashboard"))
+
+        return "Invalid email or password."
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect(url_for("login"))
 
 
 @app.route("/about")
@@ -229,6 +297,10 @@ def cv_builder():
 @app.route("/python/playground")
 def python_playground():
     return render_template("python/playground.html")
+
+
+with app.app_context():
+    db.create_all()
 
 
 if __name__ == "__main__":
