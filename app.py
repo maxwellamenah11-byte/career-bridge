@@ -124,11 +124,6 @@ def register():
     return render_template("register.html")
 
 
-@app.route("/resources")
-def resources():
-    return render_template("resources.html")
-
-
 @app.route("/opportunities")
 def opportunities():
     return render_template("opportunities.html")
