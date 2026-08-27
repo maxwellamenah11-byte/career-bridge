@@ -1,1 +1,250 @@
+{% extends "base.html" %}
 
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+
+<section class="page"><div class="page-header">
+    <h1>🎓 Student Dashboard</h1>
+    <p>
+        Welcome to your Career Bridge learning dashboard.
+        Track your courses, progress and achievements here.
+    </p>
+</div>
+
+<!-- Welcome Card -->
+<div class="contact-box">
+    <h2>👋 Welcome, Student!</h2>
+    <p>
+        Keep learning, complete your modules and build skills
+        that can help you prepare for your future career.
+    </p>
+</div>
+
+<!-- Course Progress -->
+<div class="contact-box">
+
+    <h2>📚 My Courses</h2>
+
+    <div class="dashboard-course">
+
+        <h3>🐍 Python Programming</h3>
+
+        <p id="pythonProgress">
+            Progress: 0/10 modules completed
+        </p>
+
+        <div class="progress-bar">
+            <div id="pythonBar" class="progress-fill"></div>
+        </div>
+
+        <a href="/courses/python" class="button">
+            Continue Python →
+        </a>
+
+    </div>
+
+
+    <div class="dashboard-course">
+
+        <h3>📄 CV & LinkedIn</h3>
+
+        <p id="cvProgress">
+            Progress: 0/5 modules completed
+        </p>
+
+        <div class="progress-bar">
+            <div id="cvBar" class="progress-fill"></div>
+        </div>
+
+        <a href="/courses/cv-linkedin" class="button">
+            Continue CV & LinkedIn →
+        </a>
+
+    </div>
+
+</div>
+
+<!-- Quick Links -->
+<div class="contact-box">
+
+    <h2>⚡ Quick Access</h2>
+
+    <div class="dashboard-links">
+
+        <a href="/library" class="dashboard-link">
+            📚 Library
+        </a>
+
+        <a href="/python/playground" class="dashboard-link">
+            💻 Python Playground
+        </a>
+
+        <a href="/opportunities" class="dashboard-link">
+            💼 Opportunities
+        </a>
+
+        <a href="/courses" class="dashboard-link">
+            🎓 All Courses
+        </a>
+
+    </div>
+
+</div>
+
+<!-- Achievements -->
+<div class="contact-box">
+
+    <h2>🏆 My Achievements</h2>
+
+    <div id="achievements">
+
+        <p id="pythonAchievement">
+            🔒 Complete all 10 Python modules to unlock your
+            Python achievement.
+        </p>
+
+        <p id="cvAchievement">
+            🔒 Complete all 5 CV & LinkedIn modules to unlock
+            your CV & LinkedIn achievement.
+        </p>
+
+    </div>
+
+</div>
+
+</section><style>
+
+.dashboard-course {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 15px;
+    background: #e5e5e5;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    transition: width 0.5s ease;
+}
+
+.dashboard-links {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(180px, 1fr)
+    );
+    gap: 15px;
+}
+
+.dashboard-link {
+    display: block;
+    padding: 18px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+}
+
+</style><script>
+
+
+// -----------------------------
+// CV & LINKEDIN PROGRESS
+// -----------------------------
+
+function updateCVProgress() {
+
+    const completed =
+        JSON.parse(
+            localStorage.getItem("cvLinkedinModules")
+        ) || [];
+
+    const total = 5;
+
+    const percentage =
+        (completed.length / total) * 100;
+
+    document.getElementById("cvProgress").textContent =
+        "Progress: " +
+        completed.length +
+        "/" +
+        total +
+        " modules completed";
+
+    document.getElementById("cvBar").style.width =
+        percentage + "%";
+
+
+    if (completed.length === total) {
+
+        document.getElementById(
+            "cvAchievement"
+        ).textContent =
+            "🏆 CV & LinkedIn Course Completed!";
+
+    }
+
+}
+
+
+// -----------------------------
+// PYTHON PROGRESS
+// -----------------------------
+
+function updatePythonProgress() {
+
+    /*
+       Your Python course should save completed
+       modules using the key "pythonModules".
+    */
+
+    const completed =
+        JSON.parse(
+            localStorage.getItem("pythonModules")
+        ) || [];
+
+    const total = 10;
+
+    const percentage =
+        (completed.length / total) * 100;
+
+    document.getElementById("pythonProgress").textContent =
+        "Progress: " +
+        completed.length +
+        "/" +
+        total +
+        " modules completed";
+
+    document.getElementById("pythonBar").style.width =
+        percentage + "%";
+
+
+    if (completed.length === total) {
+
+        document.getElementById(
+            "pythonAchievement"
+        ).textContent =
+            "🏆 Python Course Completed!";
+
+    }
+
+}
+
+
+// Run when dashboard opens
+
+updateCVProgress();
+updatePythonProgress();
+
+</script>{% endblock %}
