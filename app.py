@@ -259,8 +259,13 @@ def opportunities():
 
     ]
 
- 
-@app.route("/career-explorer")
+ return render_template(
+        "opportunities.html",
+        opportunities=opportunities
+    )
+
+            
+            @app.route("/career-explorer")
 def career_explorer():
     return render_template("career-explorer.html")
 
