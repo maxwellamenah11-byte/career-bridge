@@ -119,6 +119,11 @@ def career_development():
     return render_template("career-development.html")
 
 
+@app.route("/library")
+def library():
+return render_template("library.html")
+
+
 @app.route("/register")
 def register():
     return render_template("register.html")
