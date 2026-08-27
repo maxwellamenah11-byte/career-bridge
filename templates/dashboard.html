@@ -91,8 +91,39 @@
     </div>
 
 </div>
+<!-- My Certificates --><div class="contact-box"><h2>🏆 My Certificates</h2>
 
-<!-- Achievements -->
+<div id="pythonCertificate" style="display:none;">
+
+    <p>🐍 <strong>Python Programming Certificate</strong></p>
+
+    <a href="/certificate?course=Python%20Programming"
+       class="button">
+        View Certificate →
+    </a>
+
+</div>
+
+
+<div id="cvCertificate" style="display:none;">
+
+    <p>📄 <strong>CV & LinkedIn Certificate</strong></p>
+
+    <a href="/certificate?course=CV%20%26%20LinkedIn"
+       class="button">
+        View Certificate →
+    </a>
+
+</div>
+
+
+<p id="noCertificates">
+    🔒 Complete a course to unlock your certificate.
+</p>
+
+</div>
+
+    <!-- Achievements -->
 <div class="contact-box">
 
     <h2>🏆 My Achievements</h2>
@@ -246,5 +277,60 @@ function updatePythonProgress() {
 
 updateCVProgress();
 updatePythonProgress();
+function updateCertificates() {
+
+const pythonModules =
+    JSON.parse(
+        localStorage.getItem("pythonModules")
+    ) || [];
+
+const cvModules =
+    JSON.parse(
+        localStorage.getItem("cvLinkedinModules")
+    ) || [];
+
+
+let certificateUnlocked = false;
+
+
+// Python Certificate
+
+if (pythonModules.length >= 10) {
+
+    document.getElementById(
+        "pythonCertificate"
+    ).style.display = "block";
+
+    certificateUnlocked = true;
+}
+
+
+// CV & LinkedIn Certificate
+
+if (cvModules.length >= 5) {
+
+    document.getElementById(
+        "cvCertificate"
+    ).style.display = "block";
+
+    certificateUnlocked = true;
+}
+
+
+// Hide message when at least one certificate exists
+
+if (certificateUnlocked) {
+
+    document.getElementById(
+        "noCertificates"
+    ).style.display = "none";
+
+}
+
+}
+
+// Run certificate check
+
+updateCertificates();
 
 </script>{% endblock %}
