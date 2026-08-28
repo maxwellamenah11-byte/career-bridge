@@ -23,6 +23,11 @@ class Student(db.Model):
     password = db.Column(db.String(200), nullable=False)
 
 
+@app.route("/")
+def home():
+    return render_template("home.html")
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
