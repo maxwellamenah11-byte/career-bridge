@@ -22,6 +22,19 @@ class Student(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
+from functools import wraps
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+
+        if "student_id" not in session:
+            return redirect(url_for("login"))
+
+        return f(*args, **kwargs)
+
+    return decorated_function
+
 
 @app.route("/")
 def home():
@@ -92,127 +105,144 @@ def about():
 
 
 @app.route("/dashboard")
+@login_required
 def dashboard():
     return render_template("dashboard.html")
 
 
 @app.route("/certificate")
+@login_required
 def certificate():
     return render_template("certificate.html")
 
 
 @app.route("/services")
+@login_required
 def services():
     return render_template("services.html")
 
 
 @app.route("/courses")
+@login_required
 def courses():
     return render_template("courses.html")
 
 
 @app.route("/contact")
+@login_required
 def contact():
     return render_template("contact.html")
 
 
 @app.route("/courses/python")
+@login_required
 def python():
     return render_template("python.html")
 
 
 @app.route("/python/module1")
-def python_module1():
-    return render_template("python/module1.html")
-
-
-@app.route("/python/module2")
-def python_module2():
-    return render_template("python/module2.html")
-
+@login_required
 
 @app.route("/python/module3")
+@login_required
 def python_module3():
     return render_template("python/module3.html")
 
 
 @app.route("/python/module4")
+@login-required
 def python_module4():
     return render_template("python/module4.html")
 
 
 @app.route("/python/module5")
+@login_required
 def python_module5():
     return render_template("python/module5.html")
 
 
 @app.route("/python/module6")
+@login_required
 def python_module6():
     return render_template("python/module6.html")
 
 
 @app.route("/python/module7")
+@login_required
 def python_module7():
     return render_template("python/module7.html")
 
 
 @app.route("/python/module8")
+@login_required
 def python_module8():
     return render_template("python/module8.html")
 
 
 @app.route("/python/module9")
+@login_required
 def python_module9():
     return render_template("python/module9.html")
 
 
 @app.route("/python/module10")
+@login_required
 def python_module10():
     return render_template("python/module10.html")
 
 
 @app.route("/courses/cv-linkedin")
+@login_required
 def cv_linkedin():
     return render_template("cv-linkedin.html")
 
 
 @app.route("/cv-linkedin/module1")
+@login_required
 def cv_linkedin_module1():
     return render_template("cv-linkedin/module1.html")
 
 @app.route("/cv-linkedin/module2")
+@login_required
 def cv_linkedin_module2():
     return render_template("cv-linkedin/module2.html")
 
 @app.route("/cv-linkedin/module3")
+@login_required
 def cv_linkedin_module3():
     return render_template("cv-linkedin/module3.html")
 
 @app.route("/cv-linkedin/module4")
+@login_required
 def cv_linkedin_module4():
     return render_template("cv-linkedin/module4.html")
 
 @app.route("/cv-linkedin/module5")
+@login_required
 def cv_linkedin_module5():
     return render_template("cv-linkedin/module5.html")
 
 
 @app.route("/courses/digital-skills")
+@login_required
 def digital_skills():
     return render_template("digital-skills.html")
 
 
 @app.route("/courses/career-development")
+@login_required
 def career_development():
     return render_template("career-development.html")
 
 
 @app.route("/library")
+@login_required
 def library():
     return render_template("library.html")
 
 
 @app.route("/opportunities")
+@login_required
 def opportunities():
 
     opportunities = [
@@ -261,11 +291,13 @@ def opportunities():
             
             
 @app.route("/career-explorer")
+@login_required
 def career_explorer():
     return render_template("career-explorer.html")
 
 
 @app.route("/blog")
+@login_required
 def blog():
     return render_template("blog.html")
 
@@ -276,10 +308,12 @@ def career_quiz():
 
 
 @app.route("/cv-builder")
+@login_required
 def cv_builder():
     return render_template("cv-builder.html")
 
 @app.route("/python/playground")
+@login_required
 def python_playground():
     return render_template("python/playground.html")
 
