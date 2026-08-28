@@ -37,16 +37,6 @@ def register():
         email = request.form.get("email")
         password = request.form.get("password")
 
-        if not name or not email or not password:
-            return "Please fill in all fields."
-
-        existing_student = Student.query.filter_by(
-            email=email
-        ).first()
-
-        if existing_student:
-            return "An account with this email already exists."
-
         hashed_password = generate_password_hash(password)
 
         student = Student(
@@ -59,9 +49,8 @@ def register():
         db.session.commit()
 
         session["student_id"] = student.id
-        session["student_name"] = student.name
 
-        return redirect(url_for("dashboard"))
+        return redirect("/dashboard")
 
     return render_template("register.html")
 
