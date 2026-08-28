@@ -1,39 +1,60 @@
 {% extends "base.html" %}
 
-{% block title %}Register - Career Bridge{% endblock %}
+{% block title %}Create Account - Career Bridge{% endblock %}
 
 {% block content %}
 
 <section class="page">
 
     <div class="page-header">
-
-        <h1>📝 Register with Career Bridge</h1>
+        <h1>🚀 Create Your Account</h1>
 
         <p>
-            Register your interest in our courses and
-            career development opportunities.
+            Create a Career Bridge account to save your course
+            progress, certificates and achievements.
         </p>
-
     </div>
 
     <div class="contact-box">
 
-        <h2>Ready to get started?</h2>
+        <h2>📝 Sign Up</h2>
 
-        <p>
-            Complete our registration form to tell us about
-            yourself and the course you're interested in.
+        <form method="POST">
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                required
+                style="width:100%; padding:14px; margin:8px 0; border-radius:8px; border:1px solid #ddd;"
+            >
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                required
+                style="width:100%; padding:14px; margin:8px 0; border-radius:8px; border:1px solid #ddd;"
+            >
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Create Password"
+                required
+                style="width:100%; padding:14px; margin:8px 0; border-radius:8px; border:1px solid #ddd;"
+            >
+
+            <button type="submit" class="button">
+                Create Account
+            </button>
+
+        </form>
+
+        <p style="margin-top:20px;">
+            Already have an account?
+            <a href="/login">Login here</a>
         </p>
-
-        <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSfChcf4ktgjhvl0YH6Y177nuawIX-RfPfH8tWqUEYVMSj_dUQ/viewform?usp=sharing"
-            target="_blank"
-            class="button">
-
-            📝 Register Now
-
-        </a>
 
     </div>
 
