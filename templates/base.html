@@ -60,6 +60,33 @@
             background: #1d4ed8;
         }
 
+        .auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth-button {
+    color: white;
+    text-decoration: none;
+    padding: 11px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 1px solid #2563eb;
+}
+
+.auth-button.register {
+    background: #2563eb;
+}
+
+.auth-button.login {
+    background: transparent;
+}
+
+.auth-button:hover {
+    background: #1d4ed8;
+}
+       
         .nav-menu {
             display: none;
             position: absolute;
@@ -287,9 +314,21 @@
 
     <h2>Career Bridge</h2>
 
+    <div class="auth-buttons">
+
+    <a href="/register" class="auth-button register">
+        📝 Create Account
+    </a>
+
+    <a href="/login" class="auth-button login">
+        🔐 Login
+    </a>
+
     <button class="menu-button" onclick="toggleMenu()">
         ☰ Navigate
     </button>
+
+</div>
 
     <div class="nav-menu" id="navMenu">
 
@@ -314,8 +353,6 @@
         <a href="/library">📚 Library</a>
         
         <a href="/blog">📢 Blog</a>
-
-         <a href="/register">📝 Register</a>
 
         <a href="/contact">📞 Contact</a>
 
