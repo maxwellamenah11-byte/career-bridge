@@ -222,11 +222,6 @@ def library():
     return render_template("library.html")
 
 
-@app.route("/register")
-def register():
-    return render_template("register.html")
-
-
 @app.route("/opportunities")
 def opportunities():
 
