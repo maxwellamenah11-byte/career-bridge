@@ -63,24 +63,20 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
 
-        student = Student.query.filter_by(
-            email=email
-        ).first()
+        student = Student.query.filter_by(email=email).first()
 
-        if student and check_password_hash(
-            student.password,
-            password
-        ):
+        if not student:
+            return "Account not found."
 
-            session["student_id"] = student.id
-            session["student_name"] = student.name
+        if not check_password_hash(student.password, password):
+            return "Incorrect password."
 
-            return redirect(url_for("dashboard"))
+        session["student_id"] = student.id
+        session["student_name"] = student.name
 
-        return "Invalid email or password."
+        return redirect(url_for("dashboard"))
 
     return render_template("login.html")
-
 
 @app.route("/logout")
 def logout():
