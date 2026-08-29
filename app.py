@@ -87,7 +87,7 @@ def login():
         session["student_id"] = student.id
         session["student_name"] = student.name
 
-        return redirect(url_for("dashboard"))
+   return redirect(url_for("dashboard"))
 
     return render_template("login.html")
 
@@ -157,7 +157,7 @@ def python_module3():
 
 
 @app.route("/python/module4")
-@login-required
+@login_required
 def python_module4():
     return render_template("python/module4.html")
 
@@ -310,7 +310,8 @@ def blog():
 
 
 @app.route("/career-quiz")
-def career_quiz():
+@login_required
+    def career_quiz():
     return render_template("career-quiz.html")
 
 
