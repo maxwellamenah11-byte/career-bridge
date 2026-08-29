@@ -99,9 +99,11 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/about")
-def about():
-    return render_template("about.html")
+@app.route("/")
+def home():
+    if "student_id" not in session:
+        return redirect(url_for("login"))
+    return render_template("home.html")
 
 
 @app.route("/dashboard")
