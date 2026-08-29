@@ -87,7 +87,7 @@ def login():
         session["student_id"] = student.id
         session["student_name"] = student.name
 
-   return redirect(url_for("dashboard"))
+    return redirect(url_for("dashboard"))
 
     return render_template("login.html")
 
