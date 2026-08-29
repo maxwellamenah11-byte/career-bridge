@@ -142,6 +142,13 @@ def python():
 
 @app.route("/python/module1")
 @login_required
+def python_module1():
+    return render_template("python/module1.html")
+
+@app.route("/python/module2")
+@login_required
+def python_module2():
+    return render_template("python/module2.html")
 
 @app.route("/python/module3")
 @login_required
