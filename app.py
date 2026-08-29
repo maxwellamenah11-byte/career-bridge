@@ -311,7 +311,7 @@ def blog():
 
 @app.route("/career-quiz")
 @login_required
-    def career_quiz():
+def career_quiz():
     return render_template("career-quiz.html")
 
 
