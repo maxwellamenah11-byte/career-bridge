@@ -147,6 +147,55 @@ def register():
 
 
 # =========================================================
+# MENTOR DATABASE MODEL
+# =========================================================
+
+class Mentor(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    profession = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    field = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    bio = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    skills = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    experience = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    email = db.Column(
+        db.String(120),
+        nullable=True
+    )
+
+    verified = db.Column(
+        db.Boolean,
+        default=False
+    )
+
+
+# =========================================================
 # LOGIN
 # =========================================================
 
