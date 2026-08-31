@@ -289,7 +289,115 @@
                 font-size: 38px;
             }
         }
+/* CAREER BRIDGE AI */
 
+.ai-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+}
+
+.ai-button:hover {
+    background: #1d4ed8;
+}
+
+.ai-chat {
+    display: none;
+    position: fixed;
+    bottom: 85px;
+    right: 25px;
+    width: 350px;
+    height: 480px;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 15px;
+    z-index: 9999;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.ai-chat.show {
+    display: flex;
+    flex-direction: column;
+}
+
+.ai-header {
+    background: #2563eb;
+    color: white;
+    padding: 15px;
+    font-weight: bold;
+}
+
+.ai-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.ai-message {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.user-message {
+    background: #2563eb;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+.ai-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #1e293b;
+}
+
+.ai-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+}
+
+.ai-input button {
+    margin-left: 8px;
+    padding: 10px 15px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+@media (max-width: 500px) {
+    .ai-chat {
+        right: 10px;
+        bottom: 80px;
+        width: calc(100% - 20px);
+    }
+
+    .ai-button {
+        right: 15px;
+        bottom: 15px;
+    }
+}
+ 
     </style>
 
 </head>
