@@ -251,9 +251,7 @@
             border-top: 1px solid #1e293b;
         }
 
-        /* =================================
-           CAREER BRIDGE AI BUTTON
-        ================================= */
+        /* AI BUTTON */
 
         .ai-button {
             position: fixed;
@@ -275,7 +273,7 @@
             background: #1d4ed8;
         }
 
-        /* AI WINDOW */
+        /* AI CHAT */
 
         .ai-chat {
             display: none;
@@ -347,7 +345,55 @@
             background: #2563eb;
         }
 
-        /* AI MESSAGES */
+        /* PERSONAL ADVISOR */
+
+        .ai-form {
+            background: #020617;
+            padding: 12px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .ai-form h4 {
+            color: #60a5fa;
+            margin-bottom: 8px;
+        }
+
+        .ai-form input {
+            width: 100%;
+            padding: 9px;
+            margin-bottom: 7px;
+            border: 1px solid #334155;
+            border-radius: 7px;
+            background: #0f172a;
+            color: white;
+            outline: none;
+        }
+
+        .ai-form button {
+            width: 100%;
+            padding: 9px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* MEMORY STATUS */
+
+        .ai-memory {
+            padding: 7px 12px;
+            font-size: 11px;
+            color: #94a3b8;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .ai-memory span {
+            color: #60a5fa;
+        }
+
+        /* MESSAGES */
 
         .ai-messages {
             flex: 1;
@@ -374,7 +420,7 @@
             white-space: pre-line;
         }
 
-        /* AI INPUT */
+        /* INPUT */
 
         .ai-input {
             display: flex;
@@ -399,50 +445,6 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-        }
-
-        /* =================================
-           PERSONALIZED AI FORM
-        ================================= */
-
-        .ai-form {
-            background: #020617;
-            padding: 12px;
-            border-bottom: 1px solid #1e293b;
-        }
-
-        .ai-form h4 {
-            color: #60a5fa;
-            margin-bottom: 8px;
-        }
-
-        .ai-form input,
-        .ai-form textarea,
-        .ai-form select {
-            width: 100%;
-            padding: 9px;
-            margin-bottom: 7px;
-            border: 1px solid #334155;
-            border-radius: 7px;
-            background: #0f172a;
-            color: white;
-            outline: none;
-        }
-
-        .ai-form textarea {
-            resize: vertical;
-            min-height: 55px;
-        }
-
-        .ai-form button {
-            width: 100%;
-            padding: 9px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            cursor: pointer;
-            font-weight: bold;
         }
 
         /* MOBILE */
@@ -502,6 +504,7 @@
                 right: 15px;
                 bottom: 15px;
             }
+
         }
 
     </style>
@@ -511,10 +514,6 @@
 
 <body>
 
-
-<!-- ==============================
-     NAVIGATION
-============================== -->
 
 <nav>
 
@@ -590,31 +589,20 @@
 </nav>
 
 
-<!-- PAGE CONTENT -->
-
 {% block content %}
 {% endblock %}
 
 
-<!-- FOOTER -->
-
 <footer>
 
     <p><strong>Career Bridge</strong></p>
-
     <p>Building skills. Connecting opportunities.</p>
-
     <p>© 2026 Career Bridge. All rights reserved.</p>
 
 </footer>
 
 
 {% if session.get("student_id") %}
-
-
-<!-- ==============================
-     AI BUTTON
-============================== -->
 
 <button
     class="ai-button"
@@ -624,10 +612,6 @@
 
 </button>
 
-
-<!-- ==============================
-     AI CHAT
-============================== -->
 
 <div
     class="ai-chat"
@@ -641,7 +625,7 @@
             🤖 Career Bridge AI
 
             <small>
-                Your free Career & Study Assistant
+                Your personal Career Bridge assistant
             </small>
 
         </div>
@@ -656,8 +640,6 @@
 
     </div>
 
-
-    <!-- QUICK ACTIONS -->
 
     <div class="ai-quick-actions">
 
@@ -684,8 +666,6 @@
     </div>
 
 
-    <!-- PERSONALIZED CAREER FORM -->
-
     <div class="ai-form">
 
         <h4>🎯 Personal Career Advisor</h4>
@@ -693,7 +673,7 @@
         <input
             type="text"
             id="aiSubjects"
-            placeholder="Your favourite subjects">
+            placeholder="Favourite subjects">
 
         <input
             type="text"
@@ -707,14 +687,22 @@
 
         <button onclick="generateCareerAdvice()">
 
-            Find Career Matches
+            Save My Profile & Find Careers
 
         </button>
 
     </div>
 
 
-    <!-- MESSAGES -->
+    <div class="ai-memory">
+
+        🧠 Memory:
+        <span id="memoryStatus">
+            Nothing saved yet
+        </span>
+
+    </div>
+
 
     <div
         class="ai-messages"
@@ -726,21 +714,18 @@
 
             <br><br>
 
-            I can help you with careers, studying,
-            CVs, Python and opportunities.
+            I can remember your subjects, skills and
+            interests during this browser session.
 
             <br><br>
 
-            You can also use the
-            <strong>Personal Career Advisor</strong>
-            above to explore career matches.
+            Tell me about yourself and I'll use that
+            information when helping you.
 
         </div>
 
     </div>
 
-
-    <!-- INPUT -->
 
     <div class="ai-input">
 
@@ -752,25 +737,21 @@
         >
 
         <button onclick="sendAIMessage()">
-
             ➤
-
         </button>
 
     </div>
 
 </div>
 
-
 {% endif %}
 
 
 <script>
 
-
-/* =================================
+/* ===============================
    NAVIGATION
-================================= */
+================================ */
 
 function toggleMenu() {
 
@@ -786,9 +767,9 @@ function toggleMenu() {
 }
 
 
-/* =================================
-   AI WINDOW
-================================= */
+/* ===============================
+   AI
+================================ */
 
 function toggleAI() {
 
@@ -804,9 +785,122 @@ function toggleAI() {
 }
 
 
-/* =================================
-   AI MESSAGE
-================================= */
+/* ===============================
+   MEMORY
+================================ */
+
+/*
+   sessionStorage keeps the information
+   for this browser session.
+
+   It is not sent to the server.
+*/
+
+let aiMemory = {
+
+    subjects:
+        sessionStorage.getItem("cb_subjects") || "",
+
+    skills:
+        sessionStorage.getItem("cb_skills") || "",
+
+    interests:
+        sessionStorage.getItem("cb_interests") || ""
+
+};
+
+
+function saveMemory() {
+
+    sessionStorage.setItem(
+        "cb_subjects",
+        aiMemory.subjects
+    );
+
+    sessionStorage.setItem(
+        "cb_skills",
+        aiMemory.skills
+    );
+
+    sessionStorage.setItem(
+        "cb_interests",
+        aiMemory.interests
+    );
+
+    updateMemoryStatus();
+
+}
+
+
+function updateMemoryStatus() {
+
+    const status =
+        document.getElementById("memoryStatus");
+
+    if (!status) return;
+
+    let saved = [];
+
+    if (aiMemory.subjects) {
+        saved.push("subjects");
+    }
+
+    if (aiMemory.skills) {
+        saved.push("skills");
+    }
+
+    if (aiMemory.interests) {
+        saved.push("interests");
+    }
+
+    if (saved.length === 0) {
+
+        status.textContent =
+            "Nothing saved yet";
+
+    } else {
+
+        status.textContent =
+            saved.join(" • ");
+
+    }
+
+}
+
+
+function loadMemoryIntoForm() {
+
+    const subjects =
+        document.getElementById("aiSubjects");
+
+    const skills =
+        document.getElementById("aiSkills");
+
+    const interests =
+        document.getElementById("aiInterests");
+
+
+    if (subjects) {
+        subjects.value =
+            aiMemory.subjects;
+    }
+
+    if (skills) {
+        skills.value =
+            aiMemory.skills;
+    }
+
+    if (interests) {
+        interests.value =
+            aiMemory.interests;
+    }
+
+}
+
+
+/* ===============================
+   ADD MESSAGE
+================================ */
 
 function addAIMessage(message, type) {
 
@@ -818,15 +912,10 @@ function addAIMessage(message, type) {
     const box =
         document.createElement("div");
 
-    if (type === "user") {
-
-        box.className = "user-message";
-
-    } else {
-
-        box.className = "ai-message";
-
-    }
+    box.className =
+        type === "user"
+        ? "user-message"
+        : "ai-message";
 
     box.textContent = message;
 
@@ -838,25 +927,182 @@ function addAIMessage(message, type) {
 }
 
 
-/* =================================
-   QUICK ACTION
-================================= */
+/* ===============================
+   CAREER ADVISOR
+================================ */
+
+function generateCareerAdvice() {
+
+    const subjects =
+        document.getElementById("aiSubjects").value.trim();
+
+    const skills =
+        document.getElementById("aiSkills").value.trim();
+
+    const interests =
+        document.getElementById("aiInterests").value.trim();
+
+
+    if (!subjects && !skills && !interests) {
+
+        addAIMessage(
+            "Please enter at least one subject, skill or interest.",
+            "ai"
+        );
+
+        return;
+
+    }
+
+
+    aiMemory.subjects = subjects;
+    aiMemory.skills = skills;
+    aiMemory.interests = interests;
+
+    saveMemory();
+
+
+    const text =
+        (
+            subjects + " " +
+            skills + " " +
+            interests
+        ).toLowerCase();
+
+
+    let careers = [];
+
+
+    if (
+        text.includes("math") ||
+        text.includes("physics") ||
+        text.includes("engineering")
+    ) {
+
+        careers.push(
+            "⚙️ Engineering"
+        );
+
+    }
+
+
+    if (
+        text.includes("computer") ||
+        text.includes("technology") ||
+        text.includes("coding") ||
+        text.includes("programming") ||
+        text.includes("python")
+    ) {
+
+        careers.push(
+            "💻 Technology / Software"
+        );
+
+    }
+
+
+    if (
+        text.includes("data") ||
+        text.includes("excel") ||
+        text.includes("statistics") ||
+        text.includes("math")
+    ) {
+
+        careers.push(
+            "📊 Data / Analytics"
+        );
+
+    }
+
+
+    if (
+        text.includes("business") ||
+        text.includes("entrepreneur") ||
+        text.includes("leadership")
+    ) {
+
+        careers.push(
+            "💼 Business / Entrepreneurship"
+        );
+
+    }
+
+
+    if (
+        text.includes("design") ||
+        text.includes("creative") ||
+        text.includes("writing")
+    ) {
+
+        careers.push(
+            "🎨 Creative / Digital Media"
+        );
+
+    }
+
+
+    if (
+        text.includes("chemistry") ||
+        text.includes("biology") ||
+        text.includes("science")
+    ) {
+
+        careers.push(
+            "🔬 Science-related careers"
+        );
+
+    }
+
+
+    if (careers.length === 0) {
+
+        careers.push(
+            "🧭 Explore different career areas using Career Explorer"
+        );
+
+    }
+
+
+    let response =
+        "🧠 I've saved your profile for this session.\n\n";
+
+    response +=
+        "🎯 CAREER AREAS TO EXPLORE\n\n";
+
+    response +=
+        careers.join("\n");
+
+    response +=
+        "\n\nI'll use your saved interests when answering your next career questions.";
+
+    addAIMessage(
+        response,
+        "ai"
+    );
+
+}
+
+
+/* ===============================
+   QUICK ACTIONS
+================================ */
 
 function askAI(topic) {
 
     let question = "";
 
+
     if (topic === "career") {
 
         question =
-            "Help me choose a career based on my interests.";
+            "What careers could suit me?";
 
     }
 
     else if (topic === "study") {
 
         question =
-            "Help me create a study plan.";
+            "Create a study plan for me.";
 
     }
 
@@ -877,9 +1123,10 @@ function askAI(topic) {
     else if (topic === "opportunities") {
 
         question =
-            "Help me find opportunities.";
+            "What opportunities should I explore?";
 
     }
+
 
     document.getElementById("aiInput").value =
         question;
@@ -889,226 +1136,14 @@ function askAI(topic) {
 }
 
 
-/* =================================
-   PERSONAL CAREER ADVISOR
-================================= */
-
-function generateCareerAdvice() {
-
-    const subjects =
-        document.getElementById("aiSubjects").value
-        .toLowerCase();
-
-    const skills =
-        document.getElementById("aiSkills").value
-        .toLowerCase();
-
-    const interests =
-        document.getElementById("aiInterests").value
-        .toLowerCase();
-
-
-    if (!subjects && !skills && !interests) {
-
-        addAIMessage(
-            "Please enter at least your subjects, skills or interests so I can give you useful suggestions.",
-            "ai"
-        );
-
-        return;
-
-    }
-
-
-    let careers = [];
-
-
-    /* ENGINEERING */
-
-    if (
-        subjects.includes("math") ||
-        subjects.includes("physics") ||
-        interests.includes("engineering")
-    ) {
-
-        careers.push(
-            "⚙️ Engineering — good to explore if you enjoy mathematics, physics and solving technical problems."
-        );
-
-    }
-
-
-    /* TECHNOLOGY */
-
-    if (
-        interests.includes("computer") ||
-        interests.includes("technology") ||
-        interests.includes("tech") ||
-        skills.includes("coding") ||
-        skills.includes("programming") ||
-        skills.includes("python")
-    ) {
-
-        careers.push(
-            "💻 Software/Technology — worth exploring if you enjoy computers, programming and building digital solutions."
-        );
-
-    }
-
-
-    /* DATA */
-
-    if (
-        subjects.includes("math") ||
-        skills.includes("excel") ||
-        skills.includes("data") ||
-        interests.includes("data")
-    ) {
-
-        careers.push(
-            "📊 Data-related careers — a strong area to explore if you enjoy mathematics, analysis and working with information."
-        );
-
-    }
-
-
-    /* BUSINESS */
-
-    if (
-        interests.includes("business") ||
-        interests.includes("entrepreneur") ||
-        skills.includes("leadership") ||
-        skills.includes("communication")
-    ) {
-
-        careers.push(
-            "💼 Business/Entrepreneurship — worth exploring if you enjoy leadership, communication and creating ideas."
-        );
-
-    }
-
-
-    /* CREATIVE */
-
-    if (
-        interests.includes("design") ||
-        interests.includes("creative") ||
-        skills.includes("design") ||
-        skills.includes("writing")
-    ) {
-
-        careers.push(
-            "🎨 Creative/Digital careers — explore areas such as design, content, media and digital communication."
-        );
-
-    }
-
-
-    /* SCIENCE */
-
-    if (
-        subjects.includes("chemistry") ||
-        subjects.includes("biology") ||
-        interests.includes("science")
-    ) {
-
-        careers.push(
-            "🔬 Science-related careers — explore scientific, laboratory, environmental and health-related fields."
-        );
-
-    }
-
-
-    /* DEFAULT */
-
-    if (careers.length === 0) {
-
-        careers.push(
-            "🧭 Start with Career Explorer. Your interests, subjects and skills can help narrow down suitable career areas."
-        );
-
-    }
-
-
-    let response =
-        "🎯 YOUR CAREER MATCHES\n\n";
-
-    response +=
-        careers.join("\n\n");
-
-    response +=
-        "\n\nRemember: these are suggestions, not a final decision. Explore each field and learn what the actual work involves.";
-
-    addAIMessage(
-        response,
-        "ai"
-    );
-
-}
-
-
-/* =================================
-   STUDY PLAN
-================================= */
-
-function generateStudyPlan(subject) {
-
-    let plan =
-        "📚 STUDY PLAN\n\n";
-
-    plan +=
-        "Day 1 — Learn the basic concepts\n";
-
-    plan +=
-        "Day 2 — Review your notes and examples\n";
-
-    plan +=
-        "Day 3 — Practise questions\n";
-
-    plan +=
-        "Day 4 — Focus on difficult areas\n";
-
-    plan +=
-        "Day 5 — Practise past questions\n";
-
-    plan +=
-        "Day 6 — Review your mistakes\n";
-
-    plan +=
-        "Day 7 — Take a short self-test\n\n";
-
-    plan +=
-        "Subject: " + subject;
-
-    addAIMessage(
-        plan,
-        "ai"
-    );
-
-}
-
-
-/* =================================
-   AI RESPONSES
-================================= */
+/* ===============================
+   AI RESPONSE
+================================ */
 
 function getAIResponse(question) {
 
     const q =
         question.toLowerCase();
-
-
-    /* GREETING */
-
-    if (
-        q.includes("hello") ||
-        q.includes("hi") ||
-        q.includes("hey")
-    ) {
-
-        return "👋 Hello! I'm Career Bridge AI. I can help you with careers, studying, CVs, Python and opportunities.";
-
-    }
 
 
     /* CAREER */
@@ -1119,7 +1154,60 @@ function getAIResponse(question) {
         q.includes("profession")
     ) {
 
-        return "🎓 CAREER GUIDANCE\n\nThink about your favourite subjects, skills and interests. Use the Personal Career Advisor above to get career matches.\n\nYou can also explore Career Explorer:\n/career-explorer";
+        let response =
+            "🎓 CAREER GUIDANCE\n\n";
+
+
+        if (
+            aiMemory.subjects ||
+            aiMemory.skills ||
+            aiMemory.interests
+        ) {
+
+            response +=
+                "Based on what you've told me:\n\n";
+
+            if (aiMemory.subjects) {
+
+                response +=
+                    "📚 Subjects: " +
+                    aiMemory.subjects +
+                    "\n";
+
+            }
+
+            if (aiMemory.skills) {
+
+                response +=
+                    "🛠 Skills: " +
+                    aiMemory.skills +
+                    "\n";
+
+            }
+
+            if (aiMemory.interests) {
+
+                response +=
+                    "❤️ Interests: " +
+                    aiMemory.interests +
+                    "\n\n";
+
+            }
+
+            response +=
+                "Use Career Explorer to investigate career paths that match these areas.";
+
+        }
+
+        else {
+
+            response +=
+                "Tell me your favourite subjects, skills and interests using the Personal Career Advisor above.";
+
+        }
+
+
+        return response;
 
     }
 
@@ -1128,12 +1216,11 @@ function getAIResponse(question) {
 
     if (
         q.includes("study") ||
-        q.includes("studying") ||
         q.includes("exam") ||
         q.includes("revision")
     ) {
 
-        return "📚 STUDY ASSISTANT\n\nI recommend studying in short focused sessions, practising questions and reviewing your mistakes.\n\nAsk me: \"Create a study plan for Maths\" and I'll generate one.";
+        return "📚 STUDY ASSISTANT\n\nI can help you organise your studying. Tell me the subjects you need to study and how much time you have each day.";
 
     }
 
@@ -1145,7 +1232,7 @@ function getAIResponse(question) {
         q.includes("resume")
     ) {
 
-        return "📝 CV ASSISTANT\n\nA student CV can include your profile, education, skills, projects, certificates, achievements and relevant experience.\n\nYou can also use:\n/cv-builder";
+        return "📝 CV ASSISTANT\n\nI can help you improve your student CV. Make sure it clearly shows your education, skills, projects, certificates and achievements.\n\n👉 CV Builder: /cv-builder";
 
     }
 
@@ -1158,7 +1245,7 @@ function getAIResponse(question) {
         q.includes("programming")
     ) {
 
-        return "💻 PYTHON TUTOR\n\nStart with variables, data types, operators, conditions, loops, functions and projects.\n\nYour Python course is available here:\n/courses/python";
+        return "💻 PYTHON TUTOR\n\nWe can learn Python step-by-step, starting with variables and data types, then conditions, loops, functions and projects.\n\n👉 Python Course: /courses/python";
 
     }
 
@@ -1172,28 +1259,37 @@ function getAIResponse(question) {
         q.includes("opportunit")
     ) {
 
-        return "💼 OPPORTUNITIES\n\nCheck Career Bridge's Opportunities section for available programmes and scholarships.\n\n/opportunities";
+        return "💼 OPPORTUNITIES\n\nCheck the Career Bridge Opportunities section for available programmes and scholarships.\n\n👉 /opportunities";
 
     }
 
 
-    /* CAREER QUIZ */
-
-    if (q.includes("quiz")) {
-
-        return "🧭 You can use the Career Quiz to explore your interests and possible career directions.\n\n/career-quiz";
-
-    }
-
-
-    /* DASHBOARD */
+    /* MEMORY */
 
     if (
-        q.includes("dashboard") ||
-        q.includes("progress")
+        q.includes("remember") ||
+        q.includes("what do you know about me") ||
+        q.includes("my profile")
     ) {
 
-        return "📊 Your Dashboard contains your student features and learning progress.\n\n/dashboard";
+        let response =
+            "🧠 YOUR SAVED PROFILE\n\n";
+
+        response +=
+            "Subjects: " +
+            (aiMemory.subjects || "Not saved") +
+            "\n\n";
+
+        response +=
+            "Skills: " +
+            (aiMemory.skills || "Not saved") +
+            "\n\n";
+
+        response +=
+            "Interests: " +
+            (aiMemory.interests || "Not saved");
+
+        return response;
 
     }
 
@@ -1205,21 +1301,21 @@ function getAIResponse(question) {
         q.includes("what can you do")
     ) {
 
-        return "🤖 I can help with:\n\n🎓 Careers\n📚 Study plans\n📝 CVs\n💻 Python\n💼 Opportunities\n🧭 Career Explorer\n🧭 Career Quiz\n📊 Dashboard\n\nTell me what you need.";
+        return "🤖 I can help you with:\n\n🎓 Careers\n📚 Study plans\n📝 CVs\n💻 Python\n💼 Opportunities\n🧭 Career Explorer\n🧠 Your saved profile\n\nYou can also tell me your subjects, skills and interests.";
 
     }
 
 
     /* DEFAULT */
 
-    return "🤖 I can help you with careers, studying, CVs, Python and opportunities. Try asking me something specific, such as:\n\n\"What career suits someone who likes Maths and Physics?\"\n\nor\n\n\"Create a study plan for Chemistry.\"";
+    return "🤖 I'm here to help with careers, studying, CVs, Python and opportunities.\n\nYou can also ask me:\n\n• What do you remember about me?\n• What careers suit me?\n• Create a study plan.\n• Help me with my CV.";
 
 }
 
 
-/* =================================
+/* ===============================
    SEND MESSAGE
-================================= */
+================================ */
 
 function sendAIMessage() {
 
@@ -1245,37 +1341,6 @@ function sendAIMessage() {
 
     setTimeout(function() {
 
-        /*
-         * STUDY PLAN DETECTION
-         */
-
-        if (
-            question.toLowerCase().includes("study plan") ||
-            question.toLowerCase().includes("revision plan")
-        ) {
-
-            let subject =
-                question
-                .replace(/create/gi, "")
-                .replace(/a/gi, "")
-                .replace(/study/gi, "")
-                .replace(/plan/gi, "")
-                .replace(/for/gi, "")
-                .trim();
-
-            if (!subject) {
-
-                subject = "Your subject";
-
-            }
-
-            generateStudyPlan(subject);
-
-            return;
-
-        }
-
-
         const answer =
             getAIResponse(question);
 
@@ -1289,9 +1354,9 @@ function sendAIMessage() {
 }
 
 
-/* =================================
+/* ===============================
    ENTER KEY
-================================= */
+================================ */
 
 function handleAIKey(event) {
 
@@ -1302,6 +1367,22 @@ function handleAIKey(event) {
     }
 
 }
+
+
+/* ===============================
+   STARTUP
+================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadMemoryIntoForm();
+
+        updateMemoryStatus();
+
+    }
+);
 
 </script>
 
