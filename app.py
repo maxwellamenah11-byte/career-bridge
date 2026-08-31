@@ -94,6 +94,26 @@ def login_required(f):
 
 
 # =========================================================
+# ADMIN REQUIRED
+# =========================================================
+
+def admin_required(f):
+
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+
+        if "admin_id" not in session:
+
+            return redirect(
+                url_for("admin_login")
+            )
+
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+# =========================================================
 # HOME
 # =========================================================
 
@@ -794,6 +814,29 @@ def add_mentor():
 
     return render_template(
         "add-mentor.html"
+    )
+
+
+# =========================================================
+# ADMIN DATABASE MODEL
+# =========================================================
+
+class Admin(db.Model):
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    username = db.Column(
+        db.String(100),
+        unique=True,
+        nullable=False
+    )
+
+    password = db.Column(
+        db.String(200),
+        nullable=False
     )
 
 
