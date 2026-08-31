@@ -235,14 +235,12 @@
 
     <div class="profile-actions">
 
-        <button
-            class="request-button"
-            type="button"
-            onclick="alert('Mentorship requests will be available soon.')"
-        >
-            🤝 Request Mentorship
-        </button>
-
+       <a
+    href="{{ url_for('request_mentorship', mentor_id=mentor.id) }}"
+    class="request-button"
+>
+    🤝 Request Mentorship
+</a>
     </div>
 
 </div>
