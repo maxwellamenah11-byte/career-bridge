@@ -1,1 +1,96 @@
+{% extends "base.html" %}
 
+{% block content %}
+
+<div class="container" style="max-width:1100px; margin:40px auto; padding:20px;">
+
+```
+<div style="text-align:center; margin-bottom:40px;">
+    <h1>🤝 Career Bridge Mentors</h1>
+    <p>
+        Connect with experienced professionals and get guidance
+        as you build your career.
+    </p>
+</div>
+
+{% if mentors %}
+
+    <div style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+        gap:25px;
+    ">
+
+        {% for mentor in mentors %}
+
+            <div style="
+                background:white;
+                padding:25px;
+                border-radius:15px;
+                box-shadow:0 5px 20px rgba(0,0,0,0.08);
+            ">
+
+                <h2>{{ mentor.name }}</h2>
+
+                <p>
+                    <strong>{{ mentor.profession }}</strong>
+                </p>
+
+                <p>
+                    🎯 {{ mentor.field }}
+                </p>
+
+                {% if mentor.bio %}
+                    <p>{{ mentor.bio }}</p>
+                {% endif %}
+
+                {% if mentor.skills %}
+                    <p>
+                        <strong>Skills:</strong>
+                        {{ mentor.skills }}
+                    </p>
+                {% endif %}
+
+                {% if mentor.experience %}
+                    <p>
+                        <strong>Experience:</strong>
+                        {{ mentor.experience }}
+                    </p>
+                {% endif %}
+
+                {% if mentor.verified %}
+                    <p style="font-weight:bold;">
+                        ✓ Verified Mentor
+                    </p>
+                {% endif %}
+
+                <button style="
+                    width:100%;
+                    padding:12px;
+                    margin-top:15px;
+                    border:none;
+                    border-radius:8px;
+                    cursor:pointer;
+                ">
+                    Request Mentorship
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <div style="text-align:center; padding:50px;">
+        <h2>No mentors available yet.</h2>
+        <p>Career Bridge mentors will appear here soon.</p>
+    </div>
+
+{% endif %}
+```
+
+</div>
+
+{% endblock %}
