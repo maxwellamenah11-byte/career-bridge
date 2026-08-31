@@ -1,1 +1,184 @@
+{% extends "base.html" %}
 
+{% block title %}AI Assistant - Career Bridge{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+    <div class="page-header">
+
+        <h1>🤖 Career Bridge AI</h1>
+
+        <p>
+            Your personal assistant for careers, studying,
+            CVs, Python and opportunities.
+        </p>
+
+    </div>
+
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="icon">🎓</div>
+
+            <h3>Career Guidance</h3>
+
+            <p>
+                Explore career paths based on your
+                interests, subjects and skills.
+            </p>
+
+            <button
+                class="button"
+                onclick="openAIWithQuestion('Help me choose a career')">
+
+                Get Career Help
+
+            </button>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">📚</div>
+
+            <h3>Study Assistant</h3>
+
+            <p>
+                Get help understanding topics,
+                preparing for exams and studying.
+            </p>
+
+            <button
+                class="button"
+                onclick="openAIWithQuestion('Help me study')">
+
+                Study Help
+
+            </button>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">📝</div>
+
+            <h3>CV Assistant</h3>
+
+            <p>
+                Get guidance on building a strong
+                student CV.
+            </p>
+
+            <button
+                class="button"
+                onclick="openAIWithQuestion('Help me with my CV')">
+
+                CV Help
+
+            </button>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">💻</div>
+
+            <h3>Python Tutor</h3>
+
+            <p>
+                Learn Python concepts and practise
+                programming.
+            </p>
+
+            <button
+                class="button"
+                onclick="openAIWithQuestion('Teach me Python')">
+
+                Learn Python
+
+            </button>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">💼</div>
+
+            <h3>Opportunities</h3>
+
+            <p>
+                Learn about scholarships, internships
+                and career opportunities.
+            </p>
+
+            <button
+                class="button"
+                onclick="openAIWithQuestion('Show me opportunities')">
+
+                Explore
+
+            </button>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">🧭</div>
+
+            <h3>Career Explorer</h3>
+
+            <p>
+                Discover career areas that may match
+                your interests and skills.
+            </p>
+
+            <button
+                class="button"
+                onclick="openAIWithQuestion('Help me explore careers')">
+
+                Explore Careers
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<script>
+
+function openAIWithQuestion(question) {
+
+    const chat = document.getElementById("aiChat");
+    const input = document.getElementById("aiInput");
+
+    if (chat) {
+        chat.classList.add("show");
+    }
+
+    if (input) {
+
+        input.value = question;
+
+        input.focus();
+
+        sendAIMessage();
+
+    }
+
+}
+
+</script>
+
+{% endblock %}
