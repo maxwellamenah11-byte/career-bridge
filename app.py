@@ -749,46 +749,25 @@ with app.app_context():
 
     db.create_all()
 
-    # Add AI memory columns to existing databases
-    # if they don't already exist.
-
     try:
 
-        columns = db.session.execute(
-            text("PRAGMA table_info(student)")
-        ).fetchall()
-
-        existing_columns = {
-            column[1]
-            for column in columns
-        }
-
         memory_columns = {
-
-            "subjects":
-                "TEXT",
-
-            "skills":
-                "TEXT",
-
-            "interests":
-                "TEXT",
-
-            "career_goal":
-                "TEXT"
-
+            "subjects": "TEXT",
+            "skills": "TEXT",
+            "interests": "TEXT",
+            "career_goal": "TEXT"
         }
 
         for column_name, column_type in memory_columns.items():
 
-            if column_name not in existing_columns:
-
-                db.session.execute(
-                    text(
-                        f"ALTER TABLE student "
-                        f"ADD COLUMN {column_name} {column_type}"
-                    )
+            db.session.execute(
+                text(
+                    f"""
+                    ALTER TABLE student
+                    ADD COLUMN IF NOT EXISTS {column_name} {column_type}
+                    """
                 )
+            )
 
         db.session.commit()
 
@@ -800,7 +779,6 @@ with app.app_context():
             "Database migration warning:",
             e
         )
-
 
 # =========================================================
 # RUN
