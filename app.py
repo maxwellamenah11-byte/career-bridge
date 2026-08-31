@@ -757,6 +757,47 @@ def mentors():
 
 
 # =========================================================
+# ADD MENTOR
+# =========================================================
+
+@app.route("/add-mentor", methods=["GET", "POST"])
+@login_required
+def add_mentor():
+
+    if request.method == "POST":
+
+        name = request.form.get("name")
+        profession = request.form.get("profession")
+        field = request.form.get("field")
+        bio = request.form.get("bio")
+        skills = request.form.get("skills")
+        experience = request.form.get("experience")
+        email = request.form.get("email")
+
+        mentor = Mentor(
+            name=name,
+            profession=profession,
+            field=field,
+            bio=bio,
+            skills=skills,
+            experience=experience,
+            email=email,
+            verified=True
+        )
+
+        db.session.add(mentor)
+        db.session.commit()
+
+        return redirect(
+            url_for("mentors")
+        )
+
+    return render_template(
+        "add-mentor.html"
+    )
+
+
+# =========================================================
 # BLOG
 # =========================================================
 
