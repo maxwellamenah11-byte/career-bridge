@@ -7,6 +7,10 @@ from sqlalchemy import text
 
 app = Flask(__name__)
 
+# =========================================================
+# CONFIGURATION
+# =========================================================
+
 app.config["SECRET_KEY"] = os.environ.get(
     "SECRET_KEY",
     "career-bridge-development-key"
@@ -33,7 +37,10 @@ db = SQLAlchemy(app)
 
 class Student(db.Model):
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
     name = db.Column(
         db.String(100),
@@ -51,7 +58,6 @@ class Student(db.Model):
         nullable=False
     )
 
-    # AI MEMORY
     subjects = db.Column(
         db.Text,
         nullable=True
@@ -70,6 +76,81 @@ class Student(db.Model):
     career_goal = db.Column(
         db.Text,
         nullable=True
+    )
+
+
+# =========================================================
+# MENTOR DATABASE MODEL
+# =========================================================
+
+class Mentor(db.Model):
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    profession = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    field = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    bio = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    skills = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    experience = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    email = db.Column(
+        db.String(120),
+        nullable=True
+    )
+
+    verified = db.Column(
+        db.Boolean,
+        default=False
+    )
+
+
+# =========================================================
+# ADMIN DATABASE MODEL
+# =========================================================
+
+class Admin(db.Model):
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    username = db.Column(
+        db.String(100),
+        unique=True,
+        nullable=False
+    )
+
+    password = db.Column(
+        db.String(200),
+        nullable=False
     )
 
 
@@ -114,56 +195,6 @@ def admin_required(f):
 
 
 # =========================================================
-# ADMIN LOGIN
-# =========================================================
-
-@app.route("/admin/login", methods=["GET", "POST"])
-def admin_login():
-
-    if request.method == "POST":
-
-        username = request.form.get("username")
-        password = request.form.get("password")
-
-        admin = Admin.query.filter_by(
-            username=username
-        ).first()
-
-        if not admin:
-            return "Admin account not found."
-
-        if not check_password_hash(
-            admin.password,
-            password
-        ):
-            return "Incorrect password."
-
-        session["admin_id"] = admin.id
-        session["admin_username"] = admin.username
-
-        return redirect(
-            url_for("admin_dashboard")
-        )
-
-    return render_template(
-        "admin-login.html"
-    )
-
-
-# =========================================================
-# ADMIN DASHBOARD
-# =========================================================
-
-@app.route("/admin/dashboard")
-@admin_required
-def admin_dashboard():
-
-    return render_template(
-        "admin-dashboard.html"
-    )
-
-
-# =========================================================
 # HOME
 # =========================================================
 
@@ -191,6 +222,14 @@ def register():
         email = request.form.get("email")
         password = request.form.get("password")
 
+        existing_student = Student.query.filter_by(
+            email=email
+        ).first()
+
+        if existing_student:
+
+            return "An account with this email already exists."
+
         hashed_password = generate_password_hash(
             password
         )
@@ -213,55 +252,6 @@ def register():
 
     return render_template(
         "register.html"
-    )
-
-
-# =========================================================
-# MENTOR DATABASE MODEL
-# =========================================================
-
-class Mentor(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    name = db.Column(
-        db.String(100),
-        nullable=False
-    )
-
-    profession = db.Column(
-        db.String(150),
-        nullable=False
-    )
-
-    field = db.Column(
-        db.String(100),
-        nullable=False
-    )
-
-    bio = db.Column(
-        db.Text,
-        nullable=True
-    )
-
-    skills = db.Column(
-        db.Text,
-        nullable=True
-    )
-
-    experience = db.Column(
-        db.Text,
-        nullable=True
-    )
-
-    email = db.Column(
-        db.String(120),
-        nullable=True
-    )
-
-    verified = db.Column(
-        db.Boolean,
-        default=False
     )
 
 
@@ -318,6 +308,145 @@ def logout():
 
     return redirect(
         url_for("login")
+    )
+
+
+# =========================================================
+# ADMIN LOGIN
+# =========================================================
+
+@app.route(
+    "/admin/login",
+    methods=["GET", "POST"]
+)
+def admin_login():
+
+    if request.method == "POST":
+
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        admin = Admin.query.filter_by(
+            username=username
+        ).first()
+
+        if not admin:
+
+            return "Admin account not found."
+
+        if not check_password_hash(
+            admin.password,
+            password
+        ):
+
+            return "Incorrect password."
+
+        session["admin_id"] = admin.id
+        session["admin_username"] = admin.username
+
+        return redirect(
+            url_for("admin_dashboard")
+        )
+
+    return render_template(
+        "admin-login.html"
+    )
+
+
+# =========================================================
+# ADMIN DASHBOARD
+# =========================================================
+
+@app.route("/admin/dashboard")
+@admin_required
+def admin_dashboard():
+
+    mentors = Mentor.query.order_by(
+        Mentor.id.desc()
+    ).all()
+
+    return render_template(
+        "admin-dashboard.html",
+        mentors=mentors
+    )
+
+
+# =========================================================
+# ADMIN LOGOUT
+# =========================================================
+
+@app.route("/admin/logout")
+def admin_logout():
+
+    session.pop("admin_id", None)
+    session.pop("admin_username", None)
+
+    return redirect(
+        url_for("admin_login")
+    )
+
+
+# =========================================================
+# ADD MENTOR - ADMIN ONLY
+# =========================================================
+
+@app.route(
+    "/add-mentor",
+    methods=["GET", "POST"]
+)
+@admin_required
+def add_mentor():
+
+    if request.method == "POST":
+
+        name = request.form.get("name")
+        profession = request.form.get("profession")
+        field = request.form.get("field")
+        bio = request.form.get("bio")
+        skills = request.form.get("skills")
+        experience = request.form.get("experience")
+        email = request.form.get("email")
+
+        mentor = Mentor(
+            name=name,
+            profession=profession,
+            field=field,
+            bio=bio,
+            skills=skills,
+            experience=experience,
+            email=email,
+            verified=True
+        )
+
+        db.session.add(mentor)
+        db.session.commit()
+
+        return redirect(
+            url_for("mentors")
+        )
+
+    return render_template(
+        "add-mentor.html"
+    )
+
+
+# =========================================================
+# MENTORS
+# =========================================================
+
+@app.route("/mentors")
+@login_required
+def mentors():
+
+    mentors = Mentor.query.filter_by(
+        verified=True
+    ).order_by(
+        Mentor.id.desc()
+    ).all()
+
+    return render_template(
+        "mentors.html",
+        mentors=mentors
     )
 
 
@@ -522,90 +651,70 @@ def python():
 @login_required
 def python_module1():
 
-    return render_template(
-        "python/module1.html"
-    )
+    return render_template("python/module1.html")
 
 
 @app.route("/python/module2")
 @login_required
 def python_module2():
 
-    return render_template(
-        "python/module2.html"
-    )
+    return render_template("python/module2.html")
 
 
 @app.route("/python/module3")
 @login_required
 def python_module3():
 
-    return render_template(
-        "python/module3.html"
-    )
+    return render_template("python/module3.html")
 
 
 @app.route("/python/module4")
 @login_required
 def python_module4():
 
-    return render_template(
-        "python/module4.html"
-    )
+    return render_template("python/module4.html")
 
 
 @app.route("/python/module5")
 @login_required
 def python_module5():
 
-    return render_template(
-        "python/module5.html"
-    )
+    return render_template("python/module5.html")
 
 
 @app.route("/python/module6")
 @login_required
 def python_module6():
 
-    return render_template(
-        "python/module6.html"
-    )
+    return render_template("python/module6.html")
 
 
 @app.route("/python/module7")
 @login_required
 def python_module7():
 
-    return render_template(
-        "python/module7.html"
-    )
+    return render_template("python/module7.html")
 
 
 @app.route("/python/module8")
 @login_required
 def python_module8():
 
-    return render_template(
-        "python/module8.html"
-    )
+    return render_template("python/module8.html")
 
 
 @app.route("/python/module9")
 @login_required
 def python_module9():
 
-    return render_template(
-        "python/module9.html"
-    )
+    return render_template("python/module9.html")
 
 
 @app.route("/python/module10")
 @login_required
 def python_module10():
 
-    return render_template(
-        "python/module10.html"
-    )
+    return render_template("python/module10.html")
 
 
 # =========================================================
@@ -625,45 +734,35 @@ def cv_linkedin():
 @login_required
 def cv_linkedin_module1():
 
-    return render_template(
-        "cv-linkedin/module1.html"
-    )
+    return render_template("cv-linkedin/module1.html")
 
 
 @app.route("/cv-linkedin/module2")
 @login_required
 def cv_linkedin_module2():
 
-    return render_template(
-        "cv-linkedin/module2.html"
-    )
+    return render_template("cv-linkedin/module2.html")
 
 
 @app.route("/cv-linkedin/module3")
 @login_required
 def cv_linkedin_module3():
 
-    return render_template(
-        "cv-linkedin/module3.html"
-    )
+    return render_template("cv-linkedin/module3.html")
 
 
 @app.route("/cv-linkedin/module4")
 @login_required
 def cv_linkedin_module4():
 
-    return render_template(
-        "cv-linkedin/module4.html"
-    )
+    return render_template("cv-linkedin/module4.html")
 
 
 @app.route("/cv-linkedin/module5")
 @login_required
 def cv_linkedin_module5():
 
-    return render_template(
-        "cv-linkedin/module5.html"
-    )
+    return render_template("cv-linkedin/module5.html")
 
 
 # =========================================================
@@ -689,7 +788,7 @@ def career_development():
 
 
 # =========================================================
-# AI ASSISTANT PAGE
+# AI ASSISTANT
 # =========================================================
 
 @app.route("/ai-assistant")
@@ -809,88 +908,6 @@ def career_explorer():
 
 
 # =========================================================
-# MENTORS
-# =========================================================
-
-@app.route("/mentors")
-@login_required
-def mentors():
-
-    mentors = Mentor.query.filter_by(
-        verified=True
-    ).all()
-
-    return render_template(
-        "mentors.html",
-        mentors=mentors
-    )
-
-
-# =========================================================
-# ADD MENTOR
-# =========================================================
-
-@app.route("/add-mentor", methods=["GET", "POST"])
-@login_required
-def add_mentor():
-
-    if request.method == "POST":
-
-        name = request.form.get("name")
-        profession = request.form.get("profession")
-        field = request.form.get("field")
-        bio = request.form.get("bio")
-        skills = request.form.get("skills")
-        experience = request.form.get("experience")
-        email = request.form.get("email")
-
-        mentor = Mentor(
-            name=name,
-            profession=profession,
-            field=field,
-            bio=bio,
-            skills=skills,
-            experience=experience,
-            email=email,
-            verified=True
-        )
-
-        db.session.add(mentor)
-        db.session.commit()
-
-        return redirect(
-            url_for("mentors")
-        )
-
-    return render_template(
-        "add-mentor.html"
-    )
-
-
-# =========================================================
-# ADMIN DATABASE MODEL
-# =========================================================
-
-class Admin(db.Model):
-
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    username = db.Column(
-        db.String(100),
-        unique=True,
-        nullable=False
-    )
-
-    password = db.Column(
-        db.String(200),
-        nullable=False
-    )
-
-
-# =========================================================
 # BLOG
 # =========================================================
 
@@ -943,7 +960,7 @@ def python_playground():
 
 
 # =========================================================
-# DATABASE SETUP + SAFE MIGRATION
+# DATABASE SETUP
 # =========================================================
 
 with app.app_context():
@@ -965,7 +982,8 @@ with app.app_context():
                 text(
                     f"""
                     ALTER TABLE student
-                    ADD COLUMN IF NOT EXISTS {column_name} {column_type}
+                    ADD COLUMN IF NOT EXISTS
+                    {column_name} {column_type}
                     """
                 )
             )
@@ -981,14 +999,20 @@ with app.app_context():
             e
         )
 
+
 # =========================================================
 # CREATE ADMIN ACCOUNT
 # =========================================================
 
 with app.app_context():
 
-    admin_username = os.environ.get("ADMIN_USERNAME")
-    admin_password = os.environ.get("ADMIN_PASSWORD")
+    admin_username = os.environ.get(
+        "ADMIN_USERNAME"
+    )
+
+    admin_password = os.environ.get(
+        "ADMIN_PASSWORD"
+    )
 
     if admin_username and admin_password:
 
@@ -1008,7 +1032,9 @@ with app.app_context():
             db.session.add(admin)
             db.session.commit()
 
-            print("Admin account created successfully.")
+            print(
+                "Admin account created successfully."
+            )
 
 
 # =========================================================
