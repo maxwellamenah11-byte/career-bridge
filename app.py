@@ -969,6 +969,36 @@ with app.app_context():
         )
 
 # =========================================================
+# CREATE ADMIN ACCOUNT
+# =========================================================
+
+with app.app_context():
+
+    admin_username = os.environ.get("ADMIN_USERNAME")
+    admin_password = os.environ.get("ADMIN_PASSWORD")
+
+    if admin_username and admin_password:
+
+        existing_admin = Admin.query.filter_by(
+            username=admin_username
+        ).first()
+
+        if not existing_admin:
+
+            admin = Admin(
+                username=admin_username,
+                password=generate_password_hash(
+                    admin_password
+                )
+            )
+
+            db.session.add(admin)
+            db.session.commit()
+
+            print("Admin account created successfully.")
+
+
+# =========================================================
 # RUN
 # =========================================================
 
