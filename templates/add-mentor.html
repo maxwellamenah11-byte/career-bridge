@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container" style="max-width:700px; margin:40px auto; padding:20px;">
+
+    <h1>Add Mentor</h1>
+
+    <p>Add a verified professional to Career Bridge.</p>
+
+    <form method="POST">
+
+        <label>Name</label>
+        <input
+            type="text"
+            name="name"
+            required
+            style="width:100%; padding:12px; margin:8px 0 20px;"
+        >
+
+        <label>Profession</label>
+        <input
+            type="text"
+            name="profession"
+            placeholder="e.g. Petroleum Engineer"
+            required
+            style="width:100%; padding:12px; margin:8px 0 20px;"
+        >
+
+        <label>Career Field</label>
+        <input
+            type="text"
+            name="field"
+            placeholder="e.g. Engineering"
+            required
+            style="width:100%; padding:12px; margin:8px 0 20px;"
+        >
+
+        <label>Bio</label>
+        <textarea
+            name="bio"
+            rows="5"
+            style="width:100%; padding:12px; margin:8px 0 20px;"
+        ></textarea>
+
+        <label>Skills</label>
+        <input
+            type="text"
+            name="skills"
+            placeholder="e.g. Excel, Python, Project Management"
+            style="width:100%; padding:12px; margin:8px 0 20px;"
+        >
+
+        <label>Experience</label>
+        <input
+            type="text"
+            name="experience"
+            placeholder="e.g. 5 years"
+            style="width:100%; padding:12px; margin:8px 0 20px;"
+        >
+
+        <label>Email</label>
+        <input
+            type="email"
+            name="email"
+            style="width:100%; padding:12px; margin:8px 0 20px;"
+        >
+
+        <button
+            type="submit"
+            style="padding:12px 25px; border:none; border-radius:8px; cursor:pointer;"
+        >
+            Add Mentor
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}
