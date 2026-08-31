@@ -114,7 +114,7 @@ def certificate():
 
 @app.route("/about")
 @login_required
-def certificate():
+def about():
     return render_template("about.html")
 
 
