@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .requests-page {
+        max-width: 1150px;
+        margin: 0 auto;
+        padding: 45px 20px 70px;
+    }
+
+    .requests-header {
+        margin-bottom: 30px;
+    }
+
+    .requests-header h1 {
+        font-size: 36px;
+        margin-bottom: 8px;
+    }
+
+    .requests-header p {
+        opacity: 0.7;
+    }
+
+    .request-card {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        margin-bottom: 18px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+    }
+
+    .request-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .request-info h2 {
+        margin: 0 0 8px;
+        font-size: 21px;
+    }
+
+    .request-info p {
+        margin: 5px 0;
+        opacity: 0.75;
+    }
+
+    .message {
+        margin-top: 20px;
+        padding: 18px;
+        background: #f8fafc;
+        border-radius: 12px;
+        line-height: 1.6;
+    }
+
+    .status {
+        padding: 7px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+        white-space: nowrap;
+        background: #e2e8f0;
+    }
+
+    .request-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .action-button {
+        padding: 10px 16px;
+        border-radius: 9px;
+        text-decoration: none;
+        font-weight: bold;
+        background: #e2e8f0;
+        color: #111827;
+    }
+
+    .empty-state {
+        background: white;
+        padding: 50px 20px;
+        border-radius: 18px;
+        text-align: center;
+    }
+
+    @media (max-width: 600px) {
+
+        .request-top {
+            flex-direction: column;
+        }
+
+        .request-actions {
+            flex-direction: column;
+        }
+
+        .action-button {
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="requests-page">
+
+```
+<div class="requests-header">
+
+    <h1>📩 Mentorship Requests</h1>
+
+    <p>
+        Review mentorship requests submitted by Career Bridge students.
+    </p>
+
+</div>
+
+
+{% if requests %}
+
+    {% for req in requests %}
+
+        <div class="request-card">
+
+            <div class="request-top">
+
+                <div class="request-info">
+
+                    <h2>
+                        👨‍🎓 {{ req.student.name }}
+                    </h2>
+
+                    <p>
+                        📧 {{ req.student.email }}
+                    </p>
+
+                    <p>
+                        🤝 Mentor:
+                        <strong>
+                            {{ req.mentor.name }}
+                        </strong>
+                    </p>
+
+                    {% if req.created_at %}
+
+                        <p>
+                            📅 {{ req.created_at.strftime("%d %B %Y, %I:%M %p") }}
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="status">
+
+                    {{ req.status }}
+
+                </div>
+
+            </div>
+
+
+            <div class="message">
+
+                <strong>Student's message:</strong>
+
+                <p>
+                    {{ req.message }}
+                </p>
+
+            </div>
+
+
+            <div class="request-actions">
+
+                <a
+                    href="{{ url_for(
+                        'update_mentorship_request',
+                        request_id=req.id,
+                        status='Accepted'
+                    ) }}"
+                    class="action-button"
+                >
+                    ✓ Accept
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'update_mentorship_request',
+                        request_id=req.id,
+                        status='Declined'
+                    ) }}"
+                    class="action-button"
+                >
+                    ✕ Decline
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'update_mentorship_request',
+                        request_id=req.id,
+                        status='Pending'
+                    ) }}"
+                    class="action-button"
+                >
+                    ↻ Pending
+                </a>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <div class="empty-state">
+
+        <h2>📭 No mentorship requests yet</h2>
+
+        <p>
+            Student mentorship requests will appear here.
+        </p>
+
+    </div>
+
+{% endif %}
+```
+
+</div>
+
+{% endblock %}
