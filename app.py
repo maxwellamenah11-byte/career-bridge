@@ -114,6 +114,43 @@ def admin_required(f):
 
 
 # =========================================================
+# ADMIN LOGIN
+# =========================================================
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+
+    if request.method == "POST":
+
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        admin = Admin.query.filter_by(
+            username=username
+        ).first()
+
+        if not admin:
+            return "Admin account not found."
+
+        if not check_password_hash(
+            admin.password,
+            password
+        ):
+            return "Incorrect password."
+
+        session["admin_id"] = admin.id
+        session["admin_username"] = admin.username
+
+        return redirect(
+            url_for("admin_dashboard")
+        )
+
+    return render_template(
+        "admin-login.html"
+    )
+
+
+# =========================================================
 # HOME
 # =========================================================
 
