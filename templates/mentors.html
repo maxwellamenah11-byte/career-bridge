@@ -236,12 +236,12 @@
 
                 <div class="mentor-actions">
 
-                    <button
-                        class="mentor-button profile-button"
-                        type="button"
-                    >
-                        View Profile
-                    </button>
+                    <a
+    href="{{ url_for('mentor_profile', mentor_id=mentor.id) }}"
+    class="mentor-button profile-button"
+>
+    View Profile
+</a>
 
                     <button
                         class="mentor-button request-button"
