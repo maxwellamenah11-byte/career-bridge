@@ -451,6 +451,25 @@ def mentors():
 
 
 # =========================================================
+# MENTOR PROFILE
+# =========================================================
+
+@app.route("/mentor/<int:mentor_id>")
+@login_required
+def mentor_profile(mentor_id):
+
+    mentor = Mentor.query.get_or_404(mentor_id)
+
+    if not mentor.verified:
+        return "Mentor not available.", 404
+
+    return render_template(
+        "mentor-profile.html",
+        mentor=mentor
+    )
+
+
+# =========================================================
 # AI MEMORY - GET
 # =========================================================
 
