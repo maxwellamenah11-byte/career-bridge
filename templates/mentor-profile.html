@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .profile-container {
+        max-width: 850px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+
+    .profile-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .profile-avatar {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 38px;
+        font-weight: bold;
+    }
+
+    .profile-header h1 {
+        margin: 0 0 8px;
+    }
+
+    .profession {
+        opacity: 0.7;
+        margin: 0;
+    }
+
+    .verified {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 6px 10px;
+        border-radius: 20px;
+        background: #e2e8f0;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .profile-section {
+        margin-top: 28px;
+    }
+
+    .profile-section h2 {
+        margin-bottom: 10px;
+    }
+
+    .profile-section p {
+        line-height: 1.7;
+        opacity: 0.8;
+    }
+
+    .request-button {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 13px 22px;
+        background: #111827;
+        color: white;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .back-button {
+        display: inline-block;
+        margin-bottom: 20px;
+        text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .profile-card {
+            padding: 25px;
+        }
+    }
+</style>
+
+<div class="profile-container">
+
+```
+<a href="{{ url_for('mentors') }}" class="back-button">
+    ← Back to Mentors
+</a>
+
+<div class="profile-card">
+
+    <div class="profile-header">
+
+        <div class="profile-avatar">
+            {{ mentor.name[0]|upper }}
+        </div>
+
+        <div>
+
+            <h1>{{ mentor.name }}</h1>
+
+            <p class="profession">
+                {{ mentor.profession }}
+            </p>
+
+            {% if mentor.verified %}
+                <span class="verified">
+                    ✓ Verified Mentor
+                </span>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-section">
+
+        <h2>🎯 Career Field</h2>
+
+        <p>
+            {{ mentor.field }}
+        </p>
+
+    </div>
+
+
+    {% if mentor.bio %}
+
+    <div class="profile-section">
+
+        <h2>👤 About</h2>
+
+        <p>
+            {{ mentor.bio }}
+        </p>
+
+    </div>
+
+    {% endif %}
+
+
+    {% if mentor.skills %}
+
+    <div class="profile-section">
+
+        <h2>🧠 Skills</h2>
+
+        <p>
+            {{ mentor.skills }}
+        </p>
+
+    </div>
+
+    {% endif %}
+
+
+    {% if mentor.experience %}
+
+    <div class="profile-section">
+
+        <h2>💼 Experience</h2>
+
+        <p>
+            {{ mentor.experience }}
+        </p>
+
+    </div>
+
+    {% endif %}
+
+
+    <a
+        href="{{ url_for('request_mentorship', mentor_id=mentor.id) }}"
+        class="request-button"
+    >
+        🤝 Request Mentorship
+    </a>
+
+</div>
+```
+
+</div>
+
+{% endblock %}
