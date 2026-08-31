@@ -244,6 +244,12 @@ def career_development():
     return render_template("career-development.html")
 
 
+@app.route("/ai-assistant")
+@login_required
+def ai_assistant():
+    return render_template("ai-assistant.html")
+
+
 @app.route("/library")
 @login_required
 def library():
