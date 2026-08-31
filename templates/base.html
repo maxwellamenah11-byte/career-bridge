@@ -27,6 +27,8 @@
             line-height: 1.6;
         }
 
+        /* NAVIGATION */
+
         nav {
             background: #020617;
             padding: 18px 7%;
@@ -94,7 +96,7 @@
             position: absolute;
             right: 7%;
             top: 70px;
-            width: 190px;
+            width: 210px;
             background: #0f172a;
             padding: 10px;
             border-radius: 10px;
@@ -117,6 +119,8 @@
         .nav-menu a:hover {
             background: #2563eb;
         }
+
+        /* GENERAL */
 
         .page {
             min-height: 80vh;
@@ -141,6 +145,8 @@
             font-size: 18px;
         }
 
+        /* BUTTONS */
+
         .button {
             display: inline-block;
             background: #2563eb;
@@ -155,6 +161,8 @@
         .button:hover {
             background: #1d4ed8;
         }
+
+        /* HOME */
 
         .hero {
             min-height: 88vh;
@@ -190,6 +198,8 @@
             color: #cbd5e1;
             margin-bottom: 30px;
         }
+
+        /* CARDS */
 
         .cards {
             display: flex;
@@ -227,6 +237,8 @@
             color: #94a3b8;
         }
 
+        /* CONTACT */
+
         .contact-box {
             max-width: 500px;
             margin: 20px auto;
@@ -237,6 +249,8 @@
             border-radius: 12px;
         }
 
+        /* FOOTER */
+
         footer {
             background: #020617;
             color: #94a3b8;
@@ -244,6 +258,106 @@
             padding: 30px;
             border-top: 1px solid #1e293b;
         }
+
+        /* AI BUTTON */
+
+        .ai-button {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        }
+
+        .ai-button:hover {
+            background: #1d4ed8;
+        }
+
+        /* AI CHAT */
+
+        .ai-chat {
+            display: none;
+            position: fixed;
+            bottom: 85px;
+            right: 25px;
+            width: 350px;
+            height: 480px;
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 15px;
+            z-index: 9999;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .ai-chat.show {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-header {
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+
+        .ai-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .ai-message {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .user-message {
+            background: #2563eb;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-align: right;
+        }
+
+        .ai-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #1e293b;
+        }
+
+        .ai-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .ai-input button {
+            margin-left: 8px;
+            padding: 10px 15px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* MOBILE */
 
         @media (max-width: 700px) {
 
@@ -288,193 +402,243 @@
             .page-header h1 {
                 font-size: 38px;
             }
+
+            .ai-chat {
+                right: 10px;
+                bottom: 80px;
+                width: calc(100% - 20px);
+            }
+
+            .ai-button {
+                right: 15px;
+                bottom: 15px;
+            }
+
         }
-/* CAREER BRIDGE AI */
 
-.ai-button {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    background: #2563eb;
-    color: white;
-    border: none;
-    padding: 15px 20px;
-    border-radius: 50px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 9999;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-}
-
-.ai-button:hover {
-    background: #1d4ed8;
-}
-
-.ai-chat {
-    display: none;
-    position: fixed;
-    bottom: 85px;
-    right: 25px;
-    width: 350px;
-    height: 480px;
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 15px;
-    z-index: 9999;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    overflow: hidden;
-}
-
-.ai-chat.show {
-    display: flex;
-    flex-direction: column;
-}
-
-.ai-header {
-    background: #2563eb;
-    color: white;
-    padding: 15px;
-    font-weight: bold;
-}
-
-.ai-messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-}
-
-.ai-message {
-    background: #1e293b;
-    color: #e2e8f0;
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
-
-.user-message {
-    background: #2563eb;
-    color: white;
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    text-align: right;
-}
-
-.ai-input {
-    display: flex;
-    padding: 10px;
-    border-top: 1px solid #1e293b;
-}
-
-.ai-input input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    outline: none;
-}
-
-.ai-input button {
-    margin-left: 8px;
-    padding: 10px 15px;
-    background: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-@media (max-width: 500px) {
-    .ai-chat {
-        right: 10px;
-        bottom: 80px;
-        width: calc(100% - 20px);
-    }
-
-    .ai-button {
-        right: 15px;
-        bottom: 15px;
-    }
-}
- 
     </style>
 
 </head>
 
 <body>
 
-<nav>
+    <nav>
 
-    <h2>Career Bridge</h2>
+        <h2>Career Bridge</h2>
 
-    <div class="nav-actions">
+        <div class="nav-actions">
+
+            {% if session.get("student_id") %}
+
+                <button class="menu-button" onclick="toggleMenu()">
+                    ☰ Navigate
+                </button>
+
+                <a href="/logout" class="account-button logout-button">
+                    🔓 Logout
+                </a>
+
+            {% else %}
+
+                <a href="/register" class="account-button create-button">
+                    📝 Create Account
+                </a>
+
+                <a href="/login" class="account-button login-button">
+                    🔐 Login
+                </a>
+
+            {% endif %}
+
+        </div>
 
         {% if session.get("student_id") %}
 
-            <button class="menu-button" onclick="toggleMenu()">
-                ☰ Navigate
-            </button>
+            <div class="nav-menu" id="navMenu">
 
-            <a href="/logout" class="account-button logout-button">
-                🔓 Logout
-            </a>
+                <a href="/">🏠 Home</a>
+                <a href="/about">👤 About</a>
+                <a href="/dashboard">🎓 Dashboard</a>
+                <a href="/services">💼 Services</a>
+                <a href="/courses">📚 Courses</a>
+                <a href="/opportunities">💼 Opportunities</a>
+                <a href="/career-explorer">🧭 Career Explorer</a>
+                <a href="/career-quiz">🧭 Career Quiz</a>
+                <a href="/ai-assistant">🤖 AI Assistant</a>
+                <a href="/cv-builder">📝 CV Builder</a>
+                <a href="/library">📚 Library</a>
+                <a href="/blog">📢 Blog</a>
+                <a href="/contact">📞 Contact</a>
 
-        {% else %}
-
-            <a href="/register" class="account-button create-button">
-                📝 Create Account
-            </a>
-
-            <a href="/login" class="account-button login-button">
-                🔐 Login
-            </a>
+            </div>
 
         {% endif %}
 
-    </div>
+    </nav>
+
+
+    {% block content %}
+    {% endblock %}
+
+
+    <footer>
+
+        <p><strong>Career Bridge</strong></p>
+        <p>Building skills. Connecting opportunities.</p>
+        <p>© 2026 Career Bridge. All rights reserved.</p>
+
+    </footer>
+
+
+    <!-- CAREER BRIDGE AI -->
 
     {% if session.get("student_id") %}
 
-    <div class="nav-menu" id="navMenu">
+        <button class="ai-button" onclick="toggleAI()">
+            🤖 Career Bridge AI
+        </button>
 
-        <a href="/">🏠 Home</a>
-        <a href="/about">👤 About</a>
-        <a href="/dashboard">🎓 Dashboard</a>
-        <a href="/services">💼 Services</a>
-        <a href="/courses">📚 Courses</a>
-        <a href="/opportunities">💼 Opportunities</a>
-        <a href="/career-explorer">🧭 Career Explorer</a>
-        <a href="/career-quiz">🧭 Career Quiz</a>
-        <a href="/cv-builder">📝 CV Builder</a>
-        <a href="/library">📚 Library</a>
-        <a href="/blog">📢 Blog</a>
-        <a href="/contact">📞 Contact</a>
+        <div class="ai-chat" id="aiChat">
 
-    </div>
+            <div class="ai-header">
+                🤖 Career Bridge AI
+            </div>
+
+            <div class="ai-messages" id="aiMessages">
+
+                <div class="ai-message">
+                    Hi! 👋 I'm Career Bridge AI.
+                    How can I help you today?
+                </div>
+
+            </div>
+
+            <div class="ai-input">
+
+                <input
+                    type="text"
+                    id="aiInput"
+                    placeholder="Ask me something..."
+                    onkeypress="handleAIKey(event)"
+                >
+
+                <button onclick="sendAIMessage()">
+                    Send
+                </button>
+
+            </div>
+
+        </div>
 
     {% endif %}
 
-</nav>
 
-{% block content %}
-{% endblock %}
+    <script>
 
-<footer>
+        function toggleMenu() {
 
-    <p><strong>Career Bridge</strong></p>
-    <p>Building skills. Connecting opportunities.</p>
-    <p>© 2026 Career Bridge. All rights reserved.</p>
+            const menu = document.getElementById("navMenu");
 
-</footer>
+            if (menu) {
+                menu.classList.toggle("show");
+            }
 
-<script>
+        }
 
-function toggleMenu() {
-    document.getElementById("navMenu").classList.toggle("show");
-}
 
-</script>
+        function toggleAI() {
+
+            const chat = document.getElementById("aiChat");
+
+            if (chat) {
+                chat.classList.toggle("show");
+            }
+
+        }
+
+
+        function handleAIKey(event) {
+
+            if (event.key === "Enter") {
+                sendAIMessage();
+            }
+
+        }
+
+
+        function sendAIMessage() {
+
+            const input = document.getElementById("aiInput");
+            const messages = document.getElementById("aiMessages");
+
+            if (!input || !messages) {
+                return;
+            }
+
+            const question = input.value.trim();
+
+            if (!question) {
+                return;
+            }
+
+            const userMessage = document.createElement("div");
+
+            userMessage.className = "user-message";
+            userMessage.textContent = question;
+
+            messages.appendChild(userMessage);
+
+            input.value = "";
+
+            let answer =
+                "I'm still learning! 🤖 You can ask me about Career Bridge, courses, CVs, careers, Python, or opportunities.";
+
+            const lowerQuestion = question.toLowerCase();
+
+            if (lowerQuestion.includes("cv")) {
+
+                answer =
+                    "I can help you with your CV! 📝 A good CV should clearly show your education, skills, experience, projects and achievements.";
+
+            } else if (lowerQuestion.includes("python")) {
+
+                answer =
+                    "Python is a programming language used for automation, websites, data analysis and software development. 💻";
+
+            } else if (lowerQuestion.includes("career")) {
+
+                answer =
+                    "Career Bridge can help you explore careers, develop skills, improve your CV and discover opportunities. 🚀";
+
+            } else if (lowerQuestion.includes("course")) {
+
+                answer =
+                    "You can explore the courses available on Career Bridge through the Courses section. 📚";
+
+            } else if (lowerQuestion.includes("opportunit")) {
+
+                answer =
+                    "Check the Opportunities section for scholarships, internships, competitions and other career programmes. 💼";
+
+            } else if (lowerQuestion.includes("hello") || lowerQuestion.includes("hi")) {
+
+                answer =
+                    "Hello! 👋 Welcome to Career Bridge. How can I help you today?";
+
+            }
+
+            const aiMessage = document.createElement("div");
+
+            aiMessage.className = "ai-message";
+            aiMessage.textContent = answer;
+
+            messages.appendChild(aiMessage);
+
+            messages.scrollTop = messages.scrollHeight;
+
+        }
+
+    </script>
 
 </body>
 
