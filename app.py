@@ -112,6 +112,12 @@ def certificate():
     return render_template("certificate.html")
 
 
+@app.route("/about")
+@login_required
+def certificate():
+    return render_template("about.html")
+
+
 @app.route("/services")
 @login_required
 def services():
