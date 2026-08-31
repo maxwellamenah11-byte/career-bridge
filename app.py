@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import os
 
-app = Flask(**name**)
+app = Flask(__name__)
 
 # =========================================================
 
