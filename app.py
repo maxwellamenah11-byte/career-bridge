@@ -739,6 +739,24 @@ def career_explorer():
 
 
 # =========================================================
+# MENTORS
+# =========================================================
+
+@app.route("/mentors")
+@login_required
+def mentors():
+
+    mentors = Mentor.query.filter_by(
+        verified=True
+    ).all()
+
+    return render_template(
+        "mentors.html",
+        mentors=mentors
+    )
+
+
+# =========================================================
 # BLOG
 # =========================================================
 
