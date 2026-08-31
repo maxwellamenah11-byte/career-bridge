@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .request-container {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+
+    .request-card {
+        background: white;
+        padding: 35px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .request-card h1 {
+        margin-bottom: 10px;
+    }
+
+    .request-card p {
+        line-height: 1.6;
+        opacity: 0.75;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 160px;
+        padding: 14px;
+        margin-top: 15px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        resize: vertical;
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+
+    .submit-button {
+        margin-top: 20px;
+        padding: 13px 22px;
+        border: none;
+        border-radius: 10px;
+        background: #111827;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+</style>
+
+<div class="request-container">
+
+```
+<a
+    href="{{ url_for('mentor_profile', mentor_id=mentor.id) }}"
+    class="back-link"
+>
+    ← Back to Mentor Profile
+</a>
+
+<div class="request-card">
+
+    <h1>🤝 Request Mentorship</h1>
+
+    <p>
+        You are requesting mentorship from
+        <strong>{{ mentor.name }}</strong>.
+    </p>
+
+    <p>
+        Tell the mentor what you would like help with.
+    </p>
+
+    <form method="POST">
+
+        <textarea
+            name="message"
+            placeholder="Write your mentorship request here..."
+            required
+        ></textarea>
+
+        <br>
+
+        <button
+            type="submit"
+            class="submit-button"
+        >
+            Send Request
+        </button>
+
+    </form>
+
+</div>
+```
+
+</div>
+
+{% endblock %}
