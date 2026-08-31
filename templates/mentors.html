@@ -2,78 +2,255 @@
 
 {% block content %}
 
-<div class="container" style="max-width:1100px; margin:40px auto; padding:20px;">
+<style>
+    .mentors-page {
+        max-width: 1150px;
+        margin: 0 auto;
+        padding: 50px 20px 70px;
+    }
+
+    .mentors-header {
+        text-align: center;
+        margin-bottom: 45px;
+    }
+
+    .mentors-header h1 {
+        font-size: 42px;
+        margin-bottom: 12px;
+    }
+
+    .mentors-header p {
+        max-width: 650px;
+        margin: auto;
+        line-height: 1.7;
+        opacity: 0.8;
+    }
+
+    .mentor-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+
+    .mentor-card {
+        background: white;
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .mentor-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+    }
+
+    .mentor-top {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .mentor-avatar {
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 27px;
+        font-weight: bold;
+    }
+
+    .mentor-name {
+        margin: 0;
+        font-size: 21px;
+    }
+
+    .mentor-profession {
+        margin: 5px 0 0;
+        opacity: 0.7;
+        font-size: 14px;
+    }
+
+    .verified {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        background: #e2e8f0;
+    }
+
+    .mentor-field {
+        font-weight: bold;
+        margin-bottom: 12px;
+    }
+
+    .mentor-bio {
+        line-height: 1.6;
+        font-size: 14px;
+        opacity: 0.8;
+        margin-bottom: 18px;
+    }
+
+    .mentor-info {
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .mentor-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 22px;
+    }
+
+    .mentor-button {
+        flex: 1;
+        padding: 11px;
+        border-radius: 9px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+    }
+
+    .profile-button {
+        background: #e2e8f0;
+    }
+
+    .request-button {
+        background: #111827;
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+    }
+
+    @media (max-width: 600px) {
+
+        .mentors-header h1 {
+            font-size: 32px;
+        }
+
+        .mentor-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="mentors-page">
 
 ```
-<div style="text-align:center; margin-bottom:40px;">
+<div class="mentors-header">
+
     <h1>🤝 Career Bridge Mentors</h1>
+
     <p>
-        Connect with experienced professionals and get guidance
-        as you build your career.
+        Learn from experienced professionals, explore different
+        career paths, and get guidance as you prepare for your future.
     </p>
+
 </div>
+
 
 {% if mentors %}
 
-    <div style="
-        display:grid;
-        grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
-        gap:25px;
-    ">
+    <div class="mentor-grid">
 
         {% for mentor in mentors %}
 
-            <div style="
-                background:white;
-                padding:25px;
-                border-radius:15px;
-                box-shadow:0 5px 20px rgba(0,0,0,0.08);
-            ">
+            <div class="mentor-card">
 
-                <h2>{{ mentor.name }}</h2>
+                <div class="mentor-top">
 
-                <p>
-                    <strong>{{ mentor.profession }}</strong>
-                </p>
+                    <div class="mentor-avatar">
+                        {{ mentor.name[0]|upper }}
+                    </div>
 
-                <p>
+                    <div>
+
+                        <h2 class="mentor-name">
+                            {{ mentor.name }}
+                        </h2>
+
+                        <p class="mentor-profession">
+                            {{ mentor.profession }}
+                        </p>
+
+                        {% if mentor.verified %}
+
+                            <span class="verified">
+                                ✓ Verified Mentor
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="mentor-field">
                     🎯 {{ mentor.field }}
-                </p>
+                </div>
+
 
                 {% if mentor.bio %}
-                    <p>{{ mentor.bio }}</p>
+
+                    <p class="mentor-bio">
+                        {{ mentor.bio }}
+                    </p>
+
                 {% endif %}
+
 
                 {% if mentor.skills %}
-                    <p>
-                        <strong>Skills:</strong>
+
+                    <div class="mentor-info">
+                        🧠 <strong>Skills:</strong>
                         {{ mentor.skills }}
-                    </p>
+                    </div>
+
                 {% endif %}
+
 
                 {% if mentor.experience %}
-                    <p>
-                        <strong>Experience:</strong>
+
+                    <div class="mentor-info">
+                        💼 <strong>Experience:</strong>
                         {{ mentor.experience }}
-                    </p>
+                    </div>
+
                 {% endif %}
 
-                {% if mentor.verified %}
-                    <p style="font-weight:bold;">
-                        ✓ Verified Mentor
-                    </p>
-                {% endif %}
 
-                <button style="
-                    width:100%;
-                    padding:12px;
-                    margin-top:15px;
-                    border:none;
-                    border-radius:8px;
-                    cursor:pointer;
-                ">
-                    Request Mentorship
-                </button>
+                <div class="mentor-actions">
+
+                    <button
+                        class="mentor-button profile-button"
+                        type="button"
+                    >
+                        View Profile
+                    </button>
+
+                    <button
+                        class="mentor-button request-button"
+                        type="button"
+                    >
+                        Request Mentorship
+                    </button>
+
+                </div>
 
             </div>
 
@@ -83,9 +260,14 @@
 
 {% else %}
 
-    <div style="text-align:center; padding:50px;">
+    <div class="empty-state">
+
         <h2>No mentors available yet.</h2>
-        <p>Career Bridge mentors will appear here soon.</p>
+
+        <p>
+            Career Bridge mentors will appear here as they are added.
+        </p>
+
     </div>
 
 {% endif %}
