@@ -27,7 +27,9 @@
             line-height: 1.6;
         }
 
-        /* NAVIGATION */
+        /* =========================
+           NAVIGATION
+        ========================= */
 
         nav {
             background: #020617;
@@ -91,6 +93,10 @@
             color: white;
         }
 
+        /* =========================
+           NAVIGATION MENU
+        ========================= */
+
         .nav-menu {
             display: none;
             position: absolute;
@@ -120,7 +126,9 @@
             background: #2563eb;
         }
 
-        /* GENERAL */
+        /* =========================
+           GENERAL PAGES
+        ========================= */
 
         .page {
             min-height: 80vh;
@@ -145,7 +153,9 @@
             font-size: 18px;
         }
 
-        /* BUTTONS */
+        /* =========================
+           BUTTONS
+        ========================= */
 
         .button {
             display: inline-block;
@@ -162,7 +172,9 @@
             background: #1d4ed8;
         }
 
-        /* HOME */
+        /* =========================
+           HOME HERO
+        ========================= */
 
         .hero {
             min-height: 88vh;
@@ -172,6 +184,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
+
             background: linear-gradient(
                 135deg,
                 #020617,
@@ -199,7 +212,9 @@
             margin-bottom: 30px;
         }
 
-        /* CARDS */
+        /* =========================
+           CARDS
+        ========================= */
 
         .cards {
             display: flex;
@@ -237,7 +252,9 @@
             color: #94a3b8;
         }
 
-        /* CONTACT */
+        /* =========================
+           CONTACT
+        ========================= */
 
         .contact-box {
             max-width: 500px;
@@ -249,7 +266,9 @@
             border-radius: 12px;
         }
 
-        /* FOOTER */
+        /* =========================
+           FOOTER
+        ========================= */
 
         footer {
             background: #020617;
@@ -259,7 +278,9 @@
             border-top: 1px solid #1e293b;
         }
 
-        /* AI BUTTON */
+        /* =========================
+           CAREER BRIDGE AI BUTTON
+        ========================= */
 
         .ai-button {
             position: fixed;
@@ -281,15 +302,17 @@
             background: #1d4ed8;
         }
 
-        /* AI CHAT */
+        /* =========================
+           AI CHAT WINDOW
+        ========================= */
 
         .ai-chat {
             display: none;
             position: fixed;
             bottom: 85px;
             right: 25px;
-            width: 350px;
-            height: 480px;
+            width: 360px;
+            height: 520px;
             background: #0f172a;
             border: 1px solid #1e293b;
             border-radius: 15px;
@@ -303,12 +326,59 @@
             flex-direction: column;
         }
 
+        /* AI HEADER */
+
         .ai-header {
             background: #2563eb;
             color: white;
             padding: 15px;
             font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+
+        .ai-header small {
+            display: block;
+            font-size: 11px;
+            font-weight: normal;
+            opacity: 0.85;
+        }
+
+        .ai-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        /* QUICK ACTIONS */
+
+        .ai-quick-actions {
+            display: flex;
+            gap: 6px;
+            padding: 10px;
+            overflow-x: auto;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .ai-quick-actions button {
+            flex-shrink: 0;
+            background: #1e293b;
+            color: white;
+            border: none;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .ai-quick-actions button:hover {
+            background: #2563eb;
+        }
+
+        /* AI MESSAGES */
 
         .ai-messages {
             flex: 1;
@@ -322,6 +392,7 @@
             padding: 10px;
             border-radius: 10px;
             margin-bottom: 10px;
+            white-space: pre-line;
         }
 
         .user-message {
@@ -331,7 +402,10 @@
             border-radius: 10px;
             margin-bottom: 10px;
             text-align: right;
+            white-space: pre-line;
         }
+
+        /* AI INPUT */
 
         .ai-input {
             display: flex;
@@ -341,10 +415,11 @@
 
         .ai-input input {
             flex: 1;
-            padding: 10px;
+            padding: 11px;
             border: none;
             border-radius: 8px;
             outline: none;
+            font-size: 14px;
         }
 
         .ai-input button {
@@ -357,7 +432,13 @@
             cursor: pointer;
         }
 
-        /* MOBILE */
+        .ai-input button:hover {
+            background: #1d4ed8;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
 
         @media (max-width: 700px) {
 
@@ -407,6 +488,7 @@
                 right: 10px;
                 bottom: 80px;
                 width: calc(100% - 20px);
+                height: 500px;
             }
 
             .ai-button {
@@ -422,6 +504,10 @@
 
 <body>
 
+    <!-- =========================
+         NAVIGATION
+    ========================= -->
+
     <nav>
 
         <h2>Career Bridge</h2>
@@ -430,21 +516,29 @@
 
             {% if session.get("student_id") %}
 
-                <button class="menu-button" onclick="toggleMenu()">
+                <button
+                    class="menu-button"
+                    onclick="toggleMenu()">
                     ☰ Navigate
                 </button>
 
-                <a href="/logout" class="account-button logout-button">
+                <a
+                    href="/logout"
+                    class="account-button logout-button">
                     🔓 Logout
                 </a>
 
             {% else %}
 
-                <a href="/register" class="account-button create-button">
+                <a
+                    href="/register"
+                    class="account-button create-button">
                     📝 Create Account
                 </a>
 
-                <a href="/login" class="account-button login-button">
+                <a
+                    href="/login"
+                    class="account-button login-button">
                     🔐 Login
                 </a>
 
@@ -452,9 +546,12 @@
 
         </div>
 
+
         {% if session.get("student_id") %}
 
-            <div class="nav-menu" id="navMenu">
+            <div
+                class="nav-menu"
+                id="navMenu">
 
                 <a href="/">🏠 Home</a>
                 <a href="/about">👤 About</a>
@@ -477,53 +574,167 @@
     </nav>
 
 
+    <!-- =========================
+         PAGE CONTENT
+    ========================= -->
+
     {% block content %}
     {% endblock %}
 
 
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
     <footer>
 
         <p><strong>Career Bridge</strong></p>
-        <p>Building skills. Connecting opportunities.</p>
-        <p>© 2026 Career Bridge. All rights reserved.</p>
+
+        <p>
+            Building skills. Connecting opportunities.
+        </p>
+
+        <p>
+            © 2026 Career Bridge. All rights reserved.
+        </p>
 
     </footer>
 
 
-    <!-- CAREER BRIDGE AI -->
+    <!-- =========================
+         CAREER BRIDGE AI
+    ========================= -->
 
     {% if session.get("student_id") %}
 
-        <button class="ai-button" onclick="toggleAI()">
+        <button
+            class="ai-button"
+            onclick="toggleAI()">
+
             🤖 Career Bridge AI
+
         </button>
 
-        <div class="ai-chat" id="aiChat">
+
+        <div
+            class="ai-chat"
+            id="aiChat">
 
             <div class="ai-header">
-                🤖 Career Bridge AI
+
+                <div>
+
+                    🤖 Career Bridge AI
+
+                    <small>
+                        Your career & learning assistant
+                    </small>
+
+                </div>
+
+                <button
+                    onclick="toggleAI()"
+                    class="ai-close">
+
+                    ×
+
+                </button>
+
             </div>
 
-            <div class="ai-messages" id="aiMessages">
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="ai-quick-actions">
+
+                <button
+                    onclick="askAI('Help me choose a career')">
+
+                    🎓 Career
+
+                </button>
+
+                <button
+                    onclick="askAI('Help me study')">
+
+                    📚 Study
+
+                </button>
+
+                <button
+                    onclick="askAI('Help me with my CV')">
+
+                    📝 CV
+
+                </button>
+
+                <button
+                    onclick="askAI('Teach me Python')">
+
+                    💻 Python
+
+                </button>
+
+                <button
+                    onclick="askAI('Show me opportunities')">
+
+                    💼 Opportunities
+
+                </button>
+
+            </div>
+
+
+            <!-- MESSAGES -->
+
+            <div
+                class="ai-messages"
+                id="aiMessages">
 
                 <div class="ai-message">
-                    Hi! 👋 I'm Career Bridge AI.
-                    How can I help you today?
+
+                    👋 Hi! I'm Career Bridge AI.
+
+                    <br><br>
+
+                    I can help you with:
+
+                    <br>
+                    🎓 Careers
+                    <br>
+                    📚 Studying
+                    <br>
+                    📝 CVs
+                    <br>
+                    💻 Python
+                    <br>
+                    💼 Opportunities
+
+                    <br><br>
+
+                    What would you like help with?
+
                 </div>
 
             </div>
+
+
+            <!-- INPUT -->
 
             <div class="ai-input">
 
                 <input
                     type="text"
                     id="aiInput"
-                    placeholder="Ask me something..."
+                    placeholder="Ask Career Bridge AI..."
                     onkeypress="handleAIKey(event)"
                 >
 
-                <button onclick="sendAIMessage()">
-                    Send
+                <button
+                    onclick="sendAIMessage()">
+
+                    ➤
+
                 </button>
 
             </div>
@@ -533,25 +744,46 @@
     {% endif %}
 
 
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
     <script>
+
+        /* =========================
+           NAVIGATION
+        ========================= */
 
         function toggleMenu() {
 
-            const menu = document.getElementById("navMenu");
+            const menu =
+                document.getElementById("navMenu");
 
             if (menu) {
+
                 menu.classList.toggle("show");
+
             }
 
         }
 
 
+        /* =========================
+           CAREER BRIDGE AI
+        ========================= */
+
+        let aiConversation = [];
+
+
         function toggleAI() {
 
-            const chat = document.getElementById("aiChat");
+            const chat =
+                document.getElementById("aiChat");
 
             if (chat) {
+
                 chat.classList.toggle("show");
+
             }
 
         }
@@ -560,81 +792,278 @@
         function handleAIKey(event) {
 
             if (event.key === "Enter") {
+
                 sendAIMessage();
+
             }
+
+        }
+
+
+        function askAI(question) {
+
+            const input =
+                document.getElementById("aiInput");
+
+            if (!input) {
+
+                return;
+
+            }
+
+            input.value = question;
+
+            sendAIMessage();
+
+        }
+
+
+        function addAIMessage(message, type) {
+
+            const messages =
+                document.getElementById("aiMessages");
+
+            if (!messages) {
+
+                return;
+
+            }
+
+            const messageBox =
+                document.createElement("div");
+
+            if (type === "user") {
+
+                messageBox.className =
+                    "user-message";
+
+            } else {
+
+                messageBox.className =
+                    "ai-message";
+
+            }
+
+            messageBox.textContent = message;
+
+            messages.appendChild(messageBox);
+
+            messages.scrollTop =
+                messages.scrollHeight;
+
+        }
+
+
+        function getAIResponse(question) {
+
+            const q =
+                question.toLowerCase();
+
+
+            /* GREETING */
+
+            if (
+                q.includes("hello") ||
+                q.includes("hi") ||
+                q.includes("hey")
+            ) {
+
+                return "Hello! 👋 Welcome to Career Bridge AI. I can help you with careers, studying, CVs, Python and opportunities.";
+
+            }
+
+
+            /* CAREER */
+
+            if (
+                q.includes("career") ||
+                q.includes("job") ||
+                q.includes("profession")
+            ) {
+
+                return "🎓 Career Guidance:\n\nThink about three things — the subjects you enjoy, the skills you're good at, and the type of problems you enjoy solving.\n\nCareer Bridge's Career Explorer can help you explore possible career paths.";
+
+            }
+
+
+            /* STUDY */
+
+            if (
+                q.includes("study") ||
+                q.includes("learn") ||
+                q.includes("exam") ||
+                q.includes("school")
+            ) {
+
+                return "📚 Study Assistant:\n\nTry this method:\n\n1. Understand the topic.\n2. Make short notes.\n3. Practise questions.\n4. Check your mistakes.\n5. Explain the topic in your own words.\n\nI can also help you create a study plan.";
+
+            }
+
+
+            /* CV */
+
+            if (
+                q.includes("cv") ||
+                q.includes("resume") ||
+                q.includes("curriculum vitae")
+            ) {
+
+                return "📝 CV Assistant:\n\nA strong student CV can include your profile, education, skills, projects, certifications, achievements and relevant experience.\n\nKeep every section clear and focused on things you can actually demonstrate.";
+
+            }
+
+
+            /* PYTHON */
+
+            if (
+                q.includes("python") ||
+                q.includes("programming") ||
+                q.includes("code")
+            ) {
+
+                return "💻 Python Tutor:\n\nI can help you learn Python from the basics.\n\nA good starting order is:\n\nVariables → Data Types → Operators → Conditions → Loops → Functions → Projects.";
+
+            }
+
+
+            /* OPPORTUNITIES */
+
+            if (
+                q.includes("opportunit") ||
+                q.includes("scholarship") ||
+                q.includes("internship") ||
+                q.includes("grant")
+            ) {
+
+                return "💼 Opportunities Assistant:\n\nCheck Career Bridge's Opportunities section for scholarships, programmes and other career opportunities.\n\nAlways check the official organisation's requirements and deadlines.";
+
+            }
+
+
+            /* CAREER EXPLORER */
+
+            if (
+                q.includes("career explorer") ||
+                q.includes("what career") ||
+                q.includes("career path")
+            ) {
+
+                return "🧭 Career Explorer:\n\nTell me your favourite subjects, skills and interests, and I can help you think through possible career areas.";
+
+            }
+
+
+            /* COURSES */
+
+            if (
+                q.includes("course") ||
+                q.includes("courses")
+            ) {
+
+                return "📚 Courses:\n\nExplore the Courses section to find Career Bridge learning resources and career-focused skills.";
+
+            }
+
+
+            /* DASHBOARD */
+
+            if (
+                q.includes("dashboard") ||
+                q.includes("progress") ||
+                q.includes("certificate")
+            ) {
+
+                return "📊 Dashboard:\n\nYour Dashboard is where you can keep track of your learning progress and access your Career Bridge student features.";
+
+            }
+
+
+            /* HELP */
+
+            if (
+                q.includes("help") ||
+                q.includes("what can you do")
+            ) {
+
+                return "🤖 I can help with:\n\n🎓 Career Guidance\n📚 Study Help\n📝 CVs\n💻 Python\n📚 Courses\n💼 Opportunities\n🧭 Career Explorer\n📊 Career Bridge progress\n\nTry asking me something specific!";
+
+            }
+
+
+            /* DEFAULT */
+
+            return "🤖 I'm not sure about that yet.\n\nTry asking me about a career, studying, your CV, Python, courses, opportunities or your Career Bridge progress.";
 
         }
 
 
         function sendAIMessage() {
 
-            const input = document.getElementById("aiInput");
-            const messages = document.getElementById("aiMessages");
+            const input =
+                document.getElementById("aiInput");
 
-            if (!input || !messages) {
+            if (!input) {
+
                 return;
+
             }
 
-            const question = input.value.trim();
+            const question =
+                input.value.trim();
 
             if (!question) {
+
                 return;
+
             }
 
-            const userMessage = document.createElement("div");
 
-            userMessage.className = "user-message";
-            userMessage.textContent = question;
+            /* SHOW USER MESSAGE */
 
-            messages.appendChild(userMessage);
+            addAIMessage(
+                question,
+                "user"
+            );
+
+
+            /* SAVE CONVERSATION */
+
+            aiConversation.push({
+
+                role: "user",
+                message: question
+
+            });
+
+
+            /* GET RESPONSE */
+
+            const answer =
+                getAIResponse(question);
+
+
+            /* SMALL DELAY */
+
+            setTimeout(function() {
+
+                addAIMessage(
+                    answer,
+                    "ai"
+                );
+
+
+                aiConversation.push({
+
+                    role: "assistant",
+                    message: answer
+
+                });
+
+
+            }, 300);
+
 
             input.value = "";
-
-            let answer =
-                "I'm still learning! 🤖 You can ask me about Career Bridge, courses, CVs, careers, Python, or opportunities.";
-
-            const lowerQuestion = question.toLowerCase();
-
-            if (lowerQuestion.includes("cv")) {
-
-                answer =
-                    "I can help you with your CV! 📝 A good CV should clearly show your education, skills, experience, projects and achievements.";
-
-            } else if (lowerQuestion.includes("python")) {
-
-                answer =
-                    "Python is a programming language used for automation, websites, data analysis and software development. 💻";
-
-            } else if (lowerQuestion.includes("career")) {
-
-                answer =
-                    "Career Bridge can help you explore careers, develop skills, improve your CV and discover opportunities. 🚀";
-
-            } else if (lowerQuestion.includes("course")) {
-
-                answer =
-                    "You can explore the courses available on Career Bridge through the Courses section. 📚";
-
-            } else if (lowerQuestion.includes("opportunit")) {
-
-                answer =
-                    "Check the Opportunities section for scholarships, internships, competitions and other career programmes. 💼";
-
-            } else if (lowerQuestion.includes("hello") || lowerQuestion.includes("hi")) {
-
-                answer =
-                    "Hello! 👋 Welcome to Career Bridge. How can I help you today?";
-
-            }
-
-            const aiMessage = document.createElement("div");
-
-            aiMessage.className = "ai-message";
-            aiMessage.textContent = answer;
-
-            messages.appendChild(aiMessage);
-
-            messages.scrollTop = messages.scrollHeight;
 
         }
 
