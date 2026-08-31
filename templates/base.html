@@ -27,7 +27,7 @@
             line-height: 1.6;
         }
 
-        /* NAVIGATION */
+        /* ================= NAVBAR ================= */
 
         nav {
             background: #020617;
@@ -91,14 +91,14 @@
             color: white;
         }
 
-        /* NAV MENU */
+        /* ================= MENU ================= */
 
         .nav-menu {
             display: none;
             position: absolute;
             right: 7%;
             top: 70px;
-            width: 220px;
+            width: 210px;
             max-height: 75vh;
             overflow-y: auto;
             background: #0f172a;
@@ -124,7 +124,7 @@
             background: #2563eb;
         }
 
-        /* GENERAL */
+        /* ================= PAGES ================= */
 
         .page {
             min-height: 80vh;
@@ -149,6 +149,8 @@
             font-size: 18px;
         }
 
+        /* ================= BUTTONS ================= */
+
         .button {
             display: inline-block;
             background: #2563eb;
@@ -158,15 +160,13 @@
             text-decoration: none;
             font-weight: bold;
             margin: 5px;
-            border: none;
-            cursor: pointer;
         }
 
         .button:hover {
             background: #1d4ed8;
         }
 
-        /* HERO */
+        /* ================= HERO ================= */
 
         .hero {
             min-height: 88vh;
@@ -176,6 +176,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
+
             background: linear-gradient(
                 135deg,
                 #020617,
@@ -203,7 +204,7 @@
             margin-bottom: 30px;
         }
 
-        /* CARDS */
+        /* ================= CARDS ================= */
 
         .cards {
             display: flex;
@@ -241,7 +242,19 @@
             color: #94a3b8;
         }
 
-        /* FOOTER */
+        /* ================= CONTACT ================= */
+
+        .contact-box {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 35px;
+            text-align: center;
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+        }
+
+        /* ================= FOOTER ================= */
 
         footer {
             background: #020617;
@@ -251,203 +264,248 @@
             border-top: 1px solid #1e293b;
         }
 
-        /* AI BUTTON */
+        /* =================================================
+           CAREER BRIDGE AI
+           ================================================= */
 
-        .ai-button {
+        #cb-ai-button {
+
             position: fixed;
-            bottom: 25px;
-            right: 25px;
+
+            right: 22px;
+            bottom: 22px;
+
+            width: 62px;
+            height: 62px;
+
+            border: none;
+            border-radius: 50%;
+
             background: #2563eb;
             color: white;
-            border: none;
-            padding: 15px 20px;
-            border-radius: 50px;
-            font-size: 15px;
-            font-weight: bold;
+
+            font-size: 27px;
+
             cursor: pointer;
+
             z-index: 9999;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+
+            transition: 0.2s;
         }
 
-        .ai-button:hover {
+        #cb-ai-button:hover {
+            transform: scale(1.08);
             background: #1d4ed8;
         }
 
-        /* AI CHAT */
+        #cb-ai-box {
 
-        .ai-chat {
             display: none;
-            position: fixed;
-            bottom: 85px;
-            right: 25px;
-            width: 390px;
-            height: 590px;
-            background: #0f172a;
-            border: 1px solid #1e293b;
-            border-radius: 15px;
-            z-index: 9999;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            overflow: hidden;
-        }
 
-        .ai-chat.show {
-            display: flex;
+            position: fixed;
+
+            right: 22px;
+            bottom: 95px;
+
+            width: 360px;
+            max-width: calc(100vw - 30px);
+
+            height: 520px;
+
+            background: #0f172a;
+
+            border: 1px solid #334155;
+
+            border-radius: 16px;
+
+            z-index: 9998;
+
+            box-shadow: 0 15px 50px rgba(0,0,0,0.55);
+
+            overflow: hidden;
+
             flex-direction: column;
         }
 
-        .ai-header {
-            background: #2563eb;
-            color: white;
-            padding: 15px;
-            font-weight: bold;
+        #cb-ai-box.open {
             display: flex;
+        }
+
+        .cb-ai-header {
+
+            padding: 16px;
+
+            background: #1e3a8a;
+
+            display: flex;
+
             justify-content: space-between;
+
             align-items: center;
         }
 
-        .ai-header small {
-            display: block;
-            font-size: 11px;
-            font-weight: normal;
-            opacity: 0.85;
+        .cb-ai-header strong {
+            color: white;
+            font-size: 17px;
         }
 
-        .ai-close {
+        .cb-ai-close {
+
             background: transparent;
+
             border: none;
+
             color: white;
-            font-size: 26px;
+
+            font-size: 22px;
+
             cursor: pointer;
         }
 
-        /* QUICK ACTIONS */
+        #cb-ai-messages {
 
-        .ai-quick-actions {
-            display: flex;
-            gap: 6px;
-            padding: 10px;
-            overflow-x: auto;
-            border-bottom: 1px solid #1e293b;
-        }
-
-        .ai-quick-actions button {
-            flex-shrink: 0;
-            background: #1e293b;
-            color: white;
-            border: none;
-            padding: 8px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .ai-quick-actions button:hover {
-            background: #2563eb;
-        }
-
-        /* PERSONAL ADVISOR */
-
-        .ai-form {
-            background: #020617;
-            padding: 12px;
-            border-bottom: 1px solid #1e293b;
-        }
-
-        .ai-form h4 {
-            color: #60a5fa;
-            margin-bottom: 8px;
-        }
-
-        .ai-form input {
-            width: 100%;
-            padding: 9px;
-            margin-bottom: 7px;
-            border: 1px solid #334155;
-            border-radius: 7px;
-            background: #0f172a;
-            color: white;
-            outline: none;
-        }
-
-        .ai-form button {
-            width: 100%;
-            padding: 9px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* MEMORY STATUS */
-
-        .ai-memory {
-            padding: 7px 12px;
-            font-size: 11px;
-            color: #94a3b8;
-            border-bottom: 1px solid #1e293b;
-        }
-
-        .ai-memory span {
-            color: #60a5fa;
-        }
-
-        /* MESSAGES */
-
-        .ai-messages {
             flex: 1;
-            padding: 15px;
+
             overflow-y: auto;
-        }
 
-        .ai-message {
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 11px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            white-space: pre-line;
-        }
+            padding: 15px;
 
-        .user-message {
-            background: #2563eb;
-            color: white;
-            padding: 11px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            text-align: right;
-            white-space: pre-line;
-        }
-
-        /* INPUT */
-
-        .ai-input {
             display: flex;
-            padding: 10px;
-            border-top: 1px solid #1e293b;
+
+            flex-direction: column;
+
+            gap: 10px;
         }
 
-        .ai-input input {
-            flex: 1;
-            padding: 11px;
-            border: none;
-            border-radius: 8px;
-            outline: none;
+        .cb-ai-message {
+
+            padding: 10px 13px;
+
+            border-radius: 12px;
+
+            max-width: 85%;
+
             font-size: 14px;
         }
 
-        .ai-input button {
-            margin-left: 8px;
-            padding: 10px 15px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+        .cb-ai-bot {
+
+            align-self: flex-start;
+
+            background: #1e293b;
+
+            color: #e2e8f0;
         }
 
-        /* MOBILE */
+        .cb-ai-user {
+
+            align-self: flex-end;
+
+            background: #2563eb;
+
+            color: white;
+        }
+
+        .cb-ai-memory {
+
+            padding: 12px;
+
+            border-top: 1px solid #334155;
+
+            background: #020617;
+        }
+
+        .cb-ai-memory-title {
+
+            color: #60a5fa;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+        .cb-ai-memory input {
+
+            width: 100%;
+
+            margin-bottom: 6px;
+
+            padding: 8px;
+
+            border-radius: 6px;
+
+            border: 1px solid #334155;
+
+            background: #0f172a;
+
+            color: white;
+        }
+
+        .cb-ai-save {
+
+            width: 100%;
+
+            padding: 9px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            background: #16a34a;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+        .cb-ai-input-area {
+
+            display: flex;
+
+            gap: 7px;
+
+            padding: 10px;
+
+            border-top: 1px solid #334155;
+        }
+
+        #cb-ai-input {
+
+            flex: 1;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            border: 1px solid #334155;
+
+            background: #020617;
+
+            color: white;
+
+            outline: none;
+        }
+
+        #cb-ai-send {
+
+            border: none;
+
+            border-radius: 8px;
+
+            padding: 10px 14px;
+
+            background: #2563eb;
+
+            color: white;
+
+            cursor: pointer;
+        }
 
         @media (max-width: 700px) {
 
@@ -493,27 +551,24 @@
                 font-size: 38px;
             }
 
-            .ai-chat {
-                right: 10px;
-                bottom: 80px;
-                width: calc(100% - 20px);
-                height: 560px;
+            #cb-ai-box {
+                right: 15px;
+                bottom: 90px;
+                width: calc(100vw - 30px);
+                height: 500px;
             }
 
-            .ai-button {
+            #cb-ai-button {
                 right: 15px;
                 bottom: 15px;
             }
-
         }
 
     </style>
 
 </head>
 
-
 <body>
-
 
 <nav>
 
@@ -525,36 +580,32 @@
 
             <button
                 class="menu-button"
-                onclick="toggleMenu()">
-
+                onclick="toggleMenu()"
+            >
                 ☰ Navigate
-
             </button>
 
             <a
                 href="/logout"
-                class="account-button logout-button">
-
+                class="account-button logout-button"
+            >
                 🔓 Logout
-
             </a>
 
         {% else %}
 
             <a
                 href="/register"
-                class="account-button create-button">
-
+                class="account-button create-button"
+            >
                 📝 Create Account
-
             </a>
 
             <a
                 href="/login"
-                class="account-button login-button">
-
+                class="account-button login-button"
+            >
                 🔐 Login
-
             </a>
 
         {% endif %}
@@ -566,20 +617,33 @@
 
     <div
         class="nav-menu"
-        id="navMenu">
+        id="navMenu"
+    >
 
         <a href="/">🏠 Home</a>
+
         <a href="/about">👤 About</a>
+
         <a href="/dashboard">🎓 Dashboard</a>
+
         <a href="/services">💼 Services</a>
+
         <a href="/courses">📚 Courses</a>
+
         <a href="/opportunities">💼 Opportunities</a>
+
         <a href="/career-explorer">🧭 Career Explorer</a>
+
         <a href="/career-quiz">🧭 Career Quiz</a>
-        <a href="/ai-assistant">🤖 AI Assistant</a>
+
         <a href="/cv-builder">📝 CV Builder</a>
+
         <a href="/library">📚 Library</a>
+
         <a href="/blog">📢 Blog</a>
+
+        <a href="/ai-assistant">🤖 AI Assistant</a>
+
         <a href="/contact">📞 Contact</a>
 
     </div>
@@ -595,148 +659,131 @@
 
 <footer>
 
-    <p><strong>Career Bridge</strong></p>
-    <p>Building skills. Connecting opportunities.</p>
-    <p>© 2026 Career Bridge. All rights reserved.</p>
+    <p>
+        <strong>Career Bridge</strong>
+    </p>
+
+    <p>
+        Building skills. Connecting opportunities.
+    </p>
+
+    <p>
+        © 2026 Career Bridge. All rights reserved.
+    </p>
 
 </footer>
 
 
 {% if session.get("student_id") %}
 
+<!-- =====================================================
+     AI BUTTON
+     ===================================================== -->
+
 <button
-    class="ai-button"
-    onclick="toggleAI()">
-
-    🤖 Career Bridge AI
-
+    id="cb-ai-button"
+    onclick="toggleCareerBridgeAI()"
+    title="Career Bridge AI"
+>
+    🤖
 </button>
 
 
-<div
-    class="ai-chat"
-    id="aiChat">
+<!-- =====================================================
+     AI WINDOW
+     ===================================================== -->
 
+<div id="cb-ai-box">
 
-    <div class="ai-header">
+    <div class="cb-ai-header">
 
-        <div>
-
+        <strong>
             🤖 Career Bridge AI
-
-            <small>
-                Your personal Career Bridge assistant
-            </small>
-
-        </div>
+        </strong>
 
         <button
-            class="ai-close"
-            onclick="toggleAI()">
-
+            class="cb-ai-close"
+            onclick="toggleCareerBridgeAI()"
+        >
             ×
-
         </button>
 
     </div>
 
 
-    <div class="ai-quick-actions">
+    <div id="cb-ai-messages">
 
-        <button onclick="askAI('career')">
-            🎓 Career
-        </button>
+        <div class="cb-ai-message cb-ai-bot">
 
-        <button onclick="askAI('study')">
-            📚 Study
-        </button>
-
-        <button onclick="askAI('cv')">
-            📝 CV
-        </button>
-
-        <button onclick="askAI('python')">
-            💻 Python
-        </button>
-
-        <button onclick="askAI('opportunities')">
-            💼 Opportunities
-        </button>
-
-    </div>
-
-
-    <div class="ai-form">
-
-        <h4>🎯 Personal Career Advisor</h4>
-
-        <input
-            type="text"
-            id="aiSubjects"
-            placeholder="Favourite subjects">
-
-        <input
-            type="text"
-            id="aiSkills"
-            placeholder="Your skills">
-
-        <input
-            type="text"
-            id="aiInterests"
-            placeholder="Your interests">
-
-        <button onclick="generateCareerAdvice()">
-
-            Save My Profile & Find Careers
-
-        </button>
-
-    </div>
-
-
-    <div class="ai-memory">
-
-        🧠 Memory:
-        <span id="memoryStatus">
-            Nothing saved yet
-        </span>
-
-    </div>
-
-
-    <div
-        class="ai-messages"
-        id="aiMessages">
-
-        <div class="ai-message">
-
-            👋 Hi! I'm Career Bridge AI.
+            Hi! I'm Career Bridge AI. 👋
 
             <br><br>
 
-            I can remember your subjects, skills and
-            interests during this browser session.
-
-            <br><br>
-
-            Tell me about yourself and I'll use that
-            information when helping you.
+            I can remember your career profile and help
+            you explore careers, skills and opportunities.
 
         </div>
 
     </div>
 
 
-    <div class="ai-input">
+    <!-- MEMORY -->
+
+    <div class="cb-ai-memory">
+
+        <div class="cb-ai-memory-title">
+            🧠 Your Career Memory
+        </div>
 
         <input
+            id="cb-subjects"
             type="text"
-            id="aiInput"
-            placeholder="Ask Career Bridge AI..."
-            onkeypress="handleAIKey(event)"
+            placeholder="Subjects e.g. Maths, Physics"
         >
 
-        <button onclick="sendAIMessage()">
+        <input
+            id="cb-skills"
+            type="text"
+            placeholder="Skills e.g. Excel, Python"
+        >
+
+        <input
+            id="cb-interests"
+            type="text"
+            placeholder="Interests e.g. Engineering"
+        >
+
+        <input
+            id="cb-career-goal"
+            type="text"
+            placeholder="Career goal e.g. Engineer"
+        >
+
+        <button
+            class="cb-ai-save"
+            onclick="saveCareerMemory()"
+        >
+            💾 Save My Profile
+        </button>
+
+    </div>
+
+
+    <!-- CHAT -->
+
+    <div class="cb-ai-input-area">
+
+        <input
+            id="cb-ai-input"
+            type="text"
+            placeholder="Ask Career Bridge AI..."
+            onkeydown="handleAIKey(event)"
+        >
+
+        <button
+            id="cb-ai-send"
+            onclick="sendCareerAI()"
+        >
             ➤
         </button>
 
@@ -749,9 +796,9 @@
 
 <script>
 
-/* ===============================
+/* =====================================================
    NAVIGATION
-================================ */
+   ===================================================== */
 
 function toggleMenu() {
 
@@ -767,159 +814,50 @@ function toggleMenu() {
 }
 
 
-/* ===============================
-   AI
-================================ */
+/* =====================================================
+   AI WINDOW
+   ===================================================== */
 
-function toggleAI() {
+function toggleCareerBridgeAI() {
 
-    const chat =
-        document.getElementById("aiChat");
+    const box =
+        document.getElementById("cb-ai-box");
 
-    if (chat) {
+    if (!box) return;
 
-        chat.classList.toggle("show");
-
-    }
+    box.classList.toggle("open");
 
 }
 
 
-/* ===============================
-   MEMORY
-================================ */
+/* =====================================================
+   ADD AI MESSAGE
+   ===================================================== */
 
-/*
-   sessionStorage keeps the information
-   for this browser session.
-
-   It is not sent to the server.
-*/
-
-let aiMemory = {
-
-    subjects:
-        sessionStorage.getItem("cb_subjects") || "",
-
-    skills:
-        sessionStorage.getItem("cb_skills") || "",
-
-    interests:
-        sessionStorage.getItem("cb_interests") || ""
-
-};
-
-
-function saveMemory() {
-
-    sessionStorage.setItem(
-        "cb_subjects",
-        aiMemory.subjects
-    );
-
-    sessionStorage.setItem(
-        "cb_skills",
-        aiMemory.skills
-    );
-
-    sessionStorage.setItem(
-        "cb_interests",
-        aiMemory.interests
-    );
-
-    updateMemoryStatus();
-
-}
-
-
-function updateMemoryStatus() {
-
-    const status =
-        document.getElementById("memoryStatus");
-
-    if (!status) return;
-
-    let saved = [];
-
-    if (aiMemory.subjects) {
-        saved.push("subjects");
-    }
-
-    if (aiMemory.skills) {
-        saved.push("skills");
-    }
-
-    if (aiMemory.interests) {
-        saved.push("interests");
-    }
-
-    if (saved.length === 0) {
-
-        status.textContent =
-            "Nothing saved yet";
-
-    } else {
-
-        status.textContent =
-            saved.join(" • ");
-
-    }
-
-}
-
-
-function loadMemoryIntoForm() {
-
-    const subjects =
-        document.getElementById("aiSubjects");
-
-    const skills =
-        document.getElementById("aiSkills");
-
-    const interests =
-        document.getElementById("aiInterests");
-
-
-    if (subjects) {
-        subjects.value =
-            aiMemory.subjects;
-    }
-
-    if (skills) {
-        skills.value =
-            aiMemory.skills;
-    }
-
-    if (interests) {
-        interests.value =
-            aiMemory.interests;
-    }
-
-}
-
-
-/* ===============================
-   ADD MESSAGE
-================================ */
-
-function addAIMessage(message, type) {
+function addAIMessage(
+    message,
+    type = "bot"
+) {
 
     const messages =
-        document.getElementById("aiMessages");
+        document.getElementById(
+            "cb-ai-messages"
+        );
 
     if (!messages) return;
 
-    const box =
+    const div =
         document.createElement("div");
 
-    box.className =
-        type === "user"
-        ? "user-message"
-        : "ai-message";
+    div.className =
+        "cb-ai-message " +
+        (type === "user"
+            ? "cb-ai-user"
+            : "cb-ai-bot");
 
-    box.textContent = message;
+    div.textContent = message;
 
-    messages.appendChild(box);
+    messages.appendChild(div);
 
     messages.scrollTop =
         messages.scrollHeight;
@@ -927,459 +865,315 @@ function addAIMessage(message, type) {
 }
 
 
-/* ===============================
-   CAREER ADVISOR
-================================ */
+/* =====================================================
+   LOAD PERMANENT MEMORY
+   ===================================================== */
 
-function generateCareerAdvice() {
+async function loadCareerMemory() {
+
+    try {
+
+        const response =
+            await fetch("/api/ai-memory");
+
+        if (!response.ok) return;
+
+        const data =
+            await response.json();
+
+        if (!data.success) return;
+
+        const memory =
+            data.memory;
+
+        document.getElementById(
+            "cb-subjects"
+        ).value =
+            memory.subjects || "";
+
+        document.getElementById(
+            "cb-skills"
+        ).value =
+            memory.skills || "";
+
+        document.getElementById(
+            "cb-interests"
+        ).value =
+            memory.interests || "";
+
+        document.getElementById(
+            "cb-career-goal"
+        ).value =
+            memory.career_goal || "";
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Could not load AI memory:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SAVE PERMANENT MEMORY
+   ===================================================== */
+
+async function saveCareerMemory() {
 
     const subjects =
-        document.getElementById("aiSubjects").value.trim();
+        document.getElementById(
+            "cb-subjects"
+        ).value;
 
     const skills =
-        document.getElementById("aiSkills").value.trim();
+        document.getElementById(
+            "cb-skills"
+        ).value;
 
     const interests =
-        document.getElementById("aiInterests").value.trim();
+        document.getElementById(
+            "cb-interests"
+        ).value;
+
+    const careerGoal =
+        document.getElementById(
+            "cb-career-goal"
+        ).value;
 
 
-    if (!subjects && !skills && !interests) {
+    try {
+
+        const response =
+            await fetch(
+                "/api/ai-memory",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        subjects:
+                            subjects,
+
+                        skills:
+                            skills,
+
+                        interests:
+                            interests,
+
+                        career_goal:
+                            careerGoal
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.success) {
+
+            addAIMessage(
+                "Your career profile has been saved! 🧠✅",
+                "bot"
+            );
+
+        } else {
+
+            addAIMessage(
+                "I couldn't save your profile. Please try again.",
+                "bot"
+            );
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.log(error);
 
         addAIMessage(
-            "Please enter at least one subject, skill or interest.",
-            "ai"
-        );
-
-        return;
-
-    }
-
-
-    aiMemory.subjects = subjects;
-    aiMemory.skills = skills;
-    aiMemory.interests = interests;
-
-    saveMemory();
-
-
-    const text =
-        (
-            subjects + " " +
-            skills + " " +
-            interests
-        ).toLowerCase();
-
-
-    let careers = [];
-
-
-    if (
-        text.includes("math") ||
-        text.includes("physics") ||
-        text.includes("engineering")
-    ) {
-
-        careers.push(
-            "⚙️ Engineering"
+            "There was a connection problem while saving your profile.",
+            "bot"
         );
 
     }
-
-
-    if (
-        text.includes("computer") ||
-        text.includes("technology") ||
-        text.includes("coding") ||
-        text.includes("programming") ||
-        text.includes("python")
-    ) {
-
-        careers.push(
-            "💻 Technology / Software"
-        );
-
-    }
-
-
-    if (
-        text.includes("data") ||
-        text.includes("excel") ||
-        text.includes("statistics") ||
-        text.includes("math")
-    ) {
-
-        careers.push(
-            "📊 Data / Analytics"
-        );
-
-    }
-
-
-    if (
-        text.includes("business") ||
-        text.includes("entrepreneur") ||
-        text.includes("leadership")
-    ) {
-
-        careers.push(
-            "💼 Business / Entrepreneurship"
-        );
-
-    }
-
-
-    if (
-        text.includes("design") ||
-        text.includes("creative") ||
-        text.includes("writing")
-    ) {
-
-        careers.push(
-            "🎨 Creative / Digital Media"
-        );
-
-    }
-
-
-    if (
-        text.includes("chemistry") ||
-        text.includes("biology") ||
-        text.includes("science")
-    ) {
-
-        careers.push(
-            "🔬 Science-related careers"
-        );
-
-    }
-
-
-    if (careers.length === 0) {
-
-        careers.push(
-            "🧭 Explore different career areas using Career Explorer"
-        );
-
-    }
-
-
-    let response =
-        "🧠 I've saved your profile for this session.\n\n";
-
-    response +=
-        "🎯 CAREER AREAS TO EXPLORE\n\n";
-
-    response +=
-        careers.join("\n");
-
-    response +=
-        "\n\nI'll use your saved interests when answering your next career questions.";
-
-    addAIMessage(
-        response,
-        "ai"
-    );
 
 }
 
 
-/* ===============================
-   QUICK ACTIONS
-================================ */
-
-function askAI(topic) {
-
-    let question = "";
-
-
-    if (topic === "career") {
-
-        question =
-            "What careers could suit me?";
-
-    }
-
-    else if (topic === "study") {
-
-        question =
-            "Create a study plan for me.";
-
-    }
-
-    else if (topic === "cv") {
-
-        question =
-            "Help me improve my CV.";
-
-    }
-
-    else if (topic === "python") {
-
-        question =
-            "Teach me Python.";
-
-    }
-
-    else if (topic === "opportunities") {
-
-        question =
-            "What opportunities should I explore?";
-
-    }
-
-
-    document.getElementById("aiInput").value =
-        question;
-
-    sendAIMessage();
-
-}
-
-
-/* ===============================
-   AI RESPONSE
-================================ */
-
-function getAIResponse(question) {
-
-    const q =
-        question.toLowerCase();
-
-
-    /* CAREER */
-
-    if (
-        q.includes("career") ||
-        q.includes("job") ||
-        q.includes("profession")
-    ) {
-
-        let response =
-            "🎓 CAREER GUIDANCE\n\n";
-
-
-        if (
-            aiMemory.subjects ||
-            aiMemory.skills ||
-            aiMemory.interests
-        ) {
-
-            response +=
-                "Based on what you've told me:\n\n";
-
-            if (aiMemory.subjects) {
-
-                response +=
-                    "📚 Subjects: " +
-                    aiMemory.subjects +
-                    "\n";
-
-            }
-
-            if (aiMemory.skills) {
-
-                response +=
-                    "🛠 Skills: " +
-                    aiMemory.skills +
-                    "\n";
-
-            }
-
-            if (aiMemory.interests) {
-
-                response +=
-                    "❤️ Interests: " +
-                    aiMemory.interests +
-                    "\n\n";
-
-            }
-
-            response +=
-                "Use Career Explorer to investigate career paths that match these areas.";
-
-        }
-
-        else {
-
-            response +=
-                "Tell me your favourite subjects, skills and interests using the Personal Career Advisor above.";
-
-        }
-
-
-        return response;
-
-    }
-
-
-    /* STUDY */
-
-    if (
-        q.includes("study") ||
-        q.includes("exam") ||
-        q.includes("revision")
-    ) {
-
-        return "📚 STUDY ASSISTANT\n\nI can help you organise your studying. Tell me the subjects you need to study and how much time you have each day.";
-
-    }
-
-
-    /* CV */
-
-    if (
-        q.includes("cv") ||
-        q.includes("resume")
-    ) {
-
-        return "📝 CV ASSISTANT\n\nI can help you improve your student CV. Make sure it clearly shows your education, skills, projects, certificates and achievements.\n\n👉 CV Builder: /cv-builder";
-
-    }
-
-
-    /* PYTHON */
-
-    if (
-        q.includes("python") ||
-        q.includes("coding") ||
-        q.includes("programming")
-    ) {
-
-        return "💻 PYTHON TUTOR\n\nWe can learn Python step-by-step, starting with variables and data types, then conditions, loops, functions and projects.\n\n👉 Python Course: /courses/python";
-
-    }
-
-
-    /* OPPORTUNITIES */
-
-    if (
-        q.includes("scholarship") ||
-        q.includes("internship") ||
-        q.includes("grant") ||
-        q.includes("opportunit")
-    ) {
-
-        return "💼 OPPORTUNITIES\n\nCheck the Career Bridge Opportunities section for available programmes and scholarships.\n\n👉 /opportunities";
-
-    }
-
-
-    /* MEMORY */
-
-    if (
-        q.includes("remember") ||
-        q.includes("what do you know about me") ||
-        q.includes("my profile")
-    ) {
-
-        let response =
-            "🧠 YOUR SAVED PROFILE\n\n";
-
-        response +=
-            "Subjects: " +
-            (aiMemory.subjects || "Not saved") +
-            "\n\n";
-
-        response +=
-            "Skills: " +
-            (aiMemory.skills || "Not saved") +
-            "\n\n";
-
-        response +=
-            "Interests: " +
-            (aiMemory.interests || "Not saved");
-
-        return response;
-
-    }
-
-
-    /* HELP */
-
-    if (
-        q.includes("help") ||
-        q.includes("what can you do")
-    ) {
-
-        return "🤖 I can help you with:\n\n🎓 Careers\n📚 Study plans\n📝 CVs\n💻 Python\n💼 Opportunities\n🧭 Career Explorer\n🧠 Your saved profile\n\nYou can also tell me your subjects, skills and interests.";
-
-    }
-
-
-    /* DEFAULT */
-
-    return "🤖 I'm here to help with careers, studying, CVs, Python and opportunities.\n\nYou can also ask me:\n\n• What do you remember about me?\n• What careers suit me?\n• Create a study plan.\n• Help me with my CV.";
-
-}
-
-
-/* ===============================
-   SEND MESSAGE
-================================ */
-
-function sendAIMessage() {
+/* =====================================================
+   AI CHAT
+   ===================================================== */
+
+function sendCareerAI() {
 
     const input =
-        document.getElementById("aiInput");
+        document.getElementById(
+            "cb-ai-input"
+        );
 
     if (!input) return;
 
-    const question =
+    const message =
         input.value.trim();
 
-    if (!question) return;
+    if (!message) return;
 
 
     addAIMessage(
-        question,
+        message,
         "user"
     );
-
 
     input.value = "";
 
 
+    /*
+       This is currently a local Career Bridge AI
+       interface.
+
+       We can connect it to a real AI model later
+       without changing the rest of the website.
+    */
+
+    const lower =
+        message.toLowerCase();
+
+
     setTimeout(function() {
 
-        const answer =
-            getAIResponse(question);
+        if (
+            lower.includes("remember") ||
+            lower.includes("know about me")
+        ) {
+
+            const subjects =
+                document.getElementById(
+                    "cb-subjects"
+                ).value || "Not saved";
+
+            const skills =
+                document.getElementById(
+                    "cb-skills"
+                ).value || "Not saved";
+
+            const interests =
+                document.getElementById(
+                    "cb-interests"
+                ).value || "Not saved";
+
+            const goal =
+                document.getElementById(
+                    "cb-career-goal"
+                ).value || "Not saved";
+
+
+            addAIMessage(
+
+                "Here's what I remember about you:\n\n" +
+
+                "🎓 Subjects: " +
+                subjects + "\n\n" +
+
+                "🛠️ Skills: " +
+                skills + "\n\n" +
+
+                "❤️ Interests: " +
+                interests + "\n\n" +
+
+                "🎯 Career goal: " +
+                goal,
+
+                "bot"
+            );
+
+            return;
+        }
+
+
+        if (
+            lower.includes("career")
+        ) {
+
+            addAIMessage(
+
+                "I can help you explore careers based on your subjects, skills, interests and goals. Try asking: \"What careers suit me?\"",
+
+                "bot"
+            );
+
+            return;
+        }
+
+
+        if (
+            lower.includes("skill")
+        ) {
+
+            addAIMessage(
+
+                "Tell me the career you're interested in and I can help you identify useful skills to develop.",
+
+                "bot"
+            );
+
+            return;
+        }
+
 
         addAIMessage(
-            answer,
-            "ai"
+
+            "I'm your Career Bridge AI assistant. 🤖 Try asking me about your career profile, careers, skills or opportunities.",
+
+            "bot"
         );
 
-    }, 350);
+
+    }, 500);
 
 }
 
 
-/* ===============================
+/* =====================================================
    ENTER KEY
-================================ */
+   ===================================================== */
 
 function handleAIKey(event) {
 
     if (event.key === "Enter") {
 
-        sendAIMessage();
+        sendCareerAI();
 
     }
 
 }
 
 
-/* ===============================
-   STARTUP
-================================ */
+/* =====================================================
+   LOAD MEMORY WHEN PAGE OPENS
+   ===================================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
     function() {
 
-        loadMemoryIntoForm();
-
-        updateMemoryStatus();
+        loadCareerMemory();
 
     }
 );
