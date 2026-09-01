@@ -11,7 +11,7 @@ import os
 
 # =========================================================
 
-app = Flask(**name**)
+app = Flask(_name_)
 
 app.config["SECRET_KEY"] = os.environ.get(
 "SECRET_KEY",
