@@ -11,25 +11,36 @@ import os
 
 # =========================================================
 
-app = Flask(_name_)
+app = Flask(**name**)
 
 app.config["SECRET_KEY"] = os.environ.get(
 "SECRET_KEY",
 "career-bridge-development-key"
 )
 
-database_url = os.environ.get(
-    "DATABASE_URL",
-    "sqlite:///career_bridge.db"
-)
+# =========================================================
 
-if database_url.startswith("postgres://"):database_url = database_url.replace(
+# DATABASE
+
+# =========================================================
+
+database_url = os.environ.get("DATABASE_URL")
+
+if database_url:
+if database_url.startswith("postgres://"):
+database_url = database_url.replace(
 "postgres://",
 "postgresql://",
 1
 )
 
+```
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+```
+
+else:
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///career_bridge.db"
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -324,19 +335,22 @@ return decorated_function
 
 # =========================================================
 
-# DIGITAL SKILLS MODULE ACCESS CHECK
+# DIGITAL SKILLS ACCESS CONTROL
 
 # =========================================================
 
-def digital_module_access_allowed(student_id, module_number):
+def digital_module_access_allowed(
+student_id,
+module_number
+):
 
 ```
 # Module 1 is always available.
 if module_number == 1:
     return True
 
-# Every other module requires the previous module
-# to have been completed.
+# Every other module requires the previous
+# module to be completed.
 previous_module = DigitalSkillsProgress.query.filter_by(
     student_id=student_id,
     module_number=module_number - 1,
@@ -363,7 +377,7 @@ return render_template(
 
 # =========================================================
 
-# STUDENT REGISTER
+# REGISTER
 
 # =========================================================
 
@@ -428,7 +442,7 @@ return render_template(
 
 # =========================================================
 
-# STUDENT LOGIN
+# LOGIN
 
 # =========================================================
 
@@ -480,7 +494,7 @@ return render_template(
 
 # =========================================================
 
-# STUDENT LOGOUT
+# LOGOUT
 
 # =========================================================
 
@@ -831,7 +845,7 @@ return render_template(
 
 # =========================================================
 
-# STUDENT MENTORSHIP INBOX
+# STUDENT MENTORSHIP REQUESTS
 
 # =========================================================
 
@@ -856,7 +870,7 @@ return render_template(
 
 # =========================================================
 
-# ADMIN MENTORSHIP INBOX
+# ADMIN MENTORSHIP REQUESTS
 
 # =========================================================
 
@@ -879,7 +893,7 @@ return render_template(
 
 # =========================================================
 
-# ADMIN UPDATE MENTORSHIP REQUEST
+# UPDATE MENTORSHIP REQUEST
 
 # =========================================================
 
@@ -921,7 +935,7 @@ return redirect(
 
 # =========================================================
 
-# STUDENT DASHBOARD
+# DASHBOARD
 
 # =========================================================
 
@@ -1062,7 +1076,7 @@ return render_template(
 
 # =========================================================
 
-# PYTHON MODULE 1
+# PYTHON MODULES
 
 # =========================================================
 
@@ -1076,12 +1090,6 @@ return render_template(
 )
 ```
 
-# =========================================================
-
-# PYTHON MODULE 2
-
-# =========================================================
-
 @app.route("/python/module2")
 @login_required
 def python_module2():
@@ -1091,12 +1099,6 @@ return render_template(
     "python/module2.html"
 )
 ```
-
-# =========================================================
-
-# PYTHON MODULE 3
-
-# =========================================================
 
 @app.route("/python/module3")
 @login_required
@@ -1108,12 +1110,6 @@ return render_template(
 )
 ```
 
-# =========================================================
-
-# PYTHON MODULE 4
-
-# =========================================================
-
 @app.route("/python/module4")
 @login_required
 def python_module4():
@@ -1123,12 +1119,6 @@ return render_template(
     "python/module4.html"
 )
 ```
-
-# =========================================================
-
-# PYTHON MODULE 5
-
-# =========================================================
 
 @app.route("/python/module5")
 @login_required
@@ -1140,12 +1130,6 @@ return render_template(
 )
 ```
 
-# =========================================================
-
-# PYTHON MODULE 6
-
-# =========================================================
-
 @app.route("/python/module6")
 @login_required
 def python_module6():
@@ -1155,12 +1139,6 @@ return render_template(
     "python/module6.html"
 )
 ```
-
-# =========================================================
-
-# PYTHON MODULE 7
-
-# =========================================================
 
 @app.route("/python/module7")
 @login_required
@@ -1172,12 +1150,6 @@ return render_template(
 )
 ```
 
-# =========================================================
-
-# PYTHON MODULE 8
-
-# =========================================================
-
 @app.route("/python/module8")
 @login_required
 def python_module8():
@@ -1188,12 +1160,6 @@ return render_template(
 )
 ```
 
-# =========================================================
-
-# PYTHON MODULE 9
-
-# =========================================================
-
 @app.route("/python/module9")
 @login_required
 def python_module9():
@@ -1203,12 +1169,6 @@ return render_template(
     "python/module9.html"
 )
 ```
-
-# =========================================================
-
-# PYTHON MODULE 10
-
-# =========================================================
 
 @app.route("/python/module10")
 @login_required
@@ -1222,7 +1182,7 @@ return render_template(
 
 # =========================================================
 
-# CV + LINKEDIN COURSE
+# CV + LINKEDIN
 
 # =========================================================
 
@@ -1236,12 +1196,6 @@ return render_template(
 )
 ```
 
-# =========================================================
-
-# CV + LINKEDIN MODULE 1
-
-# =========================================================
-
 @app.route("/cv-linkedin/module1")
 @login_required
 def cv_linkedin_module1():
@@ -1251,12 +1205,6 @@ return render_template(
     "cv-linkedin/module1.html"
 )
 ```
-
-# =========================================================
-
-# CV + LINKEDIN MODULE 2
-
-# =========================================================
 
 @app.route("/cv-linkedin/module2")
 @login_required
@@ -1268,12 +1216,6 @@ return render_template(
 )
 ```
 
-# =========================================================
-
-# CV + LINKEDIN MODULE 3
-
-# =========================================================
-
 @app.route("/cv-linkedin/module3")
 @login_required
 def cv_linkedin_module3():
@@ -1284,12 +1226,6 @@ return render_template(
 )
 ```
 
-# =========================================================
-
-# CV + LINKEDIN MODULE 4
-
-# =========================================================
-
 @app.route("/cv-linkedin/module4")
 @login_required
 def cv_linkedin_module4():
@@ -1299,12 +1235,6 @@ return render_template(
     "cv-linkedin/module4.html"
 )
 ```
-
-# =========================================================
-
-# CV + LINKEDIN MODULE 5
-
-# =========================================================
 
 @app.route("/cv-linkedin/module5")
 @login_required
@@ -1329,10 +1259,19 @@ def digital_skills():
 ```
 student_id = session["student_id"]
 
-completed_modules = DigitalSkillsProgress.query.filter_by(
+completed_records = DigitalSkillsProgress.query.filter_by(
     student_id=student_id,
     completed=True
-).count()
+).all()
+
+completed_numbers = {
+    record.module_number
+    for record in completed_records
+}
+
+completed_modules = len(
+    completed_numbers
+)
 
 progress_percent = int(
     (completed_modules / 10) * 100
@@ -1341,7 +1280,8 @@ progress_percent = int(
 return render_template(
     "digital-skills.html",
     completed_modules=completed_modules,
-    progress_percent=progress_percent
+    progress_percent=progress_percent,
+    completed_numbers=completed_numbers
 )
 ```
 
@@ -1616,7 +1556,7 @@ return render_template(
 
 # =========================================================
 
-# DIGITAL SKILLS PROGRESS PAGE
+# DIGITAL SKILLS PROGRESS
 
 # =========================================================
 
@@ -1678,9 +1618,9 @@ if module_number < 1 or module_number > 10:
 
 student_id = session["student_id"]
 
-# =====================================================
-# PREVENT STUDENTS FROM COMPLETING MODULES OUT OF ORDER
-# =====================================================
+# -----------------------------------------------------
+# PREVENT COMPLETING MODULES OUT OF ORDER
+# -----------------------------------------------------
 
 if module_number > 1:
 
@@ -1696,9 +1636,9 @@ if module_number > 1:
             url_for("digital_skills")
         )
 
-# =====================================================
-# FIND OR CREATE PROGRESS RECORD
-# =====================================================
+# -----------------------------------------------------
+# FIND OR CREATE RECORD
+# -----------------------------------------------------
 
 record = DigitalSkillsProgress.query.filter_by(
     student_id=student_id,
@@ -1716,7 +1656,6 @@ if not record:
     db.session.add(record)
 
 record.completed = True
-
 record.completed_at = datetime.utcnow()
 
 quiz_score = request.form.get(
@@ -1791,7 +1730,7 @@ return jsonify({
 
 # =========================================================
 
-# OTHER COURSES
+# CAREER DEVELOPMENT
 
 # =========================================================
 
@@ -2101,7 +2040,7 @@ db.create_all()
 
 # =========================================================
 
-# CREATE ADMIN ACCOUNT FROM RENDER ENVIRONMENT VARIABLES
+# CREATE ADMIN ACCOUNT
 
 # =========================================================
 
@@ -2132,7 +2071,6 @@ if admin_username and admin_password:
         )
 
         db.session.add(admin)
-
         db.session.commit()
 
         print(
