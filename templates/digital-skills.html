@@ -1,125 +1,172 @@
 {% extends "base.html" %}
 
-{% block title %}Digital Skills - Career Bridge{% endblock %}
-
 {% block content %}
 
-<section class="page">
+<style>
+    .course-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 45px 20px 70px;
+    }
 
-    <div class="page-header">
+    .course-hero {
+        background: white;
+        border-radius: 22px;
+        padding: 35px;
+        margin-bottom: 25px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+    }
 
+    .course-hero h1 {
+        margin: 0 0 10px;
+        font-size: 36px;
+    }
+
+    .course-hero p {
+        line-height: 1.7;
+        opacity: 0.75;
+    }
+
+    .progress-box {
+        margin-top: 25px;
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 15px;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 12px;
+        background: #e2e8f0;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        width: {{ progress_percent|default(0) }}%;
+        background: #111827;
+        border-radius: 20px;
+        transition: width 0.3s ease;
+    }
+
+    .modules {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    .module-card {
+        background: white;
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+    }
+
+    .module-card h2 {
+        margin: 0 0 8px;
+        font-size: 20px;
+    }
+
+    .module-card p {
+        opacity: 0.7;
+        line-height: 1.5;
+    }
+
+    .module-button {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 10px 16px;
+        border-radius: 9px;
+        background: #111827;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .progress-button {
+        display: inline-block;
+        margin-top: 25px;
+        padding: 12px 20px;
+        border-radius: 10px;
+        background: #111827;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    @media (max-width: 700px) {
+        .modules {
+            grid-template-columns: 1fr;
+        }
+
+        .course-hero h1 {
+            font-size: 30px;
+        }
+    }
+</style>
+
+<div class="course-page">
+
+    <div class="course-hero">
         <h1>💻 Digital Skills</h1>
 
         <p>
-            Develop practical computer and digital skills
-            that can help you succeed in school and future work.
+            Build practical digital skills through 10 structured modules.
+            Complete each module and track your progress as you learn.
         </p>
 
-    </div>
+        <div class="progress-box">
+            <div class="progress-header">
+                <span>Course Progress</span>
+                <span>{{ completed_modules|default(0) }}/10</span>
+            </div>
 
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
 
-    <div class="contact-box">
+            <p>
+                {{ progress_percent|default(0) }}% completed
+            </p>
+        </div>
 
-        <h2>Why Digital Skills Matter</h2>
-
-        <p>
-            Technology is part of almost every modern career.
-            Developing strong digital skills can help you work
-            more efficiently, communicate professionally and
-            adapt to new technologies.
-        </p>
-
-    </div>
-
-
-    <div class="contact-box">
-
-        <h2>What You'll Learn</h2>
-
-        <p>
-            • Computer fundamentals<br>
-            • Internet and web skills<br>
-            • Online research<br>
-            • Microsoft Office and productivity tools<br>
-            • Document creation and formatting<br>
-            • Presentations<br>
-            • Spreadsheets and basic data handling<br>
-            • Digital communication<br>
-            • Online collaboration
-        </p>
-
-    </div>
-
-
-    <div class="contact-box">
-
-        <h2>Internet & Online Skills</h2>
-
-        <p>
-            Learn how to search for reliable information,
-            communicate professionally online, use online
-            learning platforms and work with digital resources.
-        </p>
-
-    </div>
-
-
-    <div class="contact-box">
-
-        <h2>Productivity Skills</h2>
-
-        <p>
-            Learn how to create well-organized documents,
-            presentations and spreadsheets that can be useful
-            for school projects, applications and future work.
-        </p>
-
-    </div>
-
-
-    <div class="contact-box">
-
-        <h2>Digital Safety</h2>
-
-        <p>
-            Understand basic online safety practices, including
-            protecting your accounts, creating strong passwords,
-            recognizing suspicious messages and being responsible
-            with personal information online.
-        </p>
-
-    </div>
-
-
-    <div class="contact-box">
-
-        <h2>Who Is This For?</h2>
-
-        <p>
-            This course is suitable for students and beginners
-            who want to become more confident using computers,
-            online tools and digital technology.
-        </p>
-
-    </div>
-
-
-    <div class="contact-box">
-
-        <h2>Start Learning</h2>
-
-        <p>
-            Ready to improve your digital skills?
-            Contact Career Bridge to learn about available
-            learning opportunities.
-        </p>
-
-        <a href="/contact" class="button">
-            Contact Career Bridge
+        <a href="{{ url_for('digital_skills_progress') }}"
+           class="progress-button">
+            📊 View My Progress
         </a>
+    </div>
+
+    <div class="modules">
+
+        {% for i in range(1, 11) %}
+        <div class="module-card">
+
+            <h2>Module {{ i }}</h2>
+
+            <p>
+                Continue your Digital Skills learning journey with
+                Module {{ i }}.
+            </p>
+
+            <a href="{{ url_for('digital_skills_module' ~ i) }}"
+               class="module-button">
+                Open Module {{ i }} →
+            </a>
+
+        </div>
+        {% endfor %}
 
     </div>
 
-</section>
+</div>
 
 {% endblock %}
