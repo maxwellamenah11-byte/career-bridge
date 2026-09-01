@@ -1,0 +1,609 @@
+```html
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .lesson-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 45px 20px 70px;
+    }
+
+    .lesson-card,
+    .quiz-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .lesson-label {
+        font-size: 14px;
+        font-weight: bold;
+        opacity: 0.6;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        margin-top: 30px;
+        margin-bottom: 12px;
+    }
+
+    p,
+    li {
+        line-height: 1.7;
+        color: #374151;
+    }
+
+    ul {
+        padding-left: 25px;
+    }
+
+    .tip-box {
+        margin-top: 25px;
+        padding: 18px;
+        background: #f1f5f9;
+        border-radius: 12px;
+        line-height: 1.6;
+    }
+
+    .example-box {
+        margin-top: 20px;
+        padding: 18px;
+        background: #f8fafc;
+        border-radius: 12px;
+        font-family: monospace;
+        overflow-x: auto;
+    }
+
+    .quiz-card h2 {
+        margin-top: 0;
+    }
+
+    .question {
+        margin-top: 25px;
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+    }
+
+    .question p {
+        font-weight: bold;
+        color: #111827;
+    }
+
+    .option {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .option:hover {
+        background: #e2e8f0;
+    }
+
+    .quiz-button,
+    .lesson-button {
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: none;
+        background: #111827;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .quiz-button {
+        margin-top: 25px;
+        font-size: 15px;
+    }
+
+    .result {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+    .pass {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .fail {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .next-button {
+        display: none;
+        margin-top: 15px;
+    }
+
+    .lesson-navigation {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    @media (max-width: 600px) {
+        .lesson-card,
+        .quiz-card {
+            padding: 25px;
+        }
+
+        h1 {
+            font-size: 29px;
+        }
+
+        .lesson-navigation {
+            flex-direction: column;
+        }
+
+        .lesson-button {
+            text-align: center;
+        }
+    }
+</style>
+
+
+<div class="lesson-page">
+
+    <!-- LESSON -->
+
+    <div class="lesson-card">
+
+        <div class="lesson-label">
+            DIGITAL SKILLS • MODULE 5 OF 10
+        </div>
+
+        <h1>📊 Microsoft Excel Basics</h1>
+
+        <p>
+            Microsoft Excel is a spreadsheet application used to organize,
+            calculate, analyze, and present information. Excel is useful
+            in education, business, engineering, finance, and many other
+            careers.
+        </p>
+
+
+        <h2>🎯 What You Will Learn</h2>
+
+        <ul>
+            <li>What a spreadsheet is</li>
+            <li>How rows, columns, and cells work</li>
+            <li>How to enter and edit data</li>
+            <li>How to use basic formulas</li>
+            <li>How to organize information in a worksheet</li>
+        </ul>
+
+
+        <h2>📋 What Is a Spreadsheet?</h2>
+
+        <p>
+            A spreadsheet is a digital document that organizes information
+            into rows and columns. It can also perform calculations
+            automatically.
+        </p>
+
+        <p>
+            Microsoft Excel is one of the most widely used spreadsheet
+            applications.
+        </p>
+
+
+        <h2>🔲 Cells</h2>
+
+        <p>
+            A cell is a box where you enter information. Every cell has
+            a unique address based on its column letter and row number.
+        </p>
+
+        <div class="example-box">
+            A1 = Column A, Row 1<br>
+            B3 = Column B, Row 3<br>
+            C5 = Column C, Row 5
+        </div>
+
+
+        <h2>↔️ Rows and Columns</h2>
+
+        <p>
+            Rows run horizontally across a worksheet and are identified
+            by numbers.
+        </p>
+
+        <p>
+            Columns run vertically and are identified by letters.
+        </p>
+
+
+        <h2>✍️ Entering Data</h2>
+
+        <p>
+            You can enter different types of information into Excel,
+            including text, numbers, and dates.
+        </p>
+
+        <ul>
+            <li>Names</li>
+            <li>Numbers</li>
+            <li>Prices</li>
+            <li>Dates</li>
+            <li>Scores</li>
+            <li>Descriptions</li>
+        </ul>
+
+
+        <h2>➕ Basic Formulas</h2>
+
+        <p>
+            Excel formulas allow you to perform calculations. A formula
+            normally begins with an equals sign (=).
+        </p>
+
+        <div class="example-box">
+            =2+2<br>
+            =10-5<br>
+            =4*3<br>
+            =20/4
+        </div>
+
+        <p>
+            Excel can also perform calculations using cell references.
+        </p>
+
+        <div class="example-box">
+            =A1+B1
+        </div>
+
+
+        <h2>🧮 Common Functions</h2>
+
+        <p>
+            Excel includes functions that make calculations easier.
+        </p>
+
+        <ul>
+            <li><strong>SUM</strong> — adds numbers together.</li>
+            <li><strong>AVERAGE</strong> — calculates the average.</li>
+            <li><strong>MAX</strong> — finds the largest value.</li>
+            <li><strong>MIN</strong> — finds the smallest value.</li>
+        </ul>
+
+
+        <div class="example-box">
+            =SUM(A1:A5)<br>
+            =AVERAGE(B1:B5)
+        </div>
+
+
+        <h2>📑 Organizing Data</h2>
+
+        <p>
+            Excel can help you organize large amounts of information.
+            You can use headings, tables, sorting, and filtering to make
+            data easier to understand.
+        </p>
+
+
+        <h2>💼 Excel in the Workplace</h2>
+
+        <p>
+            Excel is useful for many workplace tasks, including budgets,
+            reports, records, calculations, schedules, and data analysis.
+        </p>
+
+
+        <div class="tip-box">
+            <strong>💡 Key Point:</strong>
+            A cell is identified by its column letter and row number,
+            such as A1. Excel formulas normally begin with an equals sign.
+        </div>
+
+
+        <h2>📝 Module Summary</h2>
+
+        <p>
+            Excel helps users organize information and perform calculations.
+            Understanding cells, rows, columns, formulas, and basic functions
+            provides a strong foundation for more advanced spreadsheet work.
+        </p>
+
+    </div>
+
+
+    <!-- QUIZ -->
+
+    <div class="quiz-card">
+
+        <h2>🧠 Module 5 Quiz</h2>
+
+        <p>
+            Answer all 5 questions. You need at least 70% to pass.
+        </p>
+
+
+        <form id="quizForm">
+
+            <div class="question">
+
+                <p>1. What is a spreadsheet used for?</p>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="a">
+                    Organizing and calculating information
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="b">
+                    Playing music only
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="c">
+                    Sending physical letters
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="d">
+                    Charging a phone
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>2. Which identifies a cell in Excel?</p>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="a">
+                    A1
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="b">
+                    Computer
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="c">
+                    Excel.exe
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="d">
+                    Keyboard
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>3. How are columns identified in Excel?</p>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="a">
+                    Letters
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="b">
+                    Emojis
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="c">
+                    Symbols only
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="d">
+                    Colors
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>4. Which symbol normally starts an Excel formula?</p>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="a">
+                    #
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="b">
+                    @
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="c">
+                    =
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="d">
+                    $
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>5. What does the SUM function do?</p>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="a">
+                    Finds the smallest value
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="b">
+                    Adds numbers together
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="c">
+                    Deletes a worksheet
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="d">
+                    Changes the computer password
+                </label>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="quiz-button"
+                onclick="checkQuiz()"
+            >
+                Submit Quiz
+            </button>
+
+        </form>
+
+
+        <div id="result" class="result"></div>
+
+
+        <a
+            id="nextButton"
+            href="{{ url_for('digital_skills_module6') }}"
+            class="lesson-button next-button"
+        >
+            Continue to Module 6 →
+        </a>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="lesson-navigation">
+
+        <a
+            href="{{ url_for('digital_skills_module4') }}"
+            class="lesson-button"
+        >
+            ← Module 4
+        </a>
+
+        <a
+            href="{{ url_for('digital_skills') }}"
+            class="lesson-button"
+        >
+            Course Home
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function checkQuiz() {
+
+    const answers = {
+        q1: "a",
+        q2: "a",
+        q3: "a",
+        q4: "c",
+        q5: "b"
+    };
+
+    let score = 0;
+    let answered = 0;
+
+    for (let question in answers) {
+
+        const selected = document.querySelector(
+            'input[name="' + question + '"]:checked'
+        );
+
+        if (selected) {
+
+            answered++;
+
+            if (selected.value === answers[question]) {
+                score++;
+            }
+        }
+    }
+
+
+    const result = document.getElementById("result");
+    const nextButton = document.getElementById("nextButton");
+
+    result.style.display = "block";
+
+
+    if (answered < 5) {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "⚠️ Please answer all 5 questions before submitting.";
+
+        nextButton.style.display = "none";
+
+        return;
+    }
+
+
+    const percentage = (score / 5) * 100;
+
+
+    if (percentage >= 70) {
+
+        result.className = "result pass";
+
+        result.innerHTML =
+            "🎉 You passed! Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%)";
+
+        nextButton.style.display = "inline-block";
+
+    } else {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "❌ You did not pass. Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%). Review the lesson and try again.";
+
+        nextButton.style.display = "none";
+    }
+
+}
+
+</script>
+
+{% endblock %}
+```
