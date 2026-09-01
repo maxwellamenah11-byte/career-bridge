@@ -224,7 +224,6 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
 
         if "student_id" not in session:
-
             return redirect(
                 url_for("login")
             )
@@ -244,7 +243,6 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
 
         if "admin_id" not in session:
-
             return redirect(
                 url_for("admin_login")
             )
@@ -294,7 +292,6 @@ def register():
         )
 
         if not name or not email or not password:
-
             return "Please fill in all fields."
 
         existing_student = Student.query.filter_by(
@@ -302,13 +299,14 @@ def register():
         ).first()
 
         if existing_student:
-
             return "An account with this email already exists."
 
         student = Student(
             name=name,
             email=email,
-            password=generate_password_hash(password)
+            password=generate_password_hash(
+                password
+            )
         )
 
         db.session.add(student)
@@ -353,14 +351,12 @@ def login():
         ).first()
 
         if not student:
-
             return "Account not found."
 
         if not check_password_hash(
             student.password,
             password
         ):
-
             return "Incorrect password."
 
         session["student_id"] = student.id
@@ -382,8 +378,15 @@ def login():
 @app.route("/logout")
 def logout():
 
-    session.pop("student_id", None)
-    session.pop("student_name", None)
+    session.pop(
+        "student_id",
+        None
+    )
+
+    session.pop(
+        "student_name",
+        None
+    )
 
     return redirect(
         url_for("login")
@@ -417,14 +420,12 @@ def admin_login():
         ).first()
 
         if not admin:
-
             return "Admin account not found."
 
         if not check_password_hash(
             admin.password,
             password
         ):
-
             return "Incorrect admin password."
 
         session["admin_id"] = admin.id
@@ -446,8 +447,15 @@ def admin_login():
 @app.route("/admin/logout")
 def admin_logout():
 
-    session.pop("admin_id", None)
-    session.pop("admin_username", None)
+    session.pop(
+        "admin_id",
+        None
+    )
+
+    session.pop(
+        "admin_username",
+        None
+    )
 
     return redirect(
         url_for("admin_login")
@@ -462,20 +470,19 @@ def admin_logout():
 @admin_required
 def admin_dashboard():
 
-    request_count = MentorshipRequest.query.count()
-    pending_count = MentorshipRequest.query.filter_by(
+    request_count = MentorshipRequest.query.filter_by(
         status="Pending"
     ).count()
 
-    mentor_count = Mentor.query.filter_by(
-        verified=True
-    ).count()
+    mentor_count = Mentor.query.count()
+
+    student_count = Student.query.count()
 
     return render_template(
         "admin-dashboard.html",
         request_count=request_count,
-        pending_count=pending_count,
-        mentor_count=mentor_count
+        mentor_count=mentor_count,
+        student_count=student_count
     )
 
 
@@ -528,7 +535,6 @@ def add_mentor():
         ).strip()
 
         if not name or not profession or not field:
-
             return "Name, profession and field are required."
 
         mentor = Mentor(
@@ -587,7 +593,6 @@ def mentor_profile(mentor_id):
     )
 
     if not mentor.verified:
-
         return "Mentor not available.", 404
 
     return render_template(
@@ -612,7 +617,6 @@ def request_mentorship(mentor_id):
     )
 
     if not mentor.verified:
-
         return "Mentor not available.", 404
 
     if request.method == "POST":
@@ -623,7 +627,6 @@ def request_mentorship(mentor_id):
         ).strip()
 
         if not message:
-
             return "Please enter a message."
 
         mentorship_request = MentorshipRequest(
@@ -710,7 +713,6 @@ def update_mentorship_request(
     ]
 
     if status not in allowed_statuses:
-
         return "Invalid status.", 400
 
     mentorship_request = MentorshipRequest.query.get_or_404(
@@ -736,15 +738,8 @@ def update_mentorship_request(
 @login_required
 def dashboard():
 
-    mentorship_requests = MentorshipRequest.query.filter_by(
-        student_id=session["student_id"]
-    ).order_by(
-        MentorshipRequest.id.desc()
-    ).all()
-
     return render_template(
-        "dashboard.html",
-        mentorship_requests=mentorship_requests
+        "dashboard.html"
     )
 
 
@@ -917,7 +912,7 @@ def python_module10():
 
 
 # =========================================================
-# CV + LINKEDIN COURSE
+# CV + LINKEDIN
 # =========================================================
 
 @app.route("/courses/cv-linkedin")
@@ -1125,42 +1120,62 @@ def opportunities():
             "title": "Nigerian Scholarship Award",
             "organization": "Federal Scholarship Board",
             "category": "Scholarships",
-            "description": "Federal scholarship support for eligible Nigerian students.",
+            "description":
+                "Federal scholarship support for eligible Nigerian students.",
             "deadline": "Check official portal",
             "location": "Nigeria",
-            "link": "https://scholarship.education.gov.ng/"
+            "link":
+                "https://scholarship.education.gov.ng/"
         },
 
         {
             "title": "Student Venture Capital Grant",
-            "organization": "Federal Ministry of Education",
-            "category": "Career Programmes",
-            "description": "Support for eligible student-led businesses and innovative projects.",
-            "deadline": "Check official portal",
-            "location": "Nigeria",
-            "link": "https://svcg.education.gov.ng/"
+            "organization":
+                "Federal Ministry of Education",
+            "category":
+                "Career Programmes",
+            "description":
+                "Support for eligible student-led businesses and innovative projects.",
+            "deadline":
+                "Check official portal",
+            "location":
+                "Nigeria",
+            "link":
+                "https://svcg.education.gov.ng/"
         },
 
         {
-            "title": "Presidential Amnesty Programme Scholarship",
-            "organization": "Presidential Amnesty Programme",
-            "category": "Scholarships",
-            "description": "Scholarship support for eligible students from the Niger Delta.",
-            "deadline": "Applications closed",
-            "location": "Niger Delta, Nigeria",
-            "link": "https://osapnd.gov.ng/scholarship/"
+            "title":
+                "Presidential Amnesty Programme Scholarship",
+            "organization":
+                "Presidential Amnesty Programme",
+            "category":
+                "Scholarships",
+            "description":
+                "Scholarship support for eligible students from the Niger Delta.",
+            "deadline":
+                "Applications closed",
+            "location":
+                "Niger Delta, Nigeria",
+            "link":
+                "https://osapnd.gov.ng/scholarship/"
         },
 
         {
             "title": "3MTT",
-            "organization": "Federal Government of Nigeria",
-            "category": "Free Courses",
-            "description": "A national programme for developing practical digital and technology skills.",
-            "deadline": "Check official portal",
-            "location": "Nigeria",
-            "link": "https://3mtt.nitda.gov.ng/"
+            "organization":
+                "Federal Government of Nigeria",
+            "category":
+                "Free Courses",
+            "description":
+                "A national programme for developing practical digital and technology skills.",
+            "deadline":
+                "Check official portal",
+            "location":
+                "Nigeria",
+            "link":
+                "https://3mtt.nitda.gov.ng/"
         }
-
     ]
 
     return render_template(
