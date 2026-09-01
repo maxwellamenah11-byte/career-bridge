@@ -1,0 +1,493 @@
+```html
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .lesson-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 45px 20px 70px;
+    }
+
+    .lesson-card,
+    .quiz-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .lesson-label {
+        font-size: 14px;
+        font-weight: bold;
+        opacity: 0.6;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        margin-top: 30px;
+        margin-bottom: 12px;
+    }
+
+    p, li {
+        line-height: 1.7;
+        color: #374151;
+    }
+
+    ul {
+        padding-left: 25px;
+    }
+
+    .tip-box {
+        margin-top: 25px;
+        padding: 18px;
+        background: #f1f5f9;
+        border-radius: 12px;
+    }
+
+    .quiz-card h2 {
+        margin-top: 0;
+    }
+
+    .question {
+        margin-top: 25px;
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+    }
+
+    .question p {
+        font-weight: bold;
+        color: #111827;
+    }
+
+    .option {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+
+    .option:hover {
+        background: #e2e8f0;
+    }
+
+    .quiz-button {
+        margin-top: 25px;
+        padding: 13px 22px;
+        border: none;
+        border-radius: 10px;
+        background: #111827;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .result {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        display: none;
+        font-weight: bold;
+    }
+
+    .pass {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .fail {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .next-button {
+        display: none;
+        margin-top: 15px;
+        padding: 12px 20px;
+        border-radius: 10px;
+        background: #111827;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .lesson-navigation {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 35px;
+    }
+
+    .lesson-button {
+        padding: 12px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        background: #111827;
+        color: white;
+    }
+
+    @media (max-width: 600px) {
+        .lesson-card,
+        .quiz-card {
+            padding: 25px;
+        }
+
+        h1 {
+            font-size: 29px;
+        }
+
+        .lesson-navigation {
+            flex-direction: column;
+        }
+
+        .lesson-button {
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="lesson-page">
+
+    <!-- LESSON -->
+
+    <div class="lesson-card">
+
+        <div class="lesson-label">
+            DIGITAL SKILLS • MODULE 1 OF 10
+        </div>
+
+        <h1>Introduction to Digital Skills</h1>
+
+        <p>
+            Digital skills are the abilities needed to use computers,
+            smartphones, software, websites, and other digital technologies
+            effectively and responsibly.
+        </p>
+
+        <h2>🎯 What You Will Learn</h2>
+
+        <ul>
+            <li>What digital skills are</li>
+            <li>Why digital skills are important</li>
+            <li>Examples of common digital skills</li>
+            <li>How digital skills can help with education and careers</li>
+        </ul>
+
+        <h2>💻 What Are Digital Skills?</h2>
+
+        <p>
+            Digital skills are practical abilities that help you use
+            digital devices and technology to find information,
+            communicate, create content, solve problems, and complete tasks.
+        </p>
+
+        <h2>🌍 Why Are Digital Skills Important?</h2>
+
+        <p>
+            Technology is used in education, businesses, engineering,
+            healthcare, communication, entertainment, and many other areas.
+            Developing digital skills can therefore make it easier to
+            learn, work, communicate, and adapt to new technologies.
+        </p>
+
+        <h2>🧠 Examples of Digital Skills</h2>
+
+        <ul>
+            <li>Using a computer or smartphone</li>
+            <li>Searching for information online</li>
+            <li>Using email</li>
+            <li>Creating documents</li>
+            <li>Working with spreadsheets</li>
+            <li>Creating presentations</li>
+            <li>Using cloud storage</li>
+            <li>Practising good online safety</li>
+        </ul>
+
+        <div class="tip-box">
+            <strong>💡 Key Point:</strong>
+            Digital skills are not only about knowing how to use a device.
+            They also include using technology safely, responsibly, and
+            effectively to accomplish real-world tasks.
+        </div>
+
+        <h2>📝 Module Summary</h2>
+
+        <p>
+            Digital skills help people use technology effectively in
+            everyday life, education, and the workplace.
+        </p>
+
+    </div>
+
+
+    <!-- QUIZ -->
+
+    <div class="quiz-card">
+
+        <h2>🧠 Module 1 Quiz</h2>
+
+        <p>
+            Answer all 5 questions. You need at least 70% to pass.
+        </p>
+
+        <form id="quizForm">
+
+            <div class="question">
+                <p>1. What are digital skills?</p>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="a">
+                    Skills for using digital technology effectively
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="b">
+                    Only programming skills
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="c">
+                    Only gaming skills
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="d">
+                    Sports skills
+                </label>
+            </div>
+
+
+            <div class="question">
+                <p>2. Which is an example of a digital skill?</p>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="a">
+                    Using email
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="b">
+                    Running
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="c">
+                    Swimming
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="d">
+                    Cooking
+                </label>
+            </div>
+
+
+            <div class="question">
+                <p>3. Where can digital skills be useful?</p>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="a">
+                    Only at home
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="b">
+                    Education and the workplace
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="c">
+                    Only in sports
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="d">
+                    Nowhere
+                </label>
+            </div>
+
+
+            <div class="question">
+                <p>4. Which activity involves a digital skill?</p>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="a">
+                    Creating a spreadsheet
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="b">
+                    Playing football
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="c">
+                    Sleeping
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="d">
+                    Swimming
+                </label>
+            </div>
+
+
+            <div class="question">
+                <p>5. How should technology be used?</p>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="a">
+                    Carelessly
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="b">
+                    Safely, responsibly, and effectively
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="c">
+                    Only for games
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="d">
+                    Without learning anything
+                </label>
+            </div>
+
+
+            <button
+                type="button"
+                class="quiz-button"
+                onclick="checkQuiz()"
+            >
+                Submit Quiz
+            </button>
+
+        </form>
+
+
+        <div id="result" class="result"></div>
+
+
+        <a
+            id="nextButton"
+            href="{{ url_for('digital_skills_module2') }}"
+            class="next-button"
+        >
+            Continue to Module 2 →
+        </a>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="lesson-navigation">
+
+        <a
+            href="{{ url_for('digital_skills') }}"
+            class="lesson-button"
+        >
+            ← Course Home
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function checkQuiz() {
+
+    const answers = {
+        q1: "a",
+        q2: "a",
+        q3: "b",
+        q4: "a",
+        q5: "b"
+    };
+
+    let score = 0;
+    let answered = 0;
+
+    for (let question in answers) {
+
+        const selected = document.querySelector(
+            'input[name="' + question + '"]:checked'
+        );
+
+        if (selected) {
+
+            answered++;
+
+            if (selected.value === answers[question]) {
+                score++;
+            }
+        }
+    }
+
+    const result = document.getElementById("result");
+    const nextButton = document.getElementById("nextButton");
+
+    result.style.display = "block";
+
+    if (answered < 5) {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "⚠️ Please answer all 5 questions before submitting.";
+
+        nextButton.style.display = "none";
+
+        return;
+    }
+
+    const percentage = (score / 5) * 100;
+
+    if (percentage >= 70) {
+
+        result.className = "result pass";
+
+        result.innerHTML =
+            "🎉 You passed! Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%)";
+
+        nextButton.style.display = "inline-block";
+
+    } else {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "❌ You did not pass. Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%). Review the lesson and try again.";
+
+        nextButton.style.display = "none";
+    }
+}
+
+</script>
+
+{% endblock %}
+```
