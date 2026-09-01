@@ -18,13 +18,12 @@ app.config["SECRET_KEY"] = os.environ.get(
 "career-bridge-development-key"
 )
 
-database_url = os.environ.get("DATABASE_URL")
+database_url = os.environ.get(
+    "DATABASE_URL",
+    "sqlite:///career_bridge.db"
+)
 
-if not database_url:
-raise RuntimeError("DATABASE_URL is not set.")
-
-if database_url.startswith("postgres://"):
-database_url = database_url.replace(
+if database_url.startswith("postgres://"):database_url = database_url.replace(
 "postgres://",
 "postgresql://",
 1
