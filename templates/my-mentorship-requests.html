@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .requests-page {
+        max-width: 1050px;
+        margin: 0 auto;
+        padding: 50px 20px 70px;
+    }
+
+    .requests-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .requests-header h1 {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    .requests-header p {
+        opacity: 0.7;
+        line-height: 1.6;
+    }
+
+    .request-card {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+    }
+
+    .request-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .mentor-name {
+        margin: 0 0 6px;
+        font-size: 22px;
+    }
+
+    .mentor-profession {
+        margin: 0;
+        opacity: 0.7;
+    }
+
+    .status {
+        padding: 8px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .accepted {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .declined {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .request-message {
+        margin-top: 20px;
+        padding: 18px;
+        background: #f8fafc;
+        border-radius: 12px;
+        line-height: 1.6;
+    }
+
+    .request-date {
+        margin-top: 15px;
+        font-size: 13px;
+        opacity: 0.6;
+    }
+
+    .empty-state {
+        background: white;
+        padding: 60px 20px;
+        border-radius: 18px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+    }
+
+    .empty-state h2 {
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        opacity: 0.7;
+    }
+
+    .browse-button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 20px;
+        background: #111827;
+        color: white;
+        text-decoration: none;
+        border-radius: 9px;
+        font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+
+        .requests-header h1 {
+            font-size: 30px;
+        }
+
+        .request-top {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="requests-page">
+
+```
+<div class="requests-header">
+
+    <h1>📩 My Mentorship Requests</h1>
+
+    <p>
+        Track the mentorship requests you have sent
+        and see their current status.
+    </p>
+
+</div>
+
+
+{% if requests %}
+
+    {% for req in requests %}
+
+        <div class="request-card">
+
+            <div class="request-top">
+
+                <div>
+
+                    <h2 class="mentor-name">
+                        🤝 {{ req.mentor.name }}
+                    </h2>
+
+                    <p class="mentor-profession">
+                        {{ req.mentor.profession }}
+                    </p>
+
+                </div>
+
+
+                {% if req.status == "Accepted" %}
+
+                    <span class="status accepted">
+                        ✓ Accepted
+                    </span>
+
+                {% elif req.status == "Declined" %}
+
+                    <span class="status declined">
+                        ✕ Declined
+                    </span>
+
+                {% else %}
+
+                    <span class="status pending">
+                        ⏳ Pending
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="request-message">
+
+                <strong>Your message:</strong>
+
+                <p>
+                    {{ req.message }}
+                </p>
+
+            </div>
+
+
+            {% if req.created_at %}
+
+                <div class="request-date">
+
+                    📅 Request sent:
+                    {{ req.created_at.strftime("%d %B %Y, %I:%M %p") }}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <div class="empty-state">
+
+        <h2>📭 No mentorship requests yet</h2>
+
+        <p>
+            You haven't sent a mentorship request yet.
+        </p>
+
+        <a
+            href="{{ url_for('mentors') }}"
+            class="browse-button"
+        >
+            Browse Mentors
+        </a>
+
+    </div>
+
+{% endif %}
+```
+
+</div>
+
+{% endblock %}
