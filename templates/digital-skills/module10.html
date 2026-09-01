@@ -1,0 +1,581 @@
+```html
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .lesson-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 45px 20px 70px;
+    }
+
+    .lesson-card,
+    .quiz-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .lesson-label {
+        font-size: 14px;
+        font-weight: bold;
+        opacity: 0.6;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        margin-top: 30px;
+        margin-bottom: 12px;
+    }
+
+    p, li {
+        line-height: 1.7;
+        color: #374151;
+    }
+
+    ul {
+        padding-left: 25px;
+    }
+
+    .tip-box,
+    .example-box {
+        margin-top: 20px;
+        padding: 18px;
+        background: #f1f5f9;
+        border-radius: 12px;
+        line-height: 1.7;
+    }
+
+    .quiz-card h2 {
+        margin-top: 0;
+    }
+
+    .question {
+        margin-top: 25px;
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+    }
+
+    .question p {
+        font-weight: bold;
+        color: #111827;
+    }
+
+    .option {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .option:hover {
+        background: #e2e8f0;
+    }
+
+    .quiz-button,
+    .lesson-button {
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: none;
+        background: #111827;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .quiz-button {
+        margin-top: 25px;
+        font-size: 15px;
+    }
+
+    .result {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+    .pass {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .fail {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .course-complete {
+        display: none;
+        margin-top: 20px;
+        padding: 20px;
+        background: #dcfce7;
+        color: #166534;
+        border-radius: 12px;
+        line-height: 1.6;
+    }
+
+    .lesson-navigation {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    @media (max-width: 600px) {
+        .lesson-card,
+        .quiz-card {
+            padding: 25px;
+        }
+
+        h1 {
+            font-size: 29px;
+        }
+
+        .lesson-navigation {
+            flex-direction: column;
+        }
+
+        .lesson-button {
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="lesson-page">
+
+    <div class="lesson-card">
+
+        <div class="lesson-label">
+            DIGITAL SKILLS • MODULE 10 OF 10
+        </div>
+
+        <h1>🔐 Digital Safety, Cybersecurity & Responsible Technology Use</h1>
+
+        <p>
+            Being able to use technology is important, but knowing how to
+            use it safely and responsibly is equally important. This final
+            module introduces basic cybersecurity, online safety, privacy,
+            and responsible use of technology.
+        </p>
+
+        <h2>🎯 What You Will Learn</h2>
+
+        <ul>
+            <li>What cybersecurity means</li>
+            <li>How to create stronger passwords</li>
+            <li>How to recognize suspicious messages</li>
+            <li>Why privacy matters online</li>
+            <li>How to protect your accounts</li>
+            <li>Responsible use of technology</li>
+        </ul>
+
+        <h2>🛡️ What Is Cybersecurity?</h2>
+
+        <p>
+            Cybersecurity refers to protecting computers, devices,
+            accounts, networks, and information from unauthorized access
+            and other digital threats.
+        </p>
+
+        <div class="example-box">
+            <strong>Examples of things worth protecting:</strong><br><br>
+            🔑 Account passwords<br>
+            📧 Email accounts<br>
+            📱 Mobile devices<br>
+            📄 Personal documents<br>
+            💳 Financial information
+        </div>
+
+        <h2>🔑 Strong Passwords</h2>
+
+        <p>
+            Passwords help protect your online accounts. A good password
+            should be difficult for other people to guess.
+        </p>
+
+        <ul>
+            <li>Use passwords that are difficult to guess.</li>
+            <li>Avoid using the same password everywhere.</li>
+            <li>Do not share your passwords with other people.</li>
+            <li>Use multi-factor authentication when available.</li>
+        </ul>
+
+        <h2>🎣 Recognizing Suspicious Messages</h2>
+
+        <p>
+            Some online messages are designed to trick people into giving
+            away information or clicking unsafe links. This type of scam
+            is commonly known as phishing.
+        </p>
+
+        <p>
+            Be cautious when a message creates pressure, asks for
+            sensitive information, or comes from an unexpected sender.
+        </p>
+
+        <div class="tip-box">
+            <strong>💡 Remember:</strong>
+            If a message seems suspicious, do not rush to click a link or
+            provide personal information. Verify the message through a
+            trusted source first.
+        </div>
+
+        <h2>🔒 Protecting Your Privacy</h2>
+
+        <p>
+            Personal information should be handled carefully online.
+            Think about what information you share and who can access it.
+        </p>
+
+        <ul>
+            <li>Review privacy settings on your accounts.</li>
+            <li>Be careful when sharing personal information.</li>
+            <li>Only give information to trustworthy services.</li>
+            <li>Log out of accounts on shared devices.</li>
+        </ul>
+
+        <h2>📱 Protecting Your Devices</h2>
+
+        <p>
+            Keep your devices and applications updated. Updates can
+            contain security improvements and fixes for known problems.
+        </p>
+
+        <p>
+            Use screen locks and avoid leaving your devices unattended
+            where other people could access them.
+        </p>
+
+        <h2>⚖️ Responsible Technology Use</h2>
+
+        <p>
+            Technology should be used responsibly and respectfully.
+            Digital responsibility includes respecting other people's
+            privacy, following rules, and thinking about the consequences
+            of what you post or share.
+        </p>
+
+        <ul>
+            <li>Respect other people's privacy.</li>
+            <li>Do not spread false information deliberately.</li>
+            <li>Respect copyright and ownership of digital content.</li>
+            <li>Use technology for productive and appropriate purposes.</li>
+            <li>Think before posting or sharing content.</li>
+        </ul>
+
+        <h2>💼 Digital Safety at Work</h2>
+
+        <p>
+            Digital safety is also important in the workplace. Employees
+            may handle company accounts, documents, customer information,
+            and other sensitive data.
+        </p>
+
+        <p>
+            Following security policies and reporting suspicious activity
+            can help protect an organization.
+        </p>
+
+        <h2>📝 Module Summary</h2>
+
+        <p>
+            Digital skills are not only about using technology. You also
+            need to understand how to protect your information, recognize
+            suspicious activity, respect privacy, and use technology
+            responsibly.
+        </p>
+
+        <div class="tip-box">
+            <strong>🎯 Key Point:</strong>
+            Stay alert, protect your accounts, respect other people online,
+            and think before you click, share, or post.
+        </div>
+
+    </div>
+
+
+    <div class="quiz-card">
+
+        <h2>🧠 Final Module Quiz</h2>
+
+        <p>
+            Answer all 5 questions. You need at least 70% to pass.
+        </p>
+
+        <form id="quizForm">
+
+            <div class="question">
+
+                <p>1. What does cybersecurity help protect?</p>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="a">
+                    Digital devices, accounts and information
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="b">
+                    Only books
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="c">
+                    Only school uniforms
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="d">
+                    Nothing
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>2. Which is a good password practice?</p>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="a">
+                    Share your password publicly
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="b">
+                    Use the same password everywhere
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="c">
+                    Use difficult-to-guess passwords
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="d">
+                    Write your password on a public notice board
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>3. What should you do with a suspicious message?</p>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="a">
+                    Immediately click every link
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="b">
+                    Verify it before taking action
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="c">
+                    Share it with everyone
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="d">
+                    Give the sender your password
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>4. Which is an example of responsible technology use?</p>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="a">
+                    Respecting other people's privacy
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="b">
+                    Sharing someone's private information
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="c">
+                    Deliberately spreading false information
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="d">
+                    Sharing passwords
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>5. Why are software updates important?</p>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="a">
+                    They can include security improvements and fixes
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="b">
+                    They always delete your files
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="c">
+                    They prevent computers from working
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="d">
+                    They make passwords public
+                </label>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="quiz-button"
+                onclick="checkQuiz()"
+            >
+                Submit Final Quiz
+            </button>
+
+        </form>
+
+        <div id="result" class="result"></div>
+
+        <div id="courseComplete" class="course-complete">
+
+            🎉 <strong>Congratulations!</strong>
+
+            <p>
+                You have completed all 10 modules of the Digital Skills
+                course. You now have a foundation in essential digital
+                skills for school, work, and everyday life.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="lesson-navigation">
+
+        <a
+            href="{{ url_for('digital_skills_module9') }}"
+            class="lesson-button"
+        >
+            ← Module 9
+        </a>
+
+        <a
+            href="{{ url_for('digital_skills') }}"
+            class="lesson-button"
+        >
+            Course Home
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function checkQuiz() {
+
+    const answers = {
+        q1: "a",
+        q2: "c",
+        q3: "b",
+        q4: "a",
+        q5: "a"
+    };
+
+    let score = 0;
+    let answered = 0;
+
+    for (let question in answers) {
+
+        const selected = document.querySelector(
+            'input[name="' + question + '"]:checked'
+        );
+
+        if (selected) {
+
+            answered++;
+
+            if (selected.value === answers[question]) {
+                score++;
+            }
+        }
+    }
+
+    const result = document.getElementById("result");
+    const courseComplete = document.getElementById("courseComplete");
+
+    result.style.display = "block";
+    courseComplete.style.display = "none";
+
+    if (answered < 5) {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "⚠️ Please answer all 5 questions before submitting.";
+
+        return;
+    }
+
+    const percentage = (score / 5) * 100;
+
+    if (percentage >= 70) {
+
+        result.className = "result pass";
+
+        result.innerHTML =
+            "🎉 Congratulations! You passed the final quiz. Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%)";
+
+        courseComplete.style.display = "block";
+
+    } else {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "❌ You did not pass. Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%). Review the lesson and try again.";
+
+    }
+}
+
+</script>
+
+{% endblock %}
+```
