@@ -1,0 +1,552 @@
+```html
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .lesson-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 45px 20px 70px;
+    }
+
+    .lesson-card,
+    .quiz-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .lesson-label {
+        font-size: 14px;
+        font-weight: bold;
+        opacity: 0.6;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        margin-top: 30px;
+        margin-bottom: 12px;
+    }
+
+    p,
+    li {
+        line-height: 1.7;
+        color: #374151;
+    }
+
+    ul {
+        padding-left: 25px;
+    }
+
+    .tip-box {
+        margin-top: 25px;
+        padding: 18px;
+        background: #f1f5f9;
+        border-radius: 12px;
+        line-height: 1.6;
+    }
+
+    .quiz-card h2 {
+        margin-top: 0;
+    }
+
+    .question {
+        margin-top: 25px;
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+    }
+
+    .question p {
+        font-weight: bold;
+        color: #111827;
+    }
+
+    .option {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .option:hover {
+        background: #e2e8f0;
+    }
+
+    .quiz-button,
+    .lesson-button {
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: none;
+        background: #111827;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .quiz-button {
+        margin-top: 25px;
+        font-size: 15px;
+    }
+
+    .result {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+    .pass {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .fail {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .next-button {
+        display: none;
+        margin-top: 15px;
+    }
+
+    .lesson-navigation {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    @media (max-width: 600px) {
+
+        .lesson-card,
+        .quiz-card {
+            padding: 25px;
+        }
+
+        h1 {
+            font-size: 29px;
+        }
+
+        .lesson-navigation {
+            flex-direction: column;
+        }
+
+        .lesson-button {
+            text-align: center;
+        }
+    }
+</style>
+
+
+<div class="lesson-page">
+
+    <!-- LESSON -->
+
+    <div class="lesson-card">
+
+        <div class="lesson-label">
+            DIGITAL SKILLS • MODULE 2 OF 10
+        </div>
+
+        <h1>🖥️ Computer Fundamentals</h1>
+
+        <p>
+            Understanding the basic parts of a computer and how they work
+            is an important foundation for developing digital skills.
+        </p>
+
+
+        <h2>🎯 What You Will Learn</h2>
+
+        <ul>
+            <li>What a computer is</li>
+            <li>The main components of a computer</li>
+            <li>The difference between hardware and software</li>
+            <li>Examples of input and output devices</li>
+            <li>Basic computer operations</li>
+        </ul>
+
+
+        <h2>💻 What Is a Computer?</h2>
+
+        <p>
+            A computer is an electronic device that receives data,
+            processes it, stores information, and produces useful results.
+        </p>
+
+
+        <h2>⚙️ Hardware</h2>
+
+        <p>
+            Hardware refers to the physical parts of a computer that
+            you can see and touch.
+        </p>
+
+        <ul>
+            <li>Monitor</li>
+            <li>Keyboard</li>
+            <li>Mouse</li>
+            <li>System unit</li>
+            <li>Printer</li>
+            <li>Speakers</li>
+        </ul>
+
+
+        <h2>🧩 Software</h2>
+
+        <p>
+            Software refers to the programs and instructions that tell
+            a computer what to do.
+        </p>
+
+        <ul>
+            <li>Operating systems</li>
+            <li>Web browsers</li>
+            <li>Word processors</li>
+            <li>Spreadsheet applications</li>
+            <li>Presentation software</li>
+        </ul>
+
+
+        <h2>⌨️ Input Devices</h2>
+
+        <p>
+            Input devices allow users to send information or commands
+            to a computer.
+        </p>
+
+        <ul>
+            <li>Keyboard</li>
+            <li>Mouse</li>
+            <li>Microphone</li>
+            <li>Scanner</li>
+            <li>Webcam</li>
+        </ul>
+
+
+        <h2>🖨️ Output Devices</h2>
+
+        <p>
+            Output devices present information from a computer to the user.
+        </p>
+
+        <ul>
+            <li>Monitor</li>
+            <li>Printer</li>
+            <li>Speakers</li>
+            <li>Headphones</li>
+        </ul>
+
+
+        <div class="tip-box">
+            <strong>💡 Key Point:</strong>
+            Hardware is the physical part of a computer, while software
+            consists of the programs and instructions that make the
+            computer perform tasks.
+        </div>
+
+
+        <h2>📝 Module Summary</h2>
+
+        <p>
+            Computers use hardware and software to process information
+            and perform tasks. Understanding these basic components makes
+            it easier to use technology effectively.
+        </p>
+
+    </div>
+
+
+    <!-- QUIZ -->
+
+    <div class="quiz-card">
+
+        <h2>🧠 Module 2 Quiz</h2>
+
+        <p>
+            Answer all 5 questions. You need at least 70% to pass.
+        </p>
+
+
+        <form id="quizForm">
+
+            <div class="question">
+
+                <p>1. What is computer hardware?</p>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="a">
+                    Physical parts of a computer
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="b">
+                    Computer programs
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="c">
+                    Internet websites
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="d">
+                    Computer passwords
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>2. Which of these is software?</p>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="a">
+                    Keyboard
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="b">
+                    Monitor
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="c">
+                    Web browser
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="d">
+                    Mouse
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>3. Which device is mainly used for input?</p>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="a">
+                    Monitor
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="b">
+                    Keyboard
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="c">
+                    Speaker
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="d">
+                    Printer
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>4. Which of these is an output device?</p>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="a">
+                    Keyboard
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="b">
+                    Mouse
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="c">
+                    Monitor
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="d">
+                    Microphone
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>5. What does software do?</p>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="a">
+                    It provides instructions and programs for the computer
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="b">
+                    It is always a physical device
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="c">
+                    It replaces electricity
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="d">
+                    It is only used for printing
+                </label>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="quiz-button"
+                onclick="checkQuiz()"
+            >
+                Submit Quiz
+            </button>
+
+        </form>
+
+
+        <div id="result" class="result"></div>
+
+
+        <a
+            id="nextButton"
+            href="{{ url_for('digital_skills_module3') }}"
+            class="lesson-button next-button"
+        >
+            Continue to Module 3 →
+        </a>
+
+    </div>
+
+
+    <div class="lesson-navigation">
+
+        <a
+            href="{{ url_for('digital_skills_module1') }}"
+            class="lesson-button"
+        >
+            ← Module 1
+        </a>
+
+        <a
+            href="{{ url_for('digital_skills') }}"
+            class="lesson-button"
+        >
+            Course Home
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function checkQuiz() {
+
+    const answers = {
+        q1: "a",
+        q2: "c",
+        q3: "b",
+        q4: "c",
+        q5: "a"
+    };
+
+    let score = 0;
+    let answered = 0;
+
+    for (let question in answers) {
+
+        const selected = document.querySelector(
+            'input[name="' + question + '"]:checked'
+        );
+
+        if (selected) {
+
+            answered++;
+
+            if (selected.value === answers[question]) {
+                score++;
+            }
+        }
+    }
+
+
+    const result = document.getElementById("result");
+    const nextButton = document.getElementById("nextButton");
+
+    result.style.display = "block";
+
+
+    if (answered < 5) {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "⚠️ Please answer all 5 questions before submitting.";
+
+        nextButton.style.display = "none";
+
+        return;
+    }
+
+
+    const percentage = (score / 5) * 100;
+
+
+    if (percentage >= 70) {
+
+        result.className = "result pass";
+
+        result.innerHTML =
+            "🎉 You passed! Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%)";
+
+        nextButton.style.display = "inline-block";
+
+    } else {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "❌ You did not pass. Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%). Review the lesson and try again.";
+
+        nextButton.style.display = "none";
+    }
+
+}
+
+</script>
+
+{% endblock %}
+```
