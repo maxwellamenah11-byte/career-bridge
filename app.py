@@ -5,6 +5,10 @@ from functools import wraps
 from datetime import datetime
 import os
 
+# =========================================================
+# APP SETUP
+# =========================================================
+
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.environ.get(
@@ -13,11 +17,16 @@ app.config["SECRET_KEY"] = os.environ.get(
 )
 
 database_url = os.environ.get("DATABASE_URL")
+
 if not database_url:
     raise RuntimeError("DATABASE_URL is not set.")
 
 if database_url.startswith("postgres://"):
-    database_url = database_url.replace("postgres://", "postgresql://", 1)
+    database_url = database_url.replace(
+        "postgres://",
+        "postgresql://",
+        1
+    )
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -25,211 +34,567 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
-class Student(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-    subjects = db.Column(db.Text, nullable=True)
-    skills = db.Column(db.Text, nullable=True)
-    interests = db.Column(db.Text, nullable=True)
-    career_goal = db.Column(db.Text, nullable=True)
+# =========================================================
+# STUDENT MODEL
+# =========================================================
 
+class Student(db.Model):
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    email = db.Column(
+        db.String(120),
+        unique=True,
+        nullable=False
+    )
+
+    password = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+    subjects = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    skills = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    interests = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    career_goal = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+
+# =========================================================
+# MENTOR MODEL
+# =========================================================
 
 class Mentor(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    profession = db.Column(db.String(150), nullable=False)
-    field = db.Column(db.String(100), nullable=False)
-    bio = db.Column(db.Text, nullable=True)
-    skills = db.Column(db.Text, nullable=True)
-    experience = db.Column(db.Text, nullable=True)
-    email = db.Column(db.String(120), nullable=True)
-    verified = db.Column(db.Boolean, default=False)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
+    name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    profession = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    field = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    bio = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    skills = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    experience = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    email = db.Column(
+        db.String(120),
+        nullable=True
+    )
+
+    verified = db.Column(
+        db.Boolean,
+        default=False
+    )
+
+
+# =========================================================
+# ADMIN MODEL
+# =========================================================
 
 class Admin(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
+    username = db.Column(
+        db.String(100),
+        unique=True,
+        nullable=False
+    )
+
+    password = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+
+# =========================================================
+# MENTORSHIP REQUEST MODEL
+# =========================================================
 
 class MentorshipRequest(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
-    mentor_id = db.Column(db.Integer, db.ForeignKey("mentor.id"), nullable=False)
-    message = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(20), default="Pending", nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
-    student = db.relationship("Student", backref=db.backref("mentorship_requests", lazy=True))
-    mentor = db.relationship("Mentor", backref=db.backref("mentorship_requests", lazy=True))
+    student_id = db.Column(
+        db.Integer,
+        db.ForeignKey("student.id"),
+        nullable=False
+    )
 
+    mentor_id = db.Column(
+        db.Integer,
+        db.ForeignKey("mentor.id"),
+        nullable=False
+    )
 
-# New table: stores each student's Digital Skills progress.
-class DigitalSkillsProgress(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
-    module = db.Column(db.Integer, nullable=False)
-    completed = db.Column(db.Boolean, default=False, nullable=False)
-    quiz_score = db.Column(db.Integer, nullable=True)
-    completed_at = db.Column(db.DateTime, nullable=True)
+    message = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    status = db.Column(
+        db.String(20),
+        default="Pending",
+        nullable=False
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
 
     student = db.relationship(
         "Student",
-        backref=db.backref("digital_skills_progress", lazy=True)
+        backref=db.backref(
+            "mentorship_requests",
+            lazy=True
+        )
+    )
+
+    mentor = db.relationship(
+        "Mentor",
+        backref=db.backref(
+            "mentorship_requests",
+            lazy=True
+        )
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS PROGRESS MODEL
+# =========================================================
+
+class DigitalSkillsProgress(db.Model):
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    student_id = db.Column(
+        db.Integer,
+        db.ForeignKey("student.id"),
+        nullable=False
+    )
+
+    module_number = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    completed = db.Column(
+        db.Boolean,
+        default=False,
+        nullable=False
+    )
+
+    quiz_score = db.Column(
+        db.Integer,
+        nullable=True
+    )
+
+    completed_at = db.Column(
+        db.DateTime,
+        nullable=True
+    )
+
+    student = db.relationship(
+        "Student",
+        backref=db.backref(
+            "digital_skills_progress",
+            lazy=True
+        )
     )
 
     __table_args__ = (
-        db.UniqueConstraint("student_id", "module", name="unique_student_digital_module"),
+        db.UniqueConstraint(
+            "student_id",
+            "module_number",
+            name="unique_student_digital_module"
+        ),
     )
 
 
-TOTAL_DIGITAL_MODULES = 10
-
+# =========================================================
+# STUDENT LOGIN REQUIRED
+# =========================================================
 
 def login_required(f):
+
     @wraps(f)
     def decorated_function(*args, **kwargs):
+
         if "student_id" not in session:
-            return redirect(url_for("login"))
+            return redirect(
+                url_for("login")
+            )
+
         return f(*args, **kwargs)
+
     return decorated_function
 
+
+# =========================================================
+# ADMIN LOGIN REQUIRED
+# =========================================================
 
 def admin_required(f):
+
     @wraps(f)
     def decorated_function(*args, **kwargs):
+
         if "admin_id" not in session:
-            return redirect(url_for("admin_login"))
+            return redirect(
+                url_for("admin_login")
+            )
+
         return f(*args, **kwargs)
+
     return decorated_function
 
 
-def get_digital_progress(student_id):
-    completed = DigitalSkillsProgress.query.filter_by(
-        student_id=student_id,
-        completed=True
-    ).count()
-
-    percentage = round((completed / TOTAL_DIGITAL_MODULES) * 100)
-    return completed, TOTAL_DIGITAL_MODULES, percentage
-
+# =========================================================
+# HOME
+# =========================================================
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+
+    return render_template(
+        "home.html"
+    )
 
 
-@app.route("/register", methods=["GET", "POST"])
+# =========================================================
+# STUDENT REGISTER
+# =========================================================
+
+@app.route(
+    "/register",
+    methods=["GET", "POST"]
+)
 def register():
+
     if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "")
+
+        name = request.form.get(
+            "name",
+            ""
+        ).strip()
+
+        email = request.form.get(
+            "email",
+            ""
+        ).strip().lower()
+
+        password = request.form.get(
+            "password",
+            ""
+        )
 
         if not name or not email or not password:
+
             return "Please fill in all fields."
 
-        if Student.query.filter_by(email=email).first():
+        existing_student = Student.query.filter_by(
+            email=email
+        ).first()
+
+        if existing_student:
+
             return "An account with this email already exists."
 
         student = Student(
             name=name,
             email=email,
-            password=generate_password_hash(password)
+            password=generate_password_hash(
+                password
+            )
         )
+
         db.session.add(student)
         db.session.commit()
 
         session["student_id"] = student.id
         session["student_name"] = student.name
-        return redirect(url_for("dashboard"))
 
-    return render_template("register.html")
+        return redirect(
+            url_for("dashboard")
+        )
+
+    return render_template(
+        "register.html"
+    )
 
 
-@app.route("/login", methods=["GET", "POST"])
+# =========================================================
+# STUDENT LOGIN
+# =========================================================
+
+@app.route(
+    "/login",
+    methods=["GET", "POST"]
+)
 def login():
-    if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "")
 
-        student = Student.query.filter_by(email=email).first()
+    if request.method == "POST":
+
+        email = request.form.get(
+            "email",
+            ""
+        ).strip().lower()
+
+        password = request.form.get(
+            "password",
+            ""
+        )
+
+        student = Student.query.filter_by(
+            email=email
+        ).first()
+
         if not student:
+
             return "Account not found."
 
-        if not check_password_hash(student.password, password):
+        if not check_password_hash(
+            student.password,
+            password
+        ):
+
             return "Incorrect password."
 
         session["student_id"] = student.id
         session["student_name"] = student.name
-        return redirect(url_for("dashboard"))
 
-    return render_template("login.html")
+        return redirect(
+            url_for("dashboard")
+        )
 
+    return render_template(
+        "login.html"
+    )
+
+
+# =========================================================
+# STUDENT LOGOUT
+# =========================================================
 
 @app.route("/logout")
 def logout():
-    session.pop("student_id", None)
-    session.pop("student_name", None)
-    return redirect(url_for("login"))
+
+    session.pop(
+        "student_id",
+        None
+    )
+
+    session.pop(
+        "student_name",
+        None
+    )
+
+    return redirect(
+        url_for("login")
+    )
 
 
-@app.route("/admin/login", methods=["GET", "POST"])
+# =========================================================
+# ADMIN LOGIN
+# =========================================================
+
+@app.route(
+    "/admin/login",
+    methods=["GET", "POST"]
+)
 def admin_login():
-    if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password", "")
 
-        admin = Admin.query.filter_by(username=username).first()
+    if request.method == "POST":
+
+        username = request.form.get(
+            "username",
+            ""
+        ).strip()
+
+        password = request.form.get(
+            "password",
+            ""
+        )
+
+        admin = Admin.query.filter_by(
+            username=username
+        ).first()
+
         if not admin:
+
             return "Admin account not found."
 
-        if not check_password_hash(admin.password, password):
+        if not check_password_hash(
+            admin.password,
+            password
+        ):
+
             return "Incorrect admin password."
 
         session["admin_id"] = admin.id
         session["admin_username"] = admin.username
-        return redirect(url_for("admin_dashboard"))
 
-    return render_template("admin-login.html")
+        return redirect(
+            url_for("admin_dashboard")
+        )
 
+    return render_template(
+        "admin-login.html"
+    )
+
+
+# =========================================================
+# ADMIN LOGOUT
+# =========================================================
 
 @app.route("/admin/logout")
 def admin_logout():
-    session.pop("admin_id", None)
-    session.pop("admin_username", None)
-    return redirect(url_for("admin_login"))
 
+    session.pop(
+        "admin_id",
+        None
+    )
+
+    session.pop(
+        "admin_username",
+        None
+    )
+
+    return redirect(
+        url_for("admin_login")
+    )
+
+
+# =========================================================
+# ADMIN DASHBOARD
+# =========================================================
 
 @app.route("/admin/dashboard")
 @admin_required
 def admin_dashboard():
-    mentors_count = Mentor.query.count()
-    requests_count = MentorshipRequest.query.count()
-    pending_requests = MentorshipRequest.query.filter_by(status="Pending").count()
+
+    mentors = Mentor.query.order_by(
+        Mentor.name.asc()
+    ).all()
+
+    mentorship_requests = MentorshipRequest.query.order_by(
+        MentorshipRequest.id.desc()
+    ).all()
+
+    students = Student.query.order_by(
+        Student.id.desc()
+    ).all()
+
     return render_template(
         "admin-dashboard.html",
-        mentors_count=mentors_count,
-        requests_count=requests_count,
-        pending_requests=pending_requests
+        mentors=mentors,
+        mentorship_requests=mentorship_requests,
+        students=students
     )
 
 
-@app.route("/add-mentor", methods=["GET", "POST"])
+# =========================================================
+# ADD MENTOR
+# =========================================================
+
+@app.route(
+    "/add-mentor",
+    methods=["GET", "POST"]
+)
 @admin_required
 def add_mentor():
+
     if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        profession = request.form.get("profession", "").strip()
-        field = request.form.get("field", "").strip()
-        bio = request.form.get("bio", "").strip()
-        skills = request.form.get("skills", "").strip()
-        experience = request.form.get("experience", "").strip()
-        email = request.form.get("email", "").strip()
+
+        name = request.form.get(
+            "name",
+            ""
+        ).strip()
+
+        profession = request.form.get(
+            "profession",
+            ""
+        ).strip()
+
+        field = request.form.get(
+            "field",
+            ""
+        ).strip()
+
+        bio = request.form.get(
+            "bio",
+            ""
+        ).strip()
+
+        skills = request.form.get(
+            "skills",
+            ""
+        ).strip()
+
+        experience = request.form.get(
+            "experience",
+            ""
+        ).strip()
+
+        email = request.form.get(
+            "email",
+            ""
+        ).strip()
 
         if not name or not profession or not field:
+
             return "Name, profession and field are required."
 
         mentor = Mentor(
@@ -242,49 +607,120 @@ def add_mentor():
             email=email,
             verified=True
         )
+
         db.session.add(mentor)
         db.session.commit()
-        return redirect(url_for("mentors"))
 
-    return render_template("add-mentor.html")
+        return redirect(
+            url_for("admin_dashboard")
+        )
+
+    return render_template(
+        "add-mentor.html"
+    )
 
 
-@app.route("/admin/delete-mentor/<int:mentor_id>", methods=["POST"])
+# =========================================================
+# DELETE MENTOR
+# =========================================================
+
+@app.route(
+    "/admin/delete-mentor/<int:mentor_id>",
+    methods=["POST"]
+)
 @admin_required
 def delete_mentor(mentor_id):
-    mentor = Mentor.query.get_or_404(mentor_id)
-    MentorshipRequest.query.filter_by(mentor_id=mentor.id).delete()
+
+    mentor = Mentor.query.get_or_404(
+        mentor_id
+    )
+
+    MentorshipRequest.query.filter_by(
+        mentor_id=mentor.id
+    ).delete(
+        synchronize_session=False
+    )
+
     db.session.delete(mentor)
     db.session.commit()
-    return redirect(url_for("admin_dashboard"))
 
+    return redirect(
+        url_for("admin_dashboard")
+    )
+
+
+# =========================================================
+# MENTORS
+# =========================================================
 
 @app.route("/mentors")
 @login_required
 def mentors():
-    mentors_list = Mentor.query.filter_by(verified=True).order_by(Mentor.name.asc()).all()
-    return render_template("mentors.html", mentors=mentors_list)
+
+    mentors_list = Mentor.query.filter_by(
+        verified=True
+    ).order_by(
+        Mentor.name.asc()
+    ).all()
+
+    return render_template(
+        "mentors.html",
+        mentors=mentors_list
+    )
 
 
-@app.route("/mentor/<int:mentor_id>")
+# =========================================================
+# MENTOR PROFILE
+# =========================================================
+
+@app.route(
+    "/mentor/<int:mentor_id>"
+)
 @login_required
 def mentor_profile(mentor_id):
-    mentor = Mentor.query.get_or_404(mentor_id)
+
+    mentor = Mentor.query.get_or_404(
+        mentor_id
+    )
+
     if not mentor.verified:
+
         return "Mentor not available.", 404
-    return render_template("mentor-profile.html", mentor=mentor)
+
+    return render_template(
+        "mentor-profile.html",
+        mentor=mentor
+    )
 
 
-@app.route("/mentor/<int:mentor_id>/request", methods=["GET", "POST"])
+# =========================================================
+# REQUEST MENTORSHIP
+# =========================================================
+
+@app.route(
+    "/mentor/<int:mentor_id>/request",
+    methods=["GET", "POST"]
+)
 @login_required
 def request_mentorship(mentor_id):
-    mentor = Mentor.query.get_or_404(mentor_id)
+
+    mentor = Mentor.query.get_or_404(
+        mentor_id
+    )
+
     if not mentor.verified:
+
         return "Mentor not available.", 404
 
     if request.method == "POST":
-        message = request.form.get("message", "").strip()
+
+        message = request.form.get(
+            "message",
+            ""
+        ).strip()
+
         if not message:
+
             return "Please enter a message."
 
         mentorship_request = MentorshipRequest(
@@ -293,260 +729,791 @@ def request_mentorship(mentor_id):
             message=message,
             status="Pending"
         )
-        db.session.add(mentorship_request)
+
+        db.session.add(
+            mentorship_request
+        )
+
         db.session.commit()
-        return redirect(url_for("my_mentorship_requests"))
 
-    return render_template("request-mentorship.html", mentor=mentor)
+        return redirect(
+            url_for(
+                "my_mentorship_requests"
+            )
+        )
+
+    return render_template(
+        "request-mentorship.html",
+        mentor=mentor
+    )
 
 
-@app.route("/my-mentorship-requests")
+# =========================================================
+# STUDENT MENTORSHIP INBOX
+# =========================================================
+
+@app.route(
+    "/my-mentorship-requests"
+)
 @login_required
 def my_mentorship_requests():
+
     requests = MentorshipRequest.query.filter_by(
         student_id=session["student_id"]
-    ).order_by(MentorshipRequest.id.desc()).all()
-    return render_template("my-mentorship-requests.html", requests=requests)
+    ).order_by(
+        MentorshipRequest.id.desc()
+    ).all()
+
+    return render_template(
+        "my-mentorship-requests.html",
+        requests=requests
+    )
 
 
-@app.route("/admin/mentorship-requests")
+# =========================================================
+# ADMIN MENTORSHIP INBOX
+# =========================================================
+
+@app.route(
+    "/admin/mentorship-requests"
+)
 @admin_required
 def admin_mentorship_requests():
-    requests = MentorshipRequest.query.order_by(MentorshipRequest.id.desc()).all()
-    return render_template("admin-mentorship-requests.html", requests=requests)
+
+    requests = MentorshipRequest.query.order_by(
+        MentorshipRequest.id.desc()
+    ).all()
+
+    return render_template(
+        "admin-mentorship-requests.html",
+        requests=requests
+    )
 
 
-@app.route("/admin/mentorship-request/<int:request_id>/<status>", methods=["POST"])
+# =========================================================
+# ADMIN UPDATE MENTORSHIP REQUEST
+# =========================================================
+
+@app.route(
+    "/admin/mentorship-request/<int:request_id>/<status>",
+    methods=["GET", "POST"]
+)
 @admin_required
-def update_mentorship_request(request_id, status):
-    allowed_statuses = ["Pending", "Accepted", "Declined"]
+def update_mentorship_request(
+    request_id,
+    status
+):
+
+    allowed_statuses = [
+        "Pending",
+        "Accepted",
+        "Declined"
+    ]
+
     if status not in allowed_statuses:
+
         return "Invalid status.", 400
 
-    mentorship_request = MentorshipRequest.query.get_or_404(request_id)
-    mentorship_request.status = status
-    db.session.commit()
-    return redirect(url_for("admin_mentorship_requests"))
+    mentorship_request = MentorshipRequest.query.get_or_404(
+        request_id
+    )
 
+    mentorship_request.status = status
+
+    db.session.commit()
+
+    return redirect(
+        url_for(
+            "admin_mentorship_requests"
+        )
+    )
+
+
+# =========================================================
+# STUDENT DASHBOARD
+# =========================================================
 
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    completed, total, percentage = get_digital_progress(session["student_id"])
+
+    student_id = session["student_id"]
+
+    completed_modules = DigitalSkillsProgress.query.filter_by(
+        student_id=student_id,
+        completed=True
+    ).count()
+
+    progress_percent = int(
+        (completed_modules / 10) * 100
+    )
+
     mentorship_requests = MentorshipRequest.query.filter_by(
-        student_id=session["student_id"]
-    ).order_by(MentorshipRequest.id.desc()).limit(3).all()
+        student_id=student_id
+    ).order_by(
+        MentorshipRequest.id.desc()
+    ).all()
 
     return render_template(
         "dashboard.html",
-        digital_completed=completed,
-        digital_total=total,
-        digital_percentage=percentage,
+        completed_modules=completed_modules,
+        progress_percent=progress_percent,
         mentorship_requests=mentorship_requests
     )
 
 
+# =========================================================
+# CERTIFICATE
+# =========================================================
+
 @app.route("/certificate")
 @login_required
 def certificate():
-    digital_completed, digital_total, digital_percentage = get_digital_progress(session["student_id"])
+
+    completed_modules = DigitalSkillsProgress.query.filter_by(
+        student_id=session["student_id"],
+        completed=True
+    ).count()
+
     return render_template(
         "certificate.html",
-        digital_completed=digital_completed,
-        digital_total=digital_total,
-        digital_percentage=digital_percentage
+        completed_modules=completed_modules,
+        digital_skills_complete=(
+            completed_modules >= 10
+        )
     )
 
+
+# =========================================================
+# ABOUT
+# =========================================================
 
 @app.route("/about")
 @login_required
 def about():
-    return render_template("about.html")
 
+    return render_template(
+        "about.html"
+    )
+
+
+# =========================================================
+# SERVICES
+# =========================================================
 
 @app.route("/services")
 @login_required
 def services():
-    return render_template("services.html")
 
+    return render_template(
+        "services.html"
+    )
+
+
+# =========================================================
+# COURSES
+# =========================================================
 
 @app.route("/courses")
 @login_required
 def courses():
-    return render_template("courses.html")
 
+    return render_template(
+        "courses.html"
+    )
+
+
+# =========================================================
+# CONTACT
+# =========================================================
 
 @app.route("/contact")
 @login_required
 def contact():
-    return render_template("contact.html")
 
-
-# Python course
-@app.route("/courses/python")
-@login_required
-def python():
-    return render_template("python.html")
-
-
-for number in range(1, 11):
-    def make_python_route(module_number):
-        @app.route(f"/python/module{module_number}")
-        @login_required
-        def python_module():
-            return render_template(f"python/module{module_number}.html")
-        python_module.__name__ = f"python_module{module_number}"
-        return python_module
-    make_python_route(number)
-
-
-# CV + LinkedIn course
-@app.route("/courses/cv-linkedin")
-@login_required
-def cv_linkedin():
-    return render_template("cv-linkedin.html")
-
-
-for number in range(1, 6):
-    def make_cv_route(module_number):
-        @app.route(f"/cv-linkedin/module{module_number}")
-        @login_required
-        def cv_module():
-            return render_template(f"cv-linkedin/module{module_number}.html")
-        cv_module.__name__ = f"cv_linkedin_module{module_number}"
-        return cv_module
-    make_cv_route(number)
+    return render_template(
+        "contact.html"
+    )
 
 
 # =========================================================
-# DIGITAL SKILLS COURSE + PROGRESS
+# PYTHON COURSE
+# =========================================================
+
+@app.route("/courses/python")
+@login_required
+def python():
+
+    return render_template(
+        "python.html"
+    )
+
+
+# =========================================================
+# PYTHON MODULE 1
+# =========================================================
+
+@app.route("/python/module1")
+@login_required
+def python_module1():
+
+    return render_template(
+        "python/module1.html"
+    )
+
+
+# =========================================================
+# PYTHON MODULE 2
+# =========================================================
+
+@app.route("/python/module2")
+@login_required
+def python_module2():
+
+    return render_template(
+        "python/module2.html"
+    )
+
+
+# =========================================================
+# PYTHON MODULE 3
+# =========================================================
+
+@app.route("/python/module3")
+@login_required
+def python_module3():
+
+    return render_template(
+        "python/module3.html"
+    )
+
+
+# =========================================================
+# PYTHON MODULE 4
+# =========================================================
+
+@app.route("/python/module4")
+@login_required
+def python_module4():
+
+    return render_template(
+        "python/module4.html"
+    )
+
+
+# =========================================================
+# PYTHON MODULE 5
+# =========================================================
+
+@app.route("/python/module5")
+@login_required
+def python_module5():
+
+    return render_template(
+        "python/module5.html"
+    )
+
+
+# =========================================================
+# PYTHON MODULE 6
+# =========================================================
+
+@app.route("/python/module6")
+@login_required
+def python_module6():
+
+    return render_template(
+        "python/module6.html"
+    )
+
+
+# =========================================================
+# PYTHON MODULE 7
+# =========================================================
+
+@app.route("/python/module7")
+@login_required
+def python_module7():
+
+    return render_template(
+        "python/module7.html"
+    )
+
+
+# =========================================================
+# PYTHON MODULE 8
+# =========================================================
+
+@app.route("/python/module8")
+@login_required
+def python_module8():
+
+    return render_template(
+        "python/module8.html"
+    )
+
+
+# =========================================================
+# PYTHON MODULE 9
+# =========================================================
+
+@app.route("/python/module9")
+@login_required
+def python_module9():
+
+    return render_template(
+        "python/module9.html"
+    )
+
+
+# =========================================================
+# PYTHON MODULE 10
+# =========================================================
+
+@app.route("/python/module10")
+@login_required
+def python_module10():
+
+    return render_template(
+        "python/module10.html"
+    )
+
+
+# =========================================================
+# CV + LINKEDIN COURSE
+# =========================================================
+
+@app.route("/courses/cv-linkedin")
+@login_required
+def cv_linkedin():
+
+    return render_template(
+        "cv-linkedin.html"
+    )
+
+
+# =========================================================
+# CV + LINKEDIN MODULE 1
+# =========================================================
+
+@app.route("/cv-linkedin/module1")
+@login_required
+def cv_linkedin_module1():
+
+    return render_template(
+        "cv-linkedin/module1.html"
+    )
+
+
+# =========================================================
+# CV + LINKEDIN MODULE 2
+# =========================================================
+
+@app.route("/cv-linkedin/module2")
+@login_required
+def cv_linkedin_module2():
+
+    return render_template(
+        "cv-linkedin/module2.html"
+    )
+
+
+# =========================================================
+# CV + LINKEDIN MODULE 3
+# =========================================================
+
+@app.route("/cv-linkedin/module3")
+@login_required
+def cv_linkedin_module3():
+
+    return render_template(
+        "cv-linkedin/module3.html"
+    )
+
+
+# =========================================================
+# CV + LINKEDIN MODULE 4
+# =========================================================
+
+@app.route("/cv-linkedin/module4")
+@login_required
+def cv_linkedin_module4():
+
+    return render_template(
+        "cv-linkedin/module4.html"
+    )
+
+
+# =========================================================
+# CV + LINKEDIN MODULE 5
+# =========================================================
+
+@app.route("/cv-linkedin/module5")
+@login_required
+def cv_linkedin_module5():
+
+    return render_template(
+        "cv-linkedin/module5.html"
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS COURSE
 # =========================================================
 
 @app.route("/courses/digital-skills")
 @login_required
 def digital_skills():
-    completed, total, percentage = get_digital_progress(session["student_id"])
+
+    student_id = session["student_id"]
+
+    completed_modules = DigitalSkillsProgress.query.filter_by(
+        student_id=student_id,
+        completed=True
+    ).count()
+
+    progress_percent = int(
+        (completed_modules / 10) * 100
+    )
+
     return render_template(
         "digital-skills.html",
-        digital_completed=completed,
-        digital_total=total,
-        digital_percentage=percentage
+        completed_modules=completed_modules,
+        progress_percent=progress_percent
     )
 
 
-for number in range(1, TOTAL_DIGITAL_MODULES + 1):
-    def make_digital_route(module_number):
-        @app.route(f"/digital-skills/module{module_number}")
-        @login_required
-        def digital_module():
-            progress = DigitalSkillsProgress.query.filter_by(
-                student_id=session["student_id"],
-                module=module_number
-            ).first()
-            return render_template(
-                f"digital-skills/module{module_number}.html",
-                module_number=module_number,
-                progress=progress
-            )
-        digital_module.__name__ = f"digital_skills_module{module_number}"
-        return digital_module
-    make_digital_route(number)
+# =========================================================
+# DIGITAL SKILLS MODULE 1
+# =========================================================
 
-
-@app.route("/digital-skills/module/<int:module_number>/complete", methods=["POST"])
+@app.route("/digital-skills/module1")
 @login_required
-def complete_digital_module(module_number):
-    if module_number < 1 or module_number > TOTAL_DIGITAL_MODULES:
-        return "Invalid module.", 404
+def digital_skills_module1():
 
-    record = DigitalSkillsProgress.query.filter_by(
-        student_id=session["student_id"],
-        module=module_number
-    ).first()
+    return render_template(
+        "digital-skills/module1.html",
+        module_number=1
+    )
 
-    if not record:
-        record = DigitalSkillsProgress(
-            student_id=session["student_id"],
-            module=module_number
-        )
-        db.session.add(record)
 
-    record.completed = True
-    record.completed_at = datetime.utcnow()
+# =========================================================
+# DIGITAL SKILLS MODULE 2
+# =========================================================
 
-    score = request.form.get("quiz_score")
-    if score is not None and str(score).strip() != "":
-        try:
-            record.quiz_score = max(0, min(100, int(score)))
-        except ValueError:
-            pass
+@app.route("/digital-skills/module2")
+@login_required
+def digital_skills_module2():
 
-    db.session.commit()
-    return redirect(url_for("digital_skills_progress"))
+    return render_template(
+        "digital-skills/module2.html",
+        module_number=2
+    )
 
+
+# =========================================================
+# DIGITAL SKILLS MODULE 3
+# =========================================================
+
+@app.route("/digital-skills/module3")
+@login_required
+def digital_skills_module3():
+
+    return render_template(
+        "digital-skills/module3.html",
+        module_number=3
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 4
+# =========================================================
+
+@app.route("/digital-skills/module4")
+@login_required
+def digital_skills_module4():
+
+    return render_template(
+        "digital-skills/module4.html",
+        module_number=4
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 5
+# =========================================================
+
+@app.route("/digital-skills/module5")
+@login_required
+def digital_skills_module5():
+
+    return render_template(
+        "digital-skills/module5.html",
+        module_number=5
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 6
+# =========================================================
+
+@app.route("/digital-skills/module6")
+@login_required
+def digital_skills_module6():
+
+    return render_template(
+        "digital-skills/module6.html",
+        module_number=6
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 7
+# =========================================================
+
+@app.route("/digital-skills/module7")
+@login_required
+def digital_skills_module7():
+
+    return render_template(
+        "digital-skills/module7.html",
+        module_number=7
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 8
+# =========================================================
+
+@app.route("/digital-skills/module8")
+@login_required
+def digital_skills_module8():
+
+    return render_template(
+        "digital-skills/module8.html",
+        module_number=8
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 9
+# =========================================================
+
+@app.route("/digital-skills/module9")
+@login_required
+def digital_skills_module9():
+
+    return render_template(
+        "digital-skills/module9.html",
+        module_number=9
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 10
+# =========================================================
+
+@app.route("/digital-skills/module10")
+@login_required
+def digital_skills_module10():
+
+    return render_template(
+        "digital-skills/module10.html",
+        module_number=10
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS PROGRESS PAGE
+# =========================================================
 
 @app.route("/digital-skills/progress")
 @login_required
 def digital_skills_progress():
-    progress_records = DigitalSkillsProgress.query.filter_by(
-        student_id=session["student_id"]
-    ).order_by(DigitalSkillsProgress.module.asc()).all()
 
-    completed, total, percentage = get_digital_progress(session["student_id"])
-    completed_modules = {record.module for record in progress_records if record.completed}
+    student_id = session["student_id"]
+
+    progress_records = DigitalSkillsProgress.query.filter_by(
+        student_id=student_id
+    ).order_by(
+        DigitalSkillsProgress.module_number.asc()
+    ).all()
+
+    completed_numbers = {
+        record.module_number
+        for record in progress_records
+        if record.completed
+    }
+
+    completed_modules = len(
+        completed_numbers
+    )
+
+    progress_percent = int(
+        (completed_modules / 10) * 100
+    )
 
     return render_template(
         "digital-skills-progress.html",
-        progress_records=progress_records,
+        progress=progress_records,
         completed_modules=completed_modules,
-        digital_completed=completed,
-        digital_total=total,
-        digital_percentage=percentage
+        progress_percent=progress_percent,
+        completed_numbers=completed_numbers
     )
 
 
-@app.route("/api/digital-skills/progress")
+# =========================================================
+# COMPLETE DIGITAL SKILLS MODULE
+# =========================================================
+
+@app.route(
+    "/digital-skills/module/<int:module_number>/complete",
+    methods=["POST"]
+)
 @login_required
-def api_digital_skills_progress():
-    completed, total, percentage = get_digital_progress(session["student_id"])
+def complete_digital_skills_module(
+    module_number
+):
+
+    if module_number < 1 or module_number > 10:
+
+        return "Invalid module.", 400
+
+    record = DigitalSkillsProgress.query.filter_by(
+        student_id=session["student_id"],
+        module_number=module_number
+    ).first()
+
+    if not record:
+
+        record = DigitalSkillsProgress(
+            student_id=session["student_id"],
+            module_number=module_number,
+            completed=False
+        )
+
+        db.session.add(record)
+
+    record.completed = True
+
+    record.completed_at = datetime.utcnow()
+
+    quiz_score = request.form.get(
+        "quiz_score"
+    )
+
+    if quiz_score is not None and quiz_score != "":
+
+        try:
+
+            record.quiz_score = int(
+                quiz_score
+            )
+
+        except ValueError:
+
+            pass
+
+    db.session.commit()
+
+    return redirect(
+        url_for(
+            "digital_skills_progress"
+        )
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS PROGRESS API
+# =========================================================
+
+@app.route(
+    "/api/digital-skills-progress",
+    methods=["GET"]
+)
+@login_required
+def digital_skills_progress_api():
+
     records = DigitalSkillsProgress.query.filter_by(
-        student_id=session["student_id"]
-    ).order_by(DigitalSkillsProgress.module.asc()).all()
+        student_id=session["student_id"],
+        completed=True
+    ).order_by(
+        DigitalSkillsProgress.module_number.asc()
+    ).all()
+
+    completed_modules = [
+        record.module_number
+        for record in records
+    ]
+
+    total = 10
+
+    completed = len(
+        completed_modules
+    )
+
+    percentage = int(
+        (completed / total) * 100
+    )
 
     return jsonify({
         "success": True,
+        "completed_modules": completed_modules,
         "completed": completed,
         "total": total,
-        "percentage": percentage,
-        "modules": [
-            {
-                "module": record.module,
-                "completed": record.completed,
-                "quiz_score": record.quiz_score
-            }
-            for record in records
-        ]
+        "percentage": percentage
     })
 
 
-@app.route("/courses/career-development")
+# =========================================================
+# OTHER COURSES
+# =========================================================
+
+@app.route(
+    "/courses/career-development"
+)
 @login_required
 def career_development():
-    return render_template("career-development.html")
 
+    return render_template(
+        "career-development.html"
+    )
+
+
+# =========================================================
+# AI ASSISTANT
+# =========================================================
 
 @app.route("/ai-assistant")
 @login_required
 def ai_assistant():
-    return render_template("ai-assistant.html")
+
+    return render_template(
+        "ai-assistant.html"
+    )
 
 
-@app.route("/api/ai-memory", methods=["GET"])
+# =========================================================
+# AI MEMORY - GET
+# =========================================================
+
+@app.route(
+    "/api/ai-memory",
+    methods=["GET"]
+)
 @login_required
 def get_ai_memory():
-    student = Student.query.get(session["student_id"])
+
+    student = Student.query.get(
+        session["student_id"]
+    )
+
     if not student:
-        return jsonify({"success": False, "message": "Student not found."}), 404
+
+        return jsonify({
+            "success": False,
+            "message": "Student not found."
+        }), 404
 
     return jsonify({
         "success": True,
@@ -559,18 +1526,60 @@ def get_ai_memory():
     })
 
 
-@app.route("/api/ai-memory", methods=["POST"])
+# =========================================================
+# AI MEMORY - SAVE
+# =========================================================
+
+@app.route(
+    "/api/ai-memory",
+    methods=["POST"]
+)
 @login_required
 def save_ai_memory():
-    student = Student.query.get(session["student_id"])
-    if not student:
-        return jsonify({"success": False, "message": "Student not found."}), 404
 
-    data = request.get_json(silent=True) or {}
-    student.subjects = str(data.get("subjects", "")).strip()
-    student.skills = str(data.get("skills", "")).strip()
-    student.interests = str(data.get("interests", "")).strip()
-    student.career_goal = str(data.get("career_goal", "")).strip()
+    student = Student.query.get(
+        session["student_id"]
+    )
+
+    if not student:
+
+        return jsonify({
+            "success": False,
+            "message": "Student not found."
+        }), 404
+
+    data = request.get_json(
+        silent=True
+    ) or {}
+
+    student.subjects = str(
+        data.get(
+            "subjects",
+            ""
+        )
+    ).strip()
+
+    student.skills = str(
+        data.get(
+            "skills",
+            ""
+        )
+    ).strip()
+
+    student.interests = str(
+        data.get(
+            "interests",
+            ""
+        )
+    ).strip()
+
+    student.career_goal = str(
+        data.get(
+            "career_goal",
+            ""
+        )
+    ).strip()
+
     db.session.commit()
 
     return jsonify({
@@ -585,16 +1594,29 @@ def save_ai_memory():
     })
 
 
+# =========================================================
+# LIBRARY
+# =========================================================
+
 @app.route("/library")
 @login_required
 def library():
-    return render_template("library.html")
 
+    return render_template(
+        "library.html"
+    )
+
+
+# =========================================================
+# OPPORTUNITIES
+# =========================================================
 
 @app.route("/opportunities")
 @login_required
 def opportunities():
+
     opportunities_list = [
+
         {
             "title": "Nigerian Scholarship Award",
             "organization": "Federal Scholarship Board",
@@ -604,6 +1626,7 @@ def opportunities():
             "location": "Nigeria",
             "link": "https://scholarship.education.gov.ng/"
         },
+
         {
             "title": "Student Venture Capital Grant",
             "organization": "Federal Ministry of Education",
@@ -613,6 +1636,7 @@ def opportunities():
             "location": "Nigeria",
             "link": "https://svcg.education.gov.ng/"
         },
+
         {
             "title": "Presidential Amnesty Programme Scholarship",
             "organization": "Presidential Amnesty Programme",
@@ -622,6 +1646,7 @@ def opportunities():
             "location": "Niger Delta, Nigeria",
             "link": "https://osapnd.gov.ng/scholarship/"
         },
+
         {
             "title": "3MTT",
             "organization": "Federal Government of Nigeria",
@@ -631,57 +1656,133 @@ def opportunities():
             "location": "Nigeria",
             "link": "https://3mtt.nitda.gov.ng/"
         }
-    ]
-    return render_template("opportunities.html", opportunities=opportunities_list)
 
+    ]
+
+    return render_template(
+        "opportunities.html",
+        opportunities=opportunities_list
+    )
+
+
+# =========================================================
+# CAREER EXPLORER
+# =========================================================
 
 @app.route("/career-explorer")
 @login_required
 def career_explorer():
-    return render_template("career-explorer.html")
 
+    return render_template(
+        "career-explorer.html"
+    )
+
+
+# =========================================================
+# BLOG
+# =========================================================
 
 @app.route("/blog")
 @login_required
 def blog():
-    return render_template("blog.html")
 
+    return render_template(
+        "blog.html"
+    )
+
+
+# =========================================================
+# CAREER QUIZ
+# =========================================================
 
 @app.route("/career-quiz")
 @login_required
 def career_quiz():
-    return render_template("career-quiz.html")
 
+    return render_template(
+        "career-quiz.html"
+    )
+
+
+# =========================================================
+# CV BUILDER
+# =========================================================
 
 @app.route("/cv-builder")
 @login_required
 def cv_builder():
-    return render_template("cv-builder.html")
 
+    return render_template(
+        "cv-builder.html"
+    )
+
+
+# =========================================================
+# PYTHON PLAYGROUND
+# =========================================================
 
 @app.route("/python/playground")
 @login_required
 def python_playground():
-    return render_template("python/playground.html")
 
+    return render_template(
+        "python/playground.html"
+    )
+
+
+# =========================================================
+# DATABASE SETUP
+# =========================================================
 
 with app.app_context():
+
     db.create_all()
 
-    admin_username = os.environ.get("ADMIN_USERNAME")
-    admin_password = os.environ.get("ADMIN_PASSWORD")
+
+# =========================================================
+# CREATE ADMIN ACCOUNT FROM RENDER ENVIRONMENT VARIABLES
+# =========================================================
+
+with app.app_context():
+
+    admin_username = os.environ.get(
+        "ADMIN_USERNAME"
+    )
+
+    admin_password = os.environ.get(
+        "ADMIN_PASSWORD"
+    )
 
     if admin_username and admin_password:
-        existing_admin = Admin.query.filter_by(username=admin_username).first()
+
+        existing_admin = Admin.query.filter_by(
+            username=admin_username
+        ).first()
+
         if not existing_admin:
+
             admin = Admin(
                 username=admin_username,
-                password=generate_password_hash(admin_password)
+                password=generate_password_hash(
+                    admin_password
+                )
             )
-            db.session.add(admin)
-            db.session.commit()
-            print("Admin account created successfully.")
 
+            db.session.add(admin)
+
+            db.session.commit()
+
+            print(
+                "Admin account created successfully."
+            )
+
+
+# =========================================================
+# RUN
+# =========================================================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+
+    app.run(
+        debug=True
+    )
