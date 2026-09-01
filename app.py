@@ -1,9 +1,11 @@
+```python
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime
 import os
+
 
 # =========================================================
 # APP SETUP
@@ -214,6 +216,47 @@ class MentorshipRequest(db.Model):
 
 
 # =========================================================
+# COURSE PROGRESS MODEL
+# =========================================================
+
+class CourseProgress(db.Model):
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    student_id = db.Column(
+        db.Integer,
+        db.ForeignKey("student.id"),
+        nullable=False
+    )
+
+    course = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    module_number = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    completed_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    student = db.relationship(
+        "Student",
+        backref=db.backref(
+            "course_progress",
+            lazy=True
+        )
+    )
+
+
+# =========================================================
 # STUDENT LOGIN REQUIRED
 # =========================================================
 
@@ -223,7 +266,6 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
 
         if "student_id" not in session:
-
             return redirect(
                 url_for("login")
             )
@@ -243,7 +285,6 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
 
         if "admin_id" not in session:
-
             return redirect(
                 url_for("admin_login")
             )
@@ -293,7 +334,6 @@ def register():
         )
 
         if not name or not email or not password:
-
             return "Please fill in all fields."
 
         existing_student = Student.query.filter_by(
@@ -301,15 +341,12 @@ def register():
         ).first()
 
         if existing_student:
-
             return "An account with this email already exists."
 
         student = Student(
             name=name,
             email=email,
-            password=generate_password_hash(
-                password
-            )
+            password=generate_password_hash(password)
         )
 
         db.session.add(student)
@@ -354,14 +391,12 @@ def login():
         ).first()
 
         if not student:
-
             return "Account not found."
 
         if not check_password_hash(
             student.password,
             password
         ):
-
             return "Incorrect password."
 
         session["student_id"] = student.id
@@ -418,14 +453,12 @@ def admin_login():
         ).first()
 
         if not admin:
-
             return "Admin account not found."
 
         if not check_password_hash(
             admin.password,
             password
         ):
-
             return "Incorrect admin password."
 
         session["admin_id"] = admin.id
@@ -527,7 +560,6 @@ def add_mentor():
         ).strip()
 
         if not name or not profession or not field:
-
             return "Name, profession and field are required."
 
         mentor = Mentor(
@@ -568,9 +600,6 @@ def delete_mentor(mentor_id):
         mentor_id
     )
 
-    # Remove mentorship requests connected
-    # to this mentor first.
-
     MentorshipRequest.query.filter_by(
         mentor_id=mentor.id
     ).delete(
@@ -578,7 +607,6 @@ def delete_mentor(mentor_id):
     )
 
     db.session.delete(mentor)
-
     db.session.commit()
 
     return redirect(
@@ -621,7 +649,6 @@ def mentor_profile(mentor_id):
     )
 
     if not mentor.verified:
-
         return "Mentor not available.", 404
 
     return render_template(
@@ -646,7 +673,6 @@ def request_mentorship(mentor_id):
     )
 
     if not mentor.verified:
-
         return "Mentor not available.", 404
 
     if request.method == "POST":
@@ -657,7 +683,6 @@ def request_mentorship(mentor_id):
         ).strip()
 
         if not message:
-
             return "Please enter a message."
 
         mentorship_request = MentorshipRequest(
@@ -686,7 +711,7 @@ def request_mentorship(mentor_id):
 
 
 # =========================================================
-# STUDENT MENTORSHIP REQUESTS / INBOX
+# STUDENT MENTORSHIP REQUESTS
 # =========================================================
 
 @app.route(
@@ -748,7 +773,6 @@ def update_mentorship_request(
     ]
 
     if status not in allowed_statuses:
-
         return "Invalid status.", 400
 
     mentorship_request = MentorshipRequest.query.get_or_404(
@@ -767,7 +791,7 @@ def update_mentorship_request(
 
 
 # =========================================================
-# DASHBOARD
+# STUDENT DASHBOARD
 # =========================================================
 
 @app.route("/dashboard")
@@ -948,7 +972,7 @@ def python_module10():
 
 
 # =========================================================
-# CV + LINKEDIN
+# CV + LINKEDIN COURSE
 # =========================================================
 
 @app.route("/courses/cv-linkedin")
@@ -1006,7 +1030,7 @@ def cv_linkedin_module5():
 
 
 # =========================================================
-# OTHER COURSES
+# DIGITAL SKILLS COURSE
 # =========================================================
 
 @app.route("/courses/digital-skills")
@@ -1017,6 +1041,212 @@ def digital_skills():
         "digital-skills.html"
     )
 
+
+# =========================================================
+# DIGITAL SKILLS DASHBOARD
+# =========================================================
+
+@app.route("/courses/digital-skills/dashboard")
+@login_required
+def digital_skills_dashboard():
+
+    completed_records = CourseProgress.query.filter_by(
+        student_id=session["student_id"],
+        course="Digital Skills"
+    ).all()
+
+    completed_modules = sorted(
+        set(
+            record.module_number
+            for record in completed_records
+        )
+    )
+
+    completed_count = len(completed_modules)
+
+    progress_percentage = int(
+        (completed_count / 10) * 100
+    )
+
+    return render_template(
+        "digital-skills-dashboard.html",
+        completed_modules=completed_modules,
+        completed_count=completed_count,
+        progress_percentage=progress_percentage
+    )
+
+
+# =========================================================
+# MARK DIGITAL SKILLS MODULE COMPLETE
+# =========================================================
+
+@app.route(
+    "/courses/digital-skills/complete/<int:module_number>",
+    methods=["POST"]
+)
+@login_required
+def complete_digital_skills_module(module_number):
+
+    if module_number < 1 or module_number > 10:
+        return "Invalid module.", 400
+
+    existing = CourseProgress.query.filter_by(
+        student_id=session["student_id"],
+        course="Digital Skills",
+        module_number=module_number
+    ).first()
+
+    if not existing:
+
+        progress = CourseProgress(
+            student_id=session["student_id"],
+            course="Digital Skills",
+            module_number=module_number
+        )
+
+        db.session.add(progress)
+        db.session.commit()
+
+    return redirect(
+        url_for(
+            "digital_skills_dashboard"
+        )
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 1
+# =========================================================
+
+@app.route("/digital-skills/module1")
+@login_required
+def digital_skills_module1():
+
+    return render_template(
+        "digital-skills/module1.html"
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 2
+# =========================================================
+
+@app.route("/digital-skills/module2")
+@login_required
+def digital_skills_module2():
+
+    return render_template(
+        "digital-skills/module2.html"
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 3
+# =========================================================
+
+@app.route("/digital-skills/module3")
+@login_required
+def digital_skills_module3():
+
+    return render_template(
+        "digital-skills/module3.html"
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 4
+# =========================================================
+
+@app.route("/digital-skills/module4")
+@login_required
+def digital_skills_module4():
+
+    return render_template(
+        "digital-skills/module4.html"
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 5
+# =========================================================
+
+@app.route("/digital-skills/module5")
+@login_required
+def digital_skills_module5():
+
+    return render_template(
+        "digital-skills/module5.html"
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 6
+# =========================================================
+
+@app.route("/digital-skills/module6")
+@login_required
+def digital_skills_module6():
+
+    return render_template(
+        "digital-skills/module6.html"
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 7
+# =========================================================
+
+@app.route("/digital-skills/module7")
+@login_required
+def digital_skills_module7():
+
+    return render_template(
+        "digital-skills/module7.html"
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 8
+# =========================================================
+
+@app.route("/digital-skills/module8")
+@login_required
+def digital_skills_module8():
+
+    return render_template(
+        "digital-skills/module8.html"
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 9
+# =========================================================
+
+@app.route("/digital-skills/module9")
+@login_required
+def digital_skills_module9():
+
+    return render_template(
+        "digital-skills/module9.html"
+    )
+
+
+# =========================================================
+# DIGITAL SKILLS MODULE 10
+# =========================================================
+
+@app.route("/digital-skills/module10")
+@login_required
+def digital_skills_module10():
+
+    return render_template(
+        "digital-skills/module10.html"
+    )
+
+
+# =========================================================
+# CAREER DEVELOPMENT
+# =========================================================
 
 @app.route("/courses/career-development")
 @login_required
@@ -1343,3 +1573,4 @@ if __name__ == "__main__":
     app.run(
         debug=True
     )
+```
