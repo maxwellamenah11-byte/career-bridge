@@ -1,0 +1,611 @@
+```html
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .lesson-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 45px 20px 70px;
+    }
+
+    .lesson-card,
+    .quiz-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .lesson-label {
+        font-size: 14px;
+        font-weight: bold;
+        opacity: 0.6;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        margin-top: 30px;
+        margin-bottom: 12px;
+    }
+
+    p,
+    li {
+        line-height: 1.7;
+        color: #374151;
+    }
+
+    ul {
+        padding-left: 25px;
+    }
+
+    .tip-box {
+        margin-top: 25px;
+        padding: 18px;
+        background: #f1f5f9;
+        border-radius: 12px;
+        line-height: 1.6;
+    }
+
+    .example-box {
+        margin-top: 20px;
+        padding: 18px;
+        background: #f8fafc;
+        border-radius: 12px;
+        line-height: 1.7;
+    }
+
+    .quiz-card h2 {
+        margin-top: 0;
+    }
+
+    .question {
+        margin-top: 25px;
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+    }
+
+    .question p {
+        font-weight: bold;
+        color: #111827;
+    }
+
+    .option {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .option:hover {
+        background: #e2e8f0;
+    }
+
+    .quiz-button,
+    .lesson-button {
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: none;
+        background: #111827;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .quiz-button {
+        margin-top: 25px;
+        font-size: 15px;
+    }
+
+    .result {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+    .pass {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .fail {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .next-button {
+        display: none;
+        margin-top: 15px;
+    }
+
+    .lesson-navigation {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    @media (max-width: 600px) {
+        .lesson-card,
+        .quiz-card {
+            padding: 25px;
+        }
+
+        h1 {
+            font-size: 29px;
+        }
+
+        .lesson-navigation {
+            flex-direction: column;
+        }
+
+        .lesson-button {
+            text-align: center;
+        }
+    }
+</style>
+
+
+<div class="lesson-page">
+
+    <!-- LESSON -->
+
+    <div class="lesson-card">
+
+        <div class="lesson-label">
+            DIGITAL SKILLS • MODULE 7 OF 10
+        </div>
+
+        <h1>🌐 Internet & Online Safety</h1>
+
+        <p>
+            The internet is an important tool for learning, communication,
+            research, entertainment, and work. However, using the internet
+            safely requires good digital habits.
+        </p>
+
+
+        <h2>🎯 What You Will Learn</h2>
+
+        <ul>
+            <li>What the internet is</li>
+            <li>How websites and web browsers work</li>
+            <li>How to search for information effectively</li>
+            <li>How to identify suspicious online activity</li>
+            <li>How to protect your personal information</li>
+            <li>How to behave responsibly online</li>
+        </ul>
+
+
+        <h2>🌍 What Is the Internet?</h2>
+
+        <p>
+            The internet is a worldwide network that connects computers,
+            phones, servers, and other devices so they can communicate
+            and share information.
+        </p>
+
+        <p>
+            People use the internet to access websites, send messages,
+            attend online classes, conduct research, and use many
+            different digital services.
+        </p>
+
+
+        <h2>🔎 Searching for Information</h2>
+
+        <p>
+            Search engines help users find information on the web.
+            To get better results, use specific keywords that describe
+            what you are looking for.
+        </p>
+
+        <div class="example-box">
+            <strong>Example:</strong><br><br>
+            Instead of searching:<br>
+            "Excel"<br><br>
+
+            Try:<br>
+            "Excel beginner formulas tutorial"
+        </div>
+
+
+        <h2>🔐 Protecting Personal Information</h2>
+
+        <p>
+            Personal information should be handled carefully online.
+            Avoid sharing sensitive information with people or websites
+            you do not trust.
+        </p>
+
+        <ul>
+            <li>Use strong, unique passwords.</li>
+            <li>Do not share passwords with other people.</li>
+            <li>Be careful when entering personal information.</li>
+            <li>Review privacy settings on online accounts.</li>
+            <li>Log out of accounts when using shared computers.</li>
+        </ul>
+
+
+        <h2>🎣 Recognizing Phishing</h2>
+
+        <p>
+            Phishing is an attempt to trick people into giving away
+            information such as passwords or account details.
+            Phishing messages may pretend to come from a legitimate
+            company, school, bank, or other organization.
+        </p>
+
+        <div class="tip-box">
+            <strong>⚠️ Warning signs:</strong>
+            Be cautious of unexpected messages that create urgency,
+            request sensitive information, or contain suspicious links.
+        </div>
+
+
+        <h2>🔑 Strong Passwords</h2>
+
+        <p>
+            A strong password is difficult for other people to guess.
+            Different accounts should ideally use different passwords.
+        </p>
+
+        <p>
+            When available, multi-factor authentication can provide
+            an additional layer of account security.
+        </p>
+
+
+        <h2>📰 Checking Online Information</h2>
+
+        <p>
+            Not everything published online is accurate. Before trusting
+            important information, consider where it came from and whether
+            other reliable sources support it.
+        </p>
+
+        <ul>
+            <li>Check the source.</li>
+            <li>Check the date.</li>
+            <li>Compare information with reliable sources.</li>
+            <li>Be careful with sensational claims.</li>
+        </ul>
+
+
+        <h2>🤝 Responsible Online Behaviour</h2>
+
+        <p>
+            Good digital citizenship means treating other people
+            respectfully and using technology responsibly.
+        </p>
+
+        <ul>
+            <li>Communicate respectfully.</li>
+            <li>Think before posting.</li>
+            <li>Do not spread false information.</li>
+            <li>Respect other people's privacy.</li>
+            <li>Report harmful or suspicious activity when appropriate.</li>
+        </ul>
+
+
+        <h2>💼 Online Safety at Work</h2>
+
+        <p>
+            Digital safety is also important in professional environments.
+            Employees may handle company accounts, documents, customer
+            information, and other important data.
+        </p>
+
+
+        <h2>📝 Module Summary</h2>
+
+        <p>
+            Safe internet use involves protecting personal information,
+            recognizing suspicious messages, using strong passwords,
+            checking information carefully, and behaving responsibly
+            online.
+        </p>
+
+
+        <div class="tip-box">
+            <strong>🎯 Key Point:</strong>
+            Think before you click, share, download, or post.
+        </div>
+
+    </div>
+
+
+    <!-- QUIZ -->
+
+    <div class="quiz-card">
+
+        <h2>🧠 Module 7 Quiz</h2>
+
+        <p>
+            Answer all 5 questions. You need at least 70% to pass.
+        </p>
+
+
+        <form id="quizForm">
+
+            <div class="question">
+
+                <p>1. What is the internet?</p>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="a">
+                    A worldwide network connecting devices
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="b">
+                    A type of keyboard
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="c">
+                    A computer game
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="d">
+                    A printer
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>2. What is phishing?</p>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="a">
+                    A method of printing documents
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="b">
+                    An attempt to trick someone into giving away information
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="c">
+                    A type of spreadsheet
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="d">
+                    A presentation tool
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>3. Which is a good password practice?</p>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="a">
+                    Use the same password everywhere
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="b">
+                    Share your password with friends
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="c">
+                    Use strong, unique passwords
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="d">
+                    Write your password publicly
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>4. Why should you check information found online?</p>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="a">
+                    Everything online is automatically true
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="b">
+                    Online information can sometimes be inaccurate
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="c">
+                    Websites cannot contain mistakes
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="d">
+                    Search engines never show incorrect information
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>5. Which is an example of responsible online behaviour?</p>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="a">
+                    Sharing someone's private information
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="b">
+                    Spreading information without checking it
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="c">
+                    Treating people respectfully online
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="d">
+                    Sharing passwords with friends
+                </label>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="quiz-button"
+                onclick="checkQuiz()"
+            >
+                Submit Quiz
+            </button>
+
+        </form>
+
+
+        <div id="result" class="result"></div>
+
+
+        <a
+            id="nextButton"
+            href="{{ url_for('digital_skills_module8') }}"
+            class="lesson-button next-button"
+        >
+            Continue to Module 8 →
+        </a>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="lesson-navigation">
+
+        <a
+            href="{{ url_for('digital_skills_module6') }}"
+            class="lesson-button"
+        >
+            ← Module 6
+        </a>
+
+        <a
+            href="{{ url_for('digital_skills') }}"
+            class="lesson-button"
+        >
+            Course Home
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function checkQuiz() {
+
+    const answers = {
+        q1: "a",
+        q2: "b",
+        q3: "c",
+        q4: "b",
+        q5: "c"
+    };
+
+    let score = 0;
+    let answered = 0;
+
+    for (let question in answers) {
+
+        const selected = document.querySelector(
+            'input[name="' + question + '"]:checked'
+        );
+
+        if (selected) {
+
+            answered++;
+
+            if (selected.value === answers[question]) {
+                score++;
+            }
+        }
+    }
+
+
+    const result = document.getElementById("result");
+    const nextButton = document.getElementById("nextButton");
+
+    result.style.display = "block";
+
+
+    if (answered < 5) {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "⚠️ Please answer all 5 questions before submitting.";
+
+        nextButton.style.display = "none";
+
+        return;
+    }
+
+
+    const percentage = (score / 5) * 100;
+
+
+    if (percentage >= 70) {
+
+        result.className = "result pass";
+
+        result.innerHTML =
+            "🎉 You passed! Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%)";
+
+        nextButton.style.display = "inline-block";
+
+    } else {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "❌ You did not pass. Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%). Review the lesson and try again.";
+
+        nextButton.style.display = "none";
+    }
+
+}
+
+</script>
+
+{% endblock %}
+```
