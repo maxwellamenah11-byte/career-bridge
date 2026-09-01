@@ -1,10 +1,10 @@
+```python
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime
 import os
-
 
 # =========================================================
 # APP SETUP
@@ -224,6 +224,7 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
 
         if "student_id" not in session:
+
             return redirect(
                 url_for("login")
             )
@@ -243,6 +244,7 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
 
         if "admin_id" not in session:
+
             return redirect(
                 url_for("admin_login")
             )
@@ -292,6 +294,7 @@ def register():
         )
 
         if not name or not email or not password:
+
             return "Please fill in all fields."
 
         existing_student = Student.query.filter_by(
@@ -299,6 +302,7 @@ def register():
         ).first()
 
         if existing_student:
+
             return "An account with this email already exists."
 
         student = Student(
@@ -351,12 +355,14 @@ def login():
         ).first()
 
         if not student:
+
             return "Account not found."
 
         if not check_password_hash(
             student.password,
             password
         ):
+
             return "Incorrect password."
 
         session["student_id"] = student.id
@@ -378,15 +384,8 @@ def login():
 @app.route("/logout")
 def logout():
 
-    session.pop(
-        "student_id",
-        None
-    )
-
-    session.pop(
-        "student_name",
-        None
-    )
+    session.pop("student_id", None)
+    session.pop("student_name", None)
 
     return redirect(
         url_for("login")
@@ -420,12 +419,14 @@ def admin_login():
         ).first()
 
         if not admin:
+
             return "Admin account not found."
 
         if not check_password_hash(
             admin.password,
             password
         ):
+
             return "Incorrect admin password."
 
         session["admin_id"] = admin.id
@@ -447,15 +448,8 @@ def admin_login():
 @app.route("/admin/logout")
 def admin_logout():
 
-    session.pop(
-        "admin_id",
-        None
-    )
-
-    session.pop(
-        "admin_username",
-        None
-    )
+    session.pop("admin_id", None)
+    session.pop("admin_username", None)
 
     return redirect(
         url_for("admin_login")
@@ -470,19 +464,18 @@ def admin_logout():
 @admin_required
 def admin_dashboard():
 
-    request_count = MentorshipRequest.query.filter_by(
-        status="Pending"
-    ).count()
+    mentors = Mentor.query.order_by(
+        Mentor.name.asc()
+    ).all()
 
-    mentor_count = Mentor.query.count()
-
-    student_count = Student.query.count()
+    requests = MentorshipRequest.query.order_by(
+        MentorshipRequest.id.desc()
+    ).all()
 
     return render_template(
         "admin-dashboard.html",
-        request_count=request_count,
-        mentor_count=mentor_count,
-        student_count=student_count
+        mentors=mentors,
+        requests=requests
     )
 
 
@@ -535,6 +528,7 @@ def add_mentor():
         ).strip()
 
         if not name or not profession or not field:
+
             return "Name, profession and field are required."
 
         mentor = Mentor(
@@ -552,11 +546,44 @@ def add_mentor():
         db.session.commit()
 
         return redirect(
-            url_for("mentors")
+            url_for("admin_dashboard")
         )
 
     return render_template(
         "add-mentor.html"
+    )
+
+
+# =========================================================
+# DELETE MENTOR
+# =========================================================
+
+@app.route(
+    "/admin/delete-mentor/<int:mentor_id>",
+    methods=["POST"]
+)
+@admin_required
+def delete_mentor(mentor_id):
+
+    mentor = Mentor.query.get_or_404(
+        mentor_id
+    )
+
+    # Remove mentorship requests connected
+    # to this mentor first.
+
+    MentorshipRequest.query.filter_by(
+        mentor_id=mentor.id
+    ).delete(
+        synchronize_session=False
+    )
+
+    db.session.delete(mentor)
+
+    db.session.commit()
+
+    return redirect(
+        url_for("admin_dashboard")
     )
 
 
@@ -584,7 +611,9 @@ def mentors():
 # MENTOR PROFILE
 # =========================================================
 
-@app.route("/mentor/<int:mentor_id>")
+@app.route(
+    "/mentor/<int:mentor_id>"
+)
 @login_required
 def mentor_profile(mentor_id):
 
@@ -593,6 +622,7 @@ def mentor_profile(mentor_id):
     )
 
     if not mentor.verified:
+
         return "Mentor not available.", 404
 
     return render_template(
@@ -617,6 +647,7 @@ def request_mentorship(mentor_id):
     )
 
     if not mentor.verified:
+
         return "Mentor not available.", 404
 
     if request.method == "POST":
@@ -627,6 +658,7 @@ def request_mentorship(mentor_id):
         ).strip()
 
         if not message:
+
             return "Please enter a message."
 
         mentorship_request = MentorshipRequest(
@@ -655,10 +687,12 @@ def request_mentorship(mentor_id):
 
 
 # =========================================================
-# STUDENT MENTORSHIP REQUESTS
+# STUDENT MENTORSHIP REQUESTS / INBOX
 # =========================================================
 
-@app.route("/my-mentorship-requests")
+@app.route(
+    "/my-mentorship-requests"
+)
 @login_required
 def my_mentorship_requests():
 
@@ -678,7 +712,9 @@ def my_mentorship_requests():
 # ADMIN MENTORSHIP INBOX
 # =========================================================
 
-@app.route("/admin/mentorship-requests")
+@app.route(
+    "/admin/mentorship-requests"
+)
 @admin_required
 def admin_mentorship_requests():
 
@@ -693,7 +729,7 @@ def admin_mentorship_requests():
 
 
 # =========================================================
-# ADMIN UPDATE MENTORSHIP REQUEST
+# UPDATE MENTORSHIP REQUEST
 # =========================================================
 
 @app.route(
@@ -713,6 +749,7 @@ def update_mentorship_request(
     ]
 
     if status not in allowed_statuses:
+
         return "Invalid status.", 400
 
     mentorship_request = MentorshipRequest.query.get_or_404(
@@ -1122,8 +1159,10 @@ def opportunities():
             "category": "Scholarships",
             "description":
                 "Federal scholarship support for eligible Nigerian students.",
-            "deadline": "Check official portal",
-            "location": "Nigeria",
+            "deadline":
+                "Check official portal",
+            "location":
+                "Nigeria",
             "link":
                 "https://scholarship.education.gov.ng/"
         },
@@ -1176,6 +1215,7 @@ def opportunities():
             "link":
                 "https://3mtt.nitda.gov.ng/"
         }
+
     ]
 
     return render_template(
@@ -1304,3 +1344,4 @@ if __name__ == "__main__":
     app.run(
         debug=True
     )
+```
