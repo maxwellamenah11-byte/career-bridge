@@ -208,6 +208,26 @@ class MentorshipRequest(db.Model):
 
 
 # =========================================================
+# STUDENT MENTORSHIP REQUESTS
+# =========================================================
+
+@app.route("/my-mentorship-requests")
+@login_required
+def my_mentorship_requests():
+
+    requests = MentorshipRequest.query.filter_by(
+        student_id=session["student_id"]
+    ).order_by(
+        MentorshipRequest.id.desc()
+    ).all()
+
+    return render_template(
+        "my-mentorship-requests.html",
+        requests=requests
+    )
+
+
+# =========================================================
 # STUDENT LOGIN REQUIRED
 # =========================================================
 
