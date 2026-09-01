@@ -1,0 +1,556 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .lesson-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 45px 20px 70px;
+    }
+
+    .lesson-card,
+    .quiz-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .lesson-label {
+        font-size: 14px;
+        font-weight: bold;
+        opacity: 0.6;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        margin-top: 30px;
+        margin-bottom: 12px;
+    }
+
+    p, li {
+        line-height: 1.7;
+        color: #374151;
+    }
+
+    ul {
+        padding-left: 25px;
+    }
+
+    .tip-box,
+    .example-box {
+        margin-top: 20px;
+        padding: 18px;
+        background: #f1f5f9;
+        border-radius: 12px;
+        line-height: 1.7;
+    }
+
+    .quiz-card h2 {
+        margin-top: 0;
+    }
+
+    .question {
+        margin-top: 25px;
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+    }
+
+    .question p {
+        font-weight: bold;
+        color: #111827;
+    }
+
+    .option {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .option:hover {
+        background: #e2e8f0;
+    }
+
+    .quiz-button,
+    .lesson-button {
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: none;
+        background: #111827;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .quiz-button {
+        margin-top: 25px;
+        font-size: 15px;
+    }
+
+    .result {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+    .pass {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .fail {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .next-button {
+        display: none;
+        margin-top: 15px;
+    }
+
+    .lesson-navigation {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    @media (max-width: 600px) {
+        .lesson-card,
+        .quiz-card {
+            padding: 25px;
+        }
+
+        h1 {
+            font-size: 29px;
+        }
+
+        .lesson-navigation {
+            flex-direction: column;
+        }
+
+        .lesson-button {
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="lesson-page">
+
+    <div class="lesson-card">
+
+        <div class="lesson-label">
+            DIGITAL SKILLS • MODULE 9 OF 10
+        </div>
+
+        <h1>💬 Digital Communication & Online Collaboration</h1>
+
+        <p>
+            Digital communication allows people to exchange information
+            using computers, phones, and online services. Learning how to
+            communicate professionally online is an important skill for
+            students and future professionals.
+        </p>
+
+        <h2>🎯 What You Will Learn</h2>
+
+        <ul>
+            <li>What digital communication means</li>
+            <li>Common forms of online communication</li>
+            <li>Professional email communication</li>
+            <li>Online collaboration</li>
+            <li>Digital communication etiquette</li>
+            <li>How to communicate safely online</li>
+        </ul>
+
+        <h2>📱 What Is Digital Communication?</h2>
+
+        <p>
+            Digital communication is the exchange of information through
+            digital devices and online platforms.
+        </p>
+
+        <div class="example-box">
+            <strong>Examples include:</strong><br><br>
+            📧 Email<br>
+            💬 Instant messaging<br>
+            🎥 Video meetings<br>
+            📝 Online documents<br>
+            💻 Collaboration platforms
+        </div>
+
+        <h2>📧 Professional Email</h2>
+
+        <p>
+            Email is commonly used in schools, businesses, organizations,
+            and workplaces.
+        </p>
+
+        <p>
+            A professional email should have a clear subject, polite
+            language, and a message that is easy to understand.
+        </p>
+
+        <h2>🤝 Online Collaboration</h2>
+
+        <p>
+            Online collaboration allows people in different locations
+            to work together on the same project or task.
+        </p>
+
+        <ul>
+            <li>Sharing documents</li>
+            <li>Working on presentations</li>
+            <li>Communicating through messages</li>
+            <li>Holding virtual meetings</li>
+            <li>Giving and receiving feedback</li>
+        </ul>
+
+        <h2>🧑‍💻 Working as a Team Online</h2>
+
+        <p>
+            Good online teamwork requires clear communication and
+            responsibility. Team members should understand their tasks,
+            meet deadlines, and communicate when they need help.
+        </p>
+
+        <h2>📝 Digital Communication Etiquette</h2>
+
+        <p>
+            Digital etiquette refers to appropriate and respectful
+            behaviour when communicating online.
+        </p>
+
+        <ul>
+            <li>Be polite and respectful.</li>
+            <li>Think before sending a message.</li>
+            <li>Avoid unnecessary arguments.</li>
+            <li>Use clear language.</li>
+            <li>Respect other people's time.</li>
+            <li>Do not share private information without permission.</li>
+        </ul>
+
+        <div class="tip-box">
+            <strong>💡 Tip:</strong>
+            Before sending an important email or message, read it again
+            to make sure it is clear, respectful, and appropriate.
+        </div>
+
+        <h2>🔐 Communicating Safely</h2>
+
+        <p>
+            Be careful when communicating online. Do not share passwords,
+            private information, or sensitive documents with people who
+            should not have access to them.
+        </p>
+
+        <h2>💼 Communication in the Workplace</h2>
+
+        <p>
+            Employers value people who can communicate clearly and work
+            effectively with others. Digital communication skills can
+            therefore be useful when applying for jobs, participating in
+            projects, and working with colleagues.
+        </p>
+
+        <h2>📝 Module Summary</h2>
+
+        <p>
+            Digital communication makes it possible to communicate and
+            collaborate from different locations. Professional online
+            communication requires clarity, respect, responsibility,
+            and awareness of digital safety.
+        </p>
+
+        <div class="tip-box">
+            <strong>🎯 Key Point:</strong>
+            Communicate clearly, respectfully, and responsibly whenever
+            you interact with people online.
+        </div>
+
+    </div>
+
+
+    <div class="quiz-card">
+
+        <h2>🧠 Module 9 Quiz</h2>
+
+        <p>
+            Answer all 5 questions. You need at least 70% to pass.
+        </p>
+
+        <form id="quizForm">
+
+            <div class="question">
+
+                <p>1. What is digital communication?</p>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="a">
+                    Exchanging information using digital devices and platforms
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="b">
+                    Writing only on paper
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="c">
+                    Repairing a computer
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="d">
+                    Drawing a picture
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>2. Which is important in a professional email?</p>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="a">
+                    Using unclear language
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="b">
+                    Having a clear subject and polite message
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="c">
+                    Sending empty messages
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="d">
+                    Sharing passwords
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>3. What does online collaboration allow people to do?</p>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="a">
+                    Work together using online tools
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="b">
+                    Prevent communication
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="c">
+                    Delete the internet
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="d">
+                    Turn off every computer
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>4. Which is good digital communication etiquette?</p>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="a">
+                    Insulting people
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="b">
+                    Sharing private information
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="c">
+                    Communicating respectfully
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="d">
+                    Starting unnecessary arguments
+                </label>
+
+            </div>
+
+
+            <div class="question">
+
+                <p>5. What should you avoid sharing online?</p>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="a">
+                    A public school announcement
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="b">
+                    Your passwords and private information
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="c">
+                    A general study tip
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="d">
+                    A public presentation
+                </label>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="quiz-button"
+                onclick="checkQuiz()"
+            >
+                Submit Quiz
+            </button>
+
+        </form>
+
+        <div id="result" class="result"></div>
+
+        <a
+            id="nextButton"
+            href="{{ url_for('digital_skills_module10') }}"
+            class="lesson-button next-button"
+        >
+            Continue to Module 10 →
+        </a>
+
+    </div>
+
+
+    <div class="lesson-navigation">
+
+        <a
+            href="{{ url_for('digital_skills_module8') }}"
+            class="lesson-button"
+        >
+            ← Module 8
+        </a>
+
+        <a
+            href="{{ url_for('digital_skills') }}"
+            class="lesson-button"
+        >
+            Course Home
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function checkQuiz() {
+
+    const answers = {
+        q1: "a",
+        q2: "b",
+        q3: "a",
+        q4: "c",
+        q5: "b"
+    };
+
+    let score = 0;
+    let answered = 0;
+
+    for (let question in answers) {
+
+        const selected = document.querySelector(
+            'input[name="' + question + '"]:checked'
+        );
+
+        if (selected) {
+
+            answered++;
+
+            if (selected.value === answers[question]) {
+                score++;
+            }
+        }
+    }
+
+    const result = document.getElementById("result");
+    const nextButton = document.getElementById("nextButton");
+
+    result.style.display = "block";
+
+    if (answered < 5) {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "⚠️ Please answer all 5 questions before submitting.";
+
+        nextButton.style.display = "none";
+
+        return;
+    }
+
+    const percentage = (score / 5) * 100;
+
+    if (percentage >= 70) {
+
+        result.className = "result pass";
+
+        result.innerHTML =
+            "🎉 You passed! Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%)";
+
+        nextButton.style.display = "inline-block";
+
+    } else {
+
+        result.className = "result fail";
+
+        result.innerHTML =
+            "❌ You did not pass. Score: " +
+            score +
+            "/5 (" +
+            percentage +
+            "%). Review the lesson and try again.";
+
+        nextButton.style.display = "none";
+    }
+}
+
+</script>
+
+{% endblock %}
+
