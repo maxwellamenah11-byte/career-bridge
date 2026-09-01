@@ -71,6 +71,15 @@
         box-shadow: 0 8px 25px rgba(0,0,0,0.06);
     }
 
+    .module-card.locked {
+        background: #f1f5f9;
+        opacity: 0.7;
+    }
+
+    .module-card.completed {
+        border: 2px solid #111827;
+    }
+
     .module-card h2 {
         margin: 0 0 8px;
         font-size: 20px;
@@ -89,6 +98,26 @@
         background: #111827;
         color: white;
         text-decoration: none;
+        font-weight: bold;
+    }
+
+    .locked-button {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 10px 16px;
+        border-radius: 9px;
+        background: #cbd5e1;
+        color: #475569;
+        font-weight: bold;
+    }
+
+    .completed-label {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 10px 16px;
+        border-radius: 9px;
+        background: #e2e8f0;
+        color: #111827;
         font-weight: bold;
     }
 
@@ -116,56 +145,108 @@
 
 <div class="course-page">
 
-    <div class="course-hero">
-        <h1>💻 Digital Skills</h1>
+```
+<div class="course-hero">
+
+    <h1>💻 Digital Skills</h1>
+
+    <p>
+        Build practical digital skills through 10 structured modules.
+        Complete each module in order to unlock the next one.
+    </p>
+
+    <div class="progress-box">
+
+        <div class="progress-header">
+            <span>Course Progress</span>
+
+            <span>
+                {{ completed_modules|default(0) }}/10
+            </span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
 
         <p>
-            Build practical digital skills through 10 structured modules.
-            Complete each module and track your progress as you learn.
+            {{ progress_percent|default(0) }}% completed
         </p>
 
-        <div class="progress-box">
-            <div class="progress-header">
-                <span>Course Progress</span>
-                <span>{{ completed_modules|default(0) }}/10</span>
-            </div>
-
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
-
-            <p>
-                {{ progress_percent|default(0) }}% completed
-            </p>
-        </div>
-
-        <a href="{{ url_for('digital_skills_progress') }}"
-           class="progress-button">
-            📊 View My Progress
-        </a>
     </div>
 
-    <div class="modules">
+    <a href="{{ url_for('digital_skills_progress') }}"
+       class="progress-button">
+        📊 View My Progress
+    </a>
 
-        {% for i in range(1, 11) %}
-        <div class="module-card">
+</div>
 
-            <h2>Module {{ i }}</h2>
 
-            <p>
-                Continue your Digital Skills learning journey with
-                Module {{ i }}.
-            </p>
+<div class="modules">
 
-            <a href="{{ url_for('digital_skills_module' ~ i) }}"
-               class="module-button">
-                Open Module {{ i }} →
-            </a>
+    {% for i in range(1, 11) %}
+
+        {% set is_completed = i in completed_numbers %}
+        {% set is_unlocked = i == 1 or (i - 1) in completed_numbers %}
+
+        <div class="module-card
+            {% if is_completed %}completed{% endif %}
+            {% if not is_unlocked %}locked{% endif %}">
+
+            {% if is_completed %}
+
+                <h2>✅ Module {{ i }}</h2>
+
+                <p>
+                    You have completed this module.
+                    You can review it whenever you want.
+                </p>
+
+                <a href="{{ url_for('digital_skills_module' ~ i) }}"
+                   class="module-button">
+                    Review Module {{ i }} →
+                </a>
+
+                <div class="completed-label">
+                    ✓ Completed
+                </div>
+
+            {% elif is_unlocked %}
+
+                <h2>📘 Module {{ i }}</h2>
+
+                <p>
+                    This module is available.
+                    Complete it to unlock Module {{ i + 1 }}.
+                </p>
+
+                <a href="{{ url_for('digital_skills_module' ~ i) }}"
+                   class="module-button">
+                    Start Module {{ i }} →
+                </a>
+
+            {% else %}
+
+                <h2>🔒 Module {{ i }}</h2>
+
+                <p>
+                    Complete Module {{ i - 1 }}
+                    before accessing this module.
+                </p>
+
+                <div class="locked-button">
+                    🔒 Locked
+                </div>
+
+            {% endif %}
 
         </div>
-        {% endfor %}
 
-    </div>
+    {% endfor %}
+
+</div>
+```
 
 </div>
 
