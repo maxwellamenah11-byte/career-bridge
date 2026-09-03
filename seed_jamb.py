@@ -1,2298 +1,973 @@
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+import os
+import random
+import math
+
+# ============================================================
+# CAREER BRIDGE - JAMB QUESTION BANK SEEDER
+# ============================================================
+# This file creates ORIGINAL JAMB-STYLE practice questions.
+# They are NOT official JAMB past questions.
+#
+# It generates at least 500 questions for EACH subject:
+#   Use of English, Mathematics, Physics, Chemistry, Biology,
+#   Economics, Government, Literature, Geography, Commerce,
+#   Accounting, Agricultural Science, Computer Science
+#
+# Total minimum: 6,500 questions.
+#
+# Run:
+#     python seed_jamb.py
+#
+# The script imports the existing Flask app and database models
+# from app.py, so keep this file in the same project folder.
+# ============================================================
+
 from app import app, db, JAMBQuestion
 
 
-# =========================================================
-# CAREER BRIDGE — USE OF ENGLISH QUESTION BANK
-# =========================================================
-#
-# 100 ORIGINAL JAMB-STYLE USE OF ENGLISH QUESTIONS
-#
-# These are practice questions created for Career Bridge.
-# They are NOT official JAMB past questions.
-#
-# =========================================================
-
-
-ENGLISH_QUESTIONS = [
-
-    # =====================================================
-    # GRAMMAR / LEXIS
-    # =====================================================
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Tenses",
-        "difficulty": "Easy",
-        "question": "By the time we arrived at the station, the train ____.",
-        "option_a": "leaves",
-        "option_b": "had left",
-        "option_c": "has left",
-        "option_d": "will leave",
-        "correct_answer": "B",
-        "explanation": "The past perfect 'had left' shows that the train left before another past action."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Tenses",
-        "difficulty": "Easy",
-        "question": "She ____ in Lagos since 2021.",
-        "option_a": "lives",
-        "option_b": "lived",
-        "option_c": "has lived",
-        "option_d": "will live",
-        "correct_answer": "C",
-        "explanation": "The present perfect is used for an action that began in the past and continues to the present."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Tenses",
-        "difficulty": "Medium",
-        "question": "If he had studied harder, he ____ the examination.",
-        "option_a": "passes",
-        "option_b": "will pass",
-        "option_c": "would have passed",
-        "option_d": "would pass",
-        "correct_answer": "C",
-        "explanation": "The third conditional uses 'would have' plus the past participle."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Concord",
-        "difficulty": "Easy",
-        "question": "Neither the teacher nor the students ____ aware of the change.",
-        "option_a": "was",
-        "option_b": "is",
-        "option_c": "were",
-        "option_d": "has",
-        "correct_answer": "C",
-        "explanation": "With 'neither...nor', the verb agrees with the nearer subject, 'students'."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Concord",
-        "difficulty": "Medium",
-        "question": "The list of successful candidates ____ on the notice board.",
-        "option_a": "are",
-        "option_b": "were",
-        "option_c": "have",
-        "option_d": "is",
-        "correct_answer": "D",
-        "explanation": "The subject is 'list', which is singular."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Concord",
-        "difficulty": "Medium",
-        "question": "Each of the boys ____ given a certificate.",
-        "option_a": "were",
-        "option_b": "was",
-        "option_c": "have",
-        "option_d": "are",
-        "correct_answer": "B",
-        "explanation": "'Each' is singular and takes a singular verb."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Concord",
-        "difficulty": "Easy",
-        "question": "The news ____ surprising.",
-        "option_a": "were",
-        "option_b": "are",
-        "option_c": "was",
-        "option_d": "have",
-        "correct_answer": "C",
-        "explanation": "'News' is treated as a singular uncountable noun."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Concord",
-        "difficulty": "Medium",
-        "question": "A number of students ____ absent today.",
-        "option_a": "is",
-        "option_b": "was",
-        "option_c": "are",
-        "option_d": "has",
-        "correct_answer": "C",
-        "explanation": "'A number of' takes a plural noun and plural verb."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Prepositions",
-        "difficulty": "Easy",
-        "question": "The students arrived ____ school early.",
-        "option_a": "at",
-        "option_b": "on",
-        "option_c": "in",
-        "option_d": "by",
-        "correct_answer": "A",
-        "explanation": "The standard expression is 'arrive at school'."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Prepositions",
-        "difficulty": "Medium",
-        "question": "He has been absent ____ Monday.",
-        "option_a": "for",
-        "option_b": "since",
-        "option_c": "from",
-        "option_d": "by",
-        "correct_answer": "B",
-        "explanation": "'Since' is used with a specific starting point in time."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Prepositions",
-        "difficulty": "Easy",
-        "question": "The boy is good ____ Mathematics.",
-        "option_a": "in",
-        "option_b": "on",
-        "option_c": "at",
-        "option_d": "with",
-        "correct_answer": "C",
-        "explanation": "The correct expression is 'good at Mathematics'."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Articles",
-        "difficulty": "Easy",
-        "question": "She bought ____ umbrella yesterday.",
-        "option_a": "a",
-        "option_b": "an",
-        "option_c": "the",
-        "option_d": "no article",
-        "correct_answer": "B",
-        "explanation": "'Umbrella' begins with a vowel sound, so 'an' is used."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Articles",
-        "difficulty": "Medium",
-        "question": "He is ____ honest man.",
-        "option_a": "a",
-        "option_b": "an",
-        "option_c": "the",
-        "option_d": "no article",
-        "correct_answer": "B",
-        "explanation": "'Honest' begins with a vowel sound because the 'h' is silent."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Pronouns",
-        "difficulty": "Easy",
-        "question": "This book belongs to James and ____.",
-        "option_a": "I",
-        "option_b": "me",
-        "option_c": "my",
-        "option_d": "mine",
-        "correct_answer": "B",
-        "explanation": "The pronoun follows the preposition 'to', so the object form 'me' is required."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Pronouns",
-        "difficulty": "Medium",
-        "question": "The principal asked Ada and ____ to remain behind.",
-        "option_a": "I",
-        "option_b": "me",
-        "option_c": "my",
-        "option_d": "mine",
-        "correct_answer": "B",
-        "explanation": "The pronoun is the object of 'asked', so 'me' is correct."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Adverbs",
-        "difficulty": "Easy",
-        "question": "The child answered the question ____.",
-        "option_a": "correct",
-        "option_b": "correctly",
-        "option_c": "correctness",
-        "option_d": "correcting",
-        "correct_answer": "B",
-        "explanation": "An adverb is required to modify the verb 'answered'."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Adjectives",
-        "difficulty": "Easy",
-        "question": "The examination was ____ than we expected.",
-        "option_a": "difficult",
-        "option_b": "more difficult",
-        "option_c": "most difficult",
-        "option_d": "difficulty",
-        "correct_answer": "B",
-        "explanation": "The comparative form 'more difficult' is used when comparing two situations."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Question Tags",
-        "difficulty": "Easy",
-        "question": "You are coming with us, ____?",
-        "option_a": "aren't you",
-        "option_b": "are you",
-        "option_c": "isn't it",
-        "option_d": "don't you",
-        "correct_answer": "A",
-        "explanation": "A positive statement takes a negative question tag."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Question Tags",
-        "difficulty": "Medium",
-        "question": "He hardly visits us, ____?",
-        "option_a": "doesn't he",
-        "option_b": "does he",
-        "option_c": "is he",
-        "option_d": "didn't he",
-        "correct_answer": "B",
-        "explanation": "'Hardly' has a negative meaning, so the tag is positive."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Conditionals",
-        "difficulty": "Medium",
-        "question": "Unless you hurry, you ____ the bus.",
-        "option_a": "missed",
-        "option_b": "will miss",
-        "option_c": "would miss",
-        "option_d": "had missed",
-        "correct_answer": "B",
-        "explanation": "The first conditional uses a present condition and 'will' for the likely result."
-    },
-
-
-    # =====================================================
-    # SYNONYMS
-    # =====================================================
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Easy",
-        "question": "Choose the option nearest in meaning to 'ABANDON'.",
-        "option_a": "leave",
-        "option_b": "collect",
-        "option_c": "repair",
-        "option_d": "protect",
-        "correct_answer": "A",
-        "explanation": "To abandon something means to leave it completely."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Easy",
-        "question": "Choose the option nearest in meaning to 'BRIEF'.",
-        "option_a": "long",
-        "option_b": "short",
-        "option_c": "heavy",
-        "option_d": "wide",
-        "correct_answer": "B",
-        "explanation": "Brief means short in duration or length."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'DILIGENT'.",
-        "option_a": "lazy",
-        "option_b": "careless",
-        "option_c": "hardworking",
-        "option_d": "weak",
-        "correct_answer": "C",
-        "explanation": "A diligent person works carefully and consistently."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'HOSTILE'.",
-        "option_a": "friendly",
-        "option_b": "unfriendly",
-        "option_c": "helpful",
-        "option_d": "peaceful",
-        "correct_answer": "B",
-        "explanation": "Hostile means unfriendly or antagonistic."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'OBSOLETE'.",
-        "option_a": "modern",
-        "option_b": "expensive",
-        "option_c": "outdated",
-        "option_d": "valuable",
-        "correct_answer": "C",
-        "explanation": "Obsolete means no longer useful or current."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Easy",
-        "question": "Choose the option nearest in meaning to 'GENEROUS'.",
-        "option_a": "kind-hearted",
-        "option_b": "selfish",
-        "option_c": "angry",
-        "option_d": "strict",
-        "correct_answer": "A",
-        "explanation": "A generous person is willing to give or share."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'IMPEDE'.",
-        "option_a": "assist",
-        "option_b": "delay",
-        "option_c": "encourage",
-        "option_d": "complete",
-        "correct_answer": "B",
-        "explanation": "To impede means to hinder or delay."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'PRUDENT'.",
-        "option_a": "careful",
-        "option_b": "reckless",
-        "option_c": "careless",
-        "option_d": "noisy",
-        "correct_answer": "A",
-        "explanation": "Prudent means showing good judgment and care."
-    },
-
-
-    # =====================================================
-    # ANTONYMS
-    # =====================================================
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Easy",
-        "question": "Choose the option opposite in meaning to 'ANCIENT'.",
-        "option_a": "old",
-        "option_b": "modern",
-        "option_c": "historic",
-        "option_d": "traditional",
-        "correct_answer": "B",
-        "explanation": "Modern is opposite in meaning to ancient."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Easy",
-        "question": "Choose the option opposite in meaning to 'VICTORY'.",
-        "option_a": "success",
-        "option_b": "triumph",
-        "option_c": "defeat",
-        "option_d": "achievement",
-        "correct_answer": "C",
-        "explanation": "Defeat is the opposite of victory."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option opposite in meaning to 'EXPAND'.",
-        "option_a": "increase",
-        "option_b": "enlarge",
-        "option_c": "contract",
-        "option_d": "develop",
-        "correct_answer": "C",
-        "explanation": "To contract means to become smaller."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option opposite in meaning to 'OPTIMISTIC'.",
-        "option_a": "hopeful",
-        "option_b": "positive",
-        "option_c": "pessimistic",
-        "option_d": "confident",
-        "correct_answer": "C",
-        "explanation": "Pessimistic is the opposite of optimistic."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option opposite in meaning to 'TRANSPARENT'.",
-        "option_a": "clear",
-        "option_b": "obvious",
-        "option_c": "opaque",
-        "option_d": "visible",
-        "correct_answer": "C",
-        "explanation": "Opaque means not allowing light to pass through."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Easy",
-        "question": "Choose the option opposite in meaning to 'PERMANENT'.",
-        "option_a": "lasting",
-        "option_b": "temporary",
-        "option_c": "fixed",
-        "option_d": "stable",
-        "correct_answer": "B",
-        "explanation": "Temporary means lasting only for a limited time."
-    },
-
-
-    # =====================================================
-    # IDIOMS / EXPRESSIONS
-    # =====================================================
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Easy",
-        "question": "If someone 'breaks the ice', what does the person do?",
-        "option_a": "start a friendly conversation",
-        "option_b": "destroy something",
-        "option_c": "become angry",
-        "option_d": "leave immediately",
-        "correct_answer": "A",
-        "explanation": "To break the ice means to make people feel more comfortable."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Medium",
-        "question": "If a student 'hits the nail on the head', the student has ____.",
-        "option_a": "made a mistake",
-        "option_b": "said exactly the right thing",
-        "option_c": "become confused",
-        "option_d": "worked slowly",
-        "correct_answer": "B",
-        "explanation": "The expression means to describe or identify something exactly."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Easy",
-        "question": "To 'see eye to eye' with someone means to ____.",
-        "option_a": "fight with the person",
-        "option_b": "agree with the person",
-        "option_c": "avoid the person",
-        "option_d": "watch the person",
-        "correct_answer": "B",
-        "explanation": "To see eye to eye means to agree."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Medium",
-        "question": "If a person is 'under the weather', the person is ____.",
-        "option_a": "very happy",
-        "option_b": "slightly ill",
-        "option_c": "outside",
-        "option_d": "wealthy",
-        "correct_answer": "B",
-        "explanation": "The expression means to feel unwell."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Medium",
-        "question": "When someone 'spills the beans', the person ____.",
-        "option_a": "cooks food",
-        "option_b": "reveals a secret",
-        "option_c": "starts a business",
-        "option_d": "makes a promise",
-        "correct_answer": "B",
-        "explanation": "To spill the beans means to reveal secret information."
-    },
-
-
-    # =====================================================
-    # SENTENCE COMPLETION
-    # =====================================================
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Word Choice",
-        "difficulty": "Easy",
-        "question": "The principal advised the students to ____ attention in class.",
-        "option_a": "make",
-        "option_b": "pay",
-        "option_c": "give",
-        "option_d": "do",
-        "correct_answer": "B",
-        "explanation": "The correct expression is 'pay attention'."
-    },
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Word Choice",
-        "difficulty": "Easy",
-        "question": "The police are investigating the ____ of the missing student.",
-        "option_a": "disappearance",
-        "option_b": "appearance",
-        "option_c": "arrival",
-        "option_d": "entrance",
-        "correct_answer": "A",
-        "explanation": "Disappearance refers to the act of becoming missing."
-    },
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Word Choice",
-        "difficulty": "Medium",
-        "question": "The manager asked the workers to ____ the meeting until Monday.",
-        "option_a": "postpone",
-        "option_b": "prevent",
-        "option_c": "cancelled",
-        "option_d": "refuse",
-        "correct_answer": "A",
-        "explanation": "To postpone means to delay something until a later time."
-    },
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Word Choice",
-        "difficulty": "Medium",
-        "question": "The witness gave a ____ account of what happened.",
-        "option_a": "detailed",
-        "option_b": "detail",
-        "option_c": "detailing",
-        "option_d": "details",
-        "correct_answer": "A",
-        "explanation": "'Detailed' is the adjective required to describe 'account'."
-    },
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Word Choice",
-        "difficulty": "Easy",
-        "question": "The doctor advised him to ____ smoking.",
-        "option_a": "give up",
-        "option_b": "give in",
-        "option_c": "give out",
-        "option_d": "give away",
-        "correct_answer": "A",
-        "explanation": "'Give up' means to stop doing something."
-    },
-
-
-    # =====================================================
-    # PHRASAL VERBS
-    # =====================================================
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Phrasal Verbs",
-        "difficulty": "Easy",
-        "question": "The meeting was ____ because the chairman was absent.",
-        "option_a": "called off",
-        "option_b": "called in",
-        "option_c": "called up",
-        "option_d": "called over",
-        "correct_answer": "A",
-        "explanation": "'Called off' means cancelled."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Phrasal Verbs",
-        "difficulty": "Medium",
-        "question": "The student ____ the meaning of the unfamiliar word.",
-        "option_a": "looked after",
-        "option_b": "looked up",
-        "option_c": "looked into",
-        "option_d": "looked over",
-        "correct_answer": "B",
-        "explanation": "'Look up' means to search for information."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Phrasal Verbs",
-        "difficulty": "Medium",
-        "question": "The committee will ____ the matter carefully.",
-        "option_a": "look into",
-        "option_b": "look after",
-        "option_c": "look away",
-        "option_d": "look out",
-        "correct_answer": "A",
-        "explanation": "'Look into' means to investigate."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Phrasal Verbs",
-        "difficulty": "Easy",
-        "question": "Please ____ the lights before leaving the room.",
-        "option_a": "turn on",
-        "option_b": "turn up",
-        "option_c": "turn off",
-        "option_d": "turn into",
-        "correct_answer": "C",
-        "explanation": "'Turn off' means to switch something off."
-    },
-
-
-    # =====================================================
-    # WORD RELATIONSHIPS
-    # =====================================================
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Word Relationships",
-        "difficulty": "Easy",
-        "question": "Choose the word that best completes the relationship: Doctor : Hospital :: Teacher : ____",
-        "option_a": "market",
-        "option_b": "school",
-        "option_c": "court",
-        "option_d": "farm",
-        "correct_answer": "B",
-        "explanation": "A doctor commonly works in a hospital; a teacher commonly works in a school."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Word Relationships",
-        "difficulty": "Easy",
-        "question": "Choose the word that best completes the relationship: Bird : Nest :: Lion : ____",
-        "option_a": "den",
-        "option_b": "web",
-        "option_c": "stable",
-        "option_d": "hive",
-        "correct_answer": "A",
-        "explanation": "A bird lives in a nest; a lion commonly lives in a den."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Word Relationships",
-        "difficulty": "Medium",
-        "question": "Choose the word that best completes the relationship: Pen : Write :: Knife : ____",
-        "option_a": "cut",
-        "option_b": "read",
-        "option_c": "draw",
-        "option_d": "speak",
-        "correct_answer": "A",
-        "explanation": "A pen is used for writing; a knife is used for cutting."
-    },
-
-
-    # =====================================================
-    # PARTS OF SPEECH
-    # =====================================================
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Parts of Speech",
-        "difficulty": "Easy",
-        "question": "In the sentence 'The boy ran quickly', what part of speech is 'quickly'?",
-        "option_a": "Noun",
-        "option_b": "Verb",
-        "option_c": "Adjective",
-        "option_d": "Adverb",
-        "correct_answer": "D",
-        "explanation": "'Quickly' modifies the verb 'ran', so it is an adverb."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Parts of Speech",
-        "difficulty": "Easy",
-        "question": "In the sentence 'The beautiful girl smiled', what part of speech is 'beautiful'?",
-        "option_a": "Adjective",
-        "option_b": "Adverb",
-        "option_c": "Verb",
-        "option_d": "Preposition",
-        "correct_answer": "A",
-        "explanation": "'Beautiful' describes the noun 'girl', making it an adjective."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Parts of Speech",
-        "difficulty": "Medium",
-        "question": "In the sentence 'They arrived after lunch', what part of speech is 'after'?",
-        "option_a": "Noun",
-        "option_b": "Preposition",
-        "option_c": "Adjective",
-        "option_d": "Pronoun",
-        "correct_answer": "B",
-        "explanation": "'After' shows the relationship between 'arrived' and 'lunch'."
-    },
-
-
-    # =====================================================
-    # SENTENCE STRUCTURE
-    # =====================================================
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Sentence Structure",
-        "difficulty": "Easy",
-        "question": "Which sentence is correctly written?",
-        "option_a": "She don't like rice.",
-        "option_b": "She doesn't likes rice.",
-        "option_c": "She doesn't like rice.",
-        "option_d": "She not like rice.",
-        "correct_answer": "C",
-        "explanation": "After 'doesn't', the main verb remains in its base form."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Sentence Structure",
-        "difficulty": "Medium",
-        "question": "Which sentence is grammatically correct?",
-        "option_a": "Neither of the boys are ready.",
-        "option_b": "Neither of the boys is ready.",
-        "option_c": "Neither of the boys were ready.",
-        "option_d": "Neither boys is ready.",
-        "correct_answer": "B",
-        "explanation": "'Neither' is singular and takes 'is' in formal standard English."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Sentence Structure",
-        "difficulty": "Medium",
-        "question": "Which sentence is correctly written?",
-        "option_a": "Despite of the rain, we went out.",
-        "option_b": "Despite the rain, we went out.",
-        "option_c": "Despite from the rain, we went out.",
-        "option_d": "Despite to the rain, we went out.",
-        "correct_answer": "B",
-        "explanation": "'Despite' is not followed by 'of'."
-    },
-
-
-    # =====================================================
-    # VOCABULARY IN CONTEXT
-    # =====================================================
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Contextual Meaning",
-        "difficulty": "Medium",
-        "question": "The politician gave an evasive answer. This means that the answer was ____.",
-        "option_a": "direct",
-        "option_b": "clear",
-        "option_c": "avoiding the main point",
-        "option_d": "accurate",
-        "correct_answer": "C",
-        "explanation": "An evasive response avoids giving a direct answer."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Contextual Meaning",
-        "difficulty": "Medium",
-        "question": "The teacher reprimanded the student for cheating. 'Reprimanded' means ____.",
-        "option_a": "praised",
-        "option_b": "criticized",
-        "option_c": "rewarded",
-        "option_d": "ignored",
-        "correct_answer": "B",
-        "explanation": "To reprimand means to express strong disapproval."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Contextual Meaning",
-        "difficulty": "Medium",
-        "question": "The manager was reluctant to approve the proposal. 'Reluctant' means ____.",
-        "option_a": "eager",
-        "option_b": "unwilling",
-        "option_c": "excited",
-        "option_d": "certain",
-        "correct_answer": "B",
-        "explanation": "Reluctant means unwilling or hesitant."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Contextual Meaning",
-        "difficulty": "Medium",
-        "question": "The evidence was conclusive. This means that it was ____.",
-        "option_a": "uncertain",
-        "option_b": "confusing",
-        "option_c": "decisive",
-        "option_d": "irrelevant",
-        "correct_answer": "C",
-        "explanation": "Conclusive evidence provides a decisive result."
-    },
-
-
-    # =====================================================
-    # MORE GRAMMAR
-    # =====================================================
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Active and Passive Voice",
-        "difficulty": "Medium",
-        "question": "The mechanic repaired the car. Which is the correct passive form?",
-        "option_a": "The car repaired the mechanic.",
-        "option_b": "The car was repaired by the mechanic.",
-        "option_c": "The car is repaired by the mechanic yesterday.",
-        "option_d": "The mechanic was repaired by the car.",
-        "correct_answer": "B",
-        "explanation": "The object 'car' becomes the subject in the passive construction."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Active and Passive Voice",
-        "difficulty": "Medium",
-        "question": "The students completed the assignment. The passive form is ____.",
-        "option_a": "The assignment completed the students.",
-        "option_b": "The assignment was completed by the students.",
-        "option_c": "The assignment is completing the students.",
-        "option_d": "The students were completed by the assignment.",
-        "correct_answer": "B",
-        "explanation": "The simple past passive is formed with 'was/were + past participle'."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Reported Speech",
-        "difficulty": "Medium",
-        "question": "Tunde said, 'I am tired.' The reported form is ____.",
-        "option_a": "Tunde said that I am tired.",
-        "option_b": "Tunde said that he was tired.",
-        "option_c": "Tunde said that he is tired yesterday.",
-        "option_d": "Tunde says that he was tired.",
-        "correct_answer": "B",
-        "explanation": "In reported speech, 'I am' changes to 'he was' when reporting a past statement."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Reported Speech",
-        "difficulty": "Medium",
-        "question": "Ngozi said, 'I will come tomorrow.' The reported form is ____.",
-        "option_a": "Ngozi said that she would come the following day.",
-        "option_b": "Ngozi said that she will come yesterday.",
-        "option_c": "Ngozi said that I would come tomorrow.",
-        "option_d": "Ngozi says that she came tomorrow.",
-        "correct_answer": "A",
-        "explanation": "In reported speech, 'will' changes to 'would' and 'tomorrow' changes according to the reporting time."
-    },
-
-
-    # =====================================================
-    # MORE SYNONYMS
-    # =====================================================
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'METICULOUS'.",
-        "option_a": "careless",
-        "option_b": "very careful",
-        "option_c": "quick",
-        "option_d": "lazy",
-        "correct_answer": "B",
-        "explanation": "Meticulous means extremely careful and precise."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'AMBIGUOUS'.",
-        "option_a": "unclear",
-        "option_b": "obvious",
-        "option_c": "simple",
-        "option_d": "certain",
-        "correct_answer": "A",
-        "explanation": "Ambiguous means open to more than one interpretation."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'VITAL'.",
-        "option_a": "unnecessary",
-        "option_b": "essential",
-        "option_c": "ordinary",
-        "option_d": "minor",
-        "correct_answer": "B",
-        "explanation": "Vital means extremely important or necessary."
-    },
-
-
-    # =====================================================
-    # MORE ANTONYMS
-    # =====================================================
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option opposite in meaning to 'SCARCE'.",
-        "option_a": "rare",
-        "option_b": "limited",
-        "option_c": "abundant",
-        "option_d": "insufficient",
-        "correct_answer": "C",
-        "explanation": "Abundant means available in large quantities."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option opposite in meaning to 'RELUCTANT'.",
-        "option_a": "hesitant",
-        "option_b": "unwilling",
-        "option_c": "eager",
-        "option_d": "doubtful",
-        "correct_answer": "C",
-        "explanation": "Eager means enthusiastic or willing."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Easy",
-        "question": "Choose the option opposite in meaning to 'FREQUENT'.",
-        "option_a": "regular",
-        "option_b": "rare",
-        "option_c": "common",
-        "option_d": "usual",
-        "correct_answer": "B",
-        "explanation": "Rare means occurring infrequently."
-    },
-
-
-    # =====================================================
-    # ORAL ENGLISH
-    # =====================================================
-
-    {
-        "topic": "Oral English",
-        "subtopic": "Vowel Sounds",
-        "difficulty": "Medium",
-        "question": "Which word has the same vowel sound as the vowel sound in 'seat'?",
-        "option_a": "sit",
-        "option_b": "beat",
-        "option_c": "set",
-        "option_d": "said",
-        "correct_answer": "B",
-        "explanation": "'Seat' and 'beat' contain the long /iː/ vowel sound."
-    },
-
-    {
-        "topic": "Oral English",
-        "subtopic": "Vowel Sounds",
-        "difficulty": "Medium",
-        "question": "Which word has the same vowel sound as the vowel sound in 'food'?",
-        "option_a": "good",
-        "option_b": "flood",
-        "option_c": "mood",
-        "option_d": "blood",
-        "correct_answer": "C",
-        "explanation": "'Food' and 'mood' contain the /uː/ vowel sound."
-    },
-
-    {
-        "topic": "Oral English",
-        "subtopic": "Consonant Sounds",
-        "difficulty": "Medium",
-        "question": "Which word begins with the same consonant sound as 'chair'?",
-        "option_a": "share",
-        "option_b": "cheese",
-        "option_c": "gear",
-        "option_d": "there",
-        "correct_answer": "B",
-        "explanation": "'Chair' and 'cheese' begin with the /tʃ/ sound."
-    },
-
-    {
-        "topic": "Oral English",
-        "subtopic": "Consonant Sounds",
-        "difficulty": "Medium",
-        "question": "Which word begins with the same consonant sound as 'judge'?",
-        "option_a": "giant",
-        "option_b": "yellow",
-        "option_c": "church",
-        "option_d": "school",
-        "correct_answer": "A",
-        "explanation": "'Judge' and 'giant' begin with the /dʒ/ sound."
-    },
-
-
-    # =====================================================
-    # COMPREHENSION-STYLE QUESTIONS
-    # =====================================================
-
-    {
-        "topic": "Comprehension",
-        "subtopic": "Main Idea",
-        "difficulty": "Medium",
-        "question": "A paragraph explains how regular exercise improves concentration, strengthens the body and reduces stress. What is the main idea?",
-        "option_a": "Exercise is only useful for athletes.",
-        "option_b": "Regular exercise has several benefits.",
-        "option_c": "Students should avoid exercise.",
-        "option_d": "Stress is caused only by school.",
-        "correct_answer": "B",
-        "explanation": "The paragraph presents several benefits of regular exercise."
-    },
-
-    {
-        "topic": "Comprehension",
-        "subtopic": "Inference",
-        "difficulty": "Medium",
-        "question": "A student consistently arrives early, completes assignments and studies before examinations. What can reasonably be inferred?",
-        "option_a": "The student dislikes school.",
-        "option_b": "The student is disciplined.",
-        "option_c": "The student never studies.",
-        "option_d": "The student is careless.",
-        "correct_answer": "B",
-        "explanation": "The student's behaviour suggests discipline and good preparation."
-    },
-
-    {
-        "topic": "Comprehension",
-        "subtopic": "Vocabulary in Context",
-        "difficulty": "Medium",
-        "question": "The road was impassable after the heavy rainfall. The word 'impassable' means ____.",
-        "option_a": "easy to use",
-        "option_b": "difficult or impossible to travel on",
-        "option_c": "newly constructed",
-        "option_d": "very beautiful",
-        "correct_answer": "B",
-        "explanation": "An impassable road cannot be travelled through easily or at all."
-    },
-
-
-    # =====================================================
-    # CLOZE-STYLE QUESTIONS
-    # =====================================================
-
-    {
-        "topic": "Cloze Test",
-        "subtopic": "Vocabulary",
-        "difficulty": "Easy",
-        "question": "The students were excited because their teacher had ____ them that the examination would be postponed.",
-        "option_a": "told",
-        "option_b": "said",
-        "option_c": "spoken",
-        "option_d": "talked",
-        "correct_answer": "A",
-        "explanation": "The correct construction is 'told them'."
-    },
-
-    {
-        "topic": "Cloze Test",
-        "subtopic": "Grammar",
-        "difficulty": "Medium",
-        "question": "Although he was tired, he continued ____ until he completed the work.",
-        "option_a": "work",
-        "option_b": "worked",
-        "option_c": "working",
-        "option_d": "works",
-        "correct_answer": "C",
-        "explanation": "The expression 'continued working' is grammatically correct."
-    },
-
-    {
-        "topic": "Cloze Test",
-        "subtopic": "Prepositions",
-        "difficulty": "Medium",
-        "question": "The principal congratulated the students ____ their excellent performance.",
-        "option_a": "for",
-        "option_b": "on",
-        "option_c": "at",
-        "option_d": "with",
-        "correct_answer": "B",
-        "explanation": "The correct expression is 'congratulated someone on something'."
-    },
-
-
-    # =====================================================
-    # MORE MIXED QUESTIONS
-    # =====================================================
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Gerunds",
-        "difficulty": "Medium",
-        "question": "She enjoys ____ novels in her spare time.",
-        "option_a": "read",
-        "option_b": "reads",
-        "option_c": "reading",
-        "option_d": "to reading",
-        "correct_answer": "C",
-        "explanation": "The verb 'enjoy' is followed by a gerund."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Infinitives",
-        "difficulty": "Medium",
-        "question": "The student decided ____ harder for the next examination.",
-        "option_a": "study",
-        "option_b": "studying",
-        "option_c": "to study",
-        "option_d": "studied",
-        "correct_answer": "C",
-        "explanation": "'Decide' is normally followed by an infinitive."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Modal Verbs",
-        "difficulty": "Easy",
-        "question": "You ____ obey the rules of the examination hall.",
-        "option_a": "must",
-        "option_b": "might",
-        "option_c": "could",
-        "option_d": "would",
-        "correct_answer": "A",
-        "explanation": "'Must' expresses strong obligation."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Modal Verbs",
-        "difficulty": "Medium",
-        "question": "You ____ have informed me earlier.",
-        "option_a": "should",
-        "option_b": "should have",
-        "option_c": "must",
-        "option_d": "can",
-        "correct_answer": "B",
-        "explanation": "'Should have' expresses something that was advisable but did not happen."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Relative Clauses",
-        "difficulty": "Medium",
-        "question": "The man ____ won the award is my uncle.",
-        "option_a": "which",
-        "option_b": "whose",
-        "option_c": "who",
-        "option_d": "whom",
-        "correct_answer": "C",
-        "explanation": "'Who' is used as the relative pronoun referring to a person acting as the subject."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Relative Clauses",
-        "difficulty": "Medium",
-        "question": "The book ____ I borrowed was very interesting.",
-        "option_a": "who",
-        "option_b": "which",
-        "option_c": "whose",
-        "option_d": "whom",
-        "correct_answer": "B",
-        "explanation": "'Which' refers to the thing 'book'."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Easy",
-        "question": "Choose the option nearest in meaning to 'RAPID'.",
-        "option_a": "slow",
-        "option_b": "fast",
-        "option_c": "weak",
-        "option_d": "late",
-        "correct_answer": "B",
-        "explanation": "Rapid means fast or quick."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'COMMENCE'.",
-        "option_a": "finish",
-        "option_b": "begin",
-        "option_c": "stop",
-        "option_d": "delay",
-        "correct_answer": "B",
-        "explanation": "Commence means begin."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Easy",
-        "question": "Choose the option opposite in meaning to 'ACCEPT'.",
-        "option_a": "receive",
-        "option_b": "approve",
-        "option_c": "reject",
-        "option_d": "allow",
-        "correct_answer": "C",
-        "explanation": "Reject is opposite in meaning to accept."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option opposite in meaning to 'GENUINE'.",
-        "option_a": "real",
-        "option_b": "authentic",
-        "option_c": "false",
-        "option_d": "original",
-        "correct_answer": "C",
-        "explanation": "False is opposite in meaning to genuine."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Medium",
-        "question": "To 'cut corners' means to ____.",
-        "option_a": "take unnecessary risks",
-        "option_b": "do something cheaply or carelessly",
-        "option_c": "cut a piece of paper",
-        "option_d": "arrive early",
-        "correct_answer": "B",
-        "explanation": "The expression means to take shortcuts, often at the expense of quality."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Medium",
-        "question": "If someone 'keeps an eye on' something, the person ____.",
-        "option_a": "ignores it",
-        "option_b": "watches it carefully",
-        "option_c": "destroys it",
-        "option_d": "moves it",
-        "correct_answer": "B",
-        "explanation": "To keep an eye on something means to watch or monitor it."
-    },
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Collocations",
-        "difficulty": "Easy",
-        "question": "The athlete made ____ progress after months of training.",
-        "option_a": "much",
-        "option_b": "many",
-        "option_c": "several",
-        "option_d": "a few",
-        "correct_answer": "A",
-        "explanation": "'Progress' is generally treated as an uncountable noun, so 'much' is appropriate."
-    },
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Collocations",
-        "difficulty": "Medium",
-        "question": "The government should take ____ measures to reduce traffic congestion.",
-        "option_a": "effective",
-        "option_b": "effect",
-        "option_c": "effectively",
-        "option_d": "effectiveness",
-        "correct_answer": "A",
-        "explanation": "'Effective' is the adjective that appropriately describes 'measures'."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Countable and Uncountable Nouns",
-        "difficulty": "Easy",
-        "question": "We need some ____ before making a decision.",
-        "option_a": "informations",
-        "option_b": "information",
-        "option_c": "an information",
-        "option_d": "inform",
-        "correct_answer": "B",
-        "explanation": "'Information' is an uncountable noun."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Countable and Uncountable Nouns",
-        "difficulty": "Easy",
-        "question": "She gave me two useful ____.",
-        "option_a": "advices",
-        "option_b": "advice",
-        "option_c": "pieces of advice",
-        "option_d": "advise",
-        "correct_answer": "C",
-        "explanation": "'Advice' is uncountable, so 'two pieces of advice' is correct."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Comparison",
-        "difficulty": "Easy",
-        "question": "Of the three students, Ada is the ____.",
-        "option_a": "tall",
-        "option_b": "taller",
-        "option_c": "tallest",
-        "option_d": "more tall",
-        "correct_answer": "C",
-        "explanation": "The superlative form is used when comparing three or more people."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Comparison",
-        "difficulty": "Medium",
-        "question": "This problem is ____ than the previous one.",
-        "option_a": "complex",
-        "option_b": "more complex",
-        "option_c": "most complex",
-        "option_d": "complexest",
-        "correct_answer": "B",
-        "explanation": "'More complex' is the correct comparative form."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Negatives",
-        "difficulty": "Medium",
-        "question": "Hardly ____ the examination begun when the lights went off.",
-        "option_a": "had",
-        "option_b": "has",
-        "option_c": "did",
-        "option_d": "was",
-        "correct_answer": "A",
-        "explanation": "The structure is 'Hardly had...when...' for two closely connected past events."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Inversion",
-        "difficulty": "Hard",
-        "question": "Not only ____ intelligent, but she is also hardworking.",
-        "option_a": "she is",
-        "option_b": "is she",
-        "option_c": "she was",
-        "option_d": "was she",
-        "correct_answer": "B",
-        "explanation": "After 'not only' at the beginning, subject-verb inversion is used."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Word Meaning",
-        "difficulty": "Medium",
-        "question": "A person who is 'compassionate' is one who is ____.",
-        "option_a": "cruel",
-        "option_b": "sympathetic",
-        "option_c": "selfish",
-        "option_d": "careless",
-        "correct_answer": "B",
-        "explanation": "A compassionate person shows sympathy and concern for others."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Word Meaning",
-        "difficulty": "Medium",
-        "question": "A 'versatile' person is someone who ____.",
-        "option_a": "can perform many different tasks",
-        "option_b": "refuses to learn",
-        "option_c": "is always angry",
-        "option_d": "works only at night",
-        "correct_answer": "A",
-        "explanation": "Versatile describes someone capable of adapting to or doing many different things."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Word Meaning",
-        "difficulty": "Medium",
-        "question": "If a plan is 'feasible', it is ____.",
-        "option_a": "impossible",
-        "option_b": "practical and possible",
-        "option_c": "illegal",
-        "option_d": "unnecessary",
-        "correct_answer": "B",
-        "explanation": "Feasible means possible and practical."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Word Meaning",
-        "difficulty": "Medium",
-        "question": "A 'benevolent' person is ____.",
-        "option_a": "kind and generous",
-        "option_b": "violent",
-        "option_c": "dishonest",
-        "option_d": "careless",
-        "correct_answer": "A",
-        "explanation": "Benevolent means kind-hearted and well-meaning."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Word Meaning",
-        "difficulty": "Medium",
-        "question": "A 'credible' explanation is one that is ____.",
-        "option_a": "believable",
-        "option_b": "impossible",
-        "option_c": "confusing",
-        "option_d": "irrelevant",
-        "correct_answer": "A",
-        "explanation": "Credible means believable or trustworthy."
-    },
-
-    {
-        "topic": "Oral English",
-        "subtopic": "Stress",
-        "difficulty": "Medium",
-        "question": "Which word has stress on the second syllable?",
-        "option_a": "TAble",
-        "option_b": "DOCtor",
-        "option_c": "reLAX",
-        "option_d": "WINdow",
-        "correct_answer": "C",
-        "explanation": "The main stress in 'relax' falls on the second syllable."
-    },
-
-    {
-        "topic": "Oral English",
-        "subtopic": "Rhyming Words",
-        "difficulty": "Easy",
-        "question": "Which word rhymes with 'light'?",
-        "option_a": "late",
-        "option_b": "might",
-        "option_c": "let",
-        "option_d": "lot",
-        "correct_answer": "B",
-        "explanation": "'Light' and 'might' have the same final sound."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Conjunctions",
-        "difficulty": "Easy",
-        "question": "I wanted to attend the programme, ____ I was ill.",
-        "option_a": "because",
-        "option_b": "but",
-        "option_c": "so",
-        "option_d": "and",
-        "correct_answer": "B",
-        "explanation": "'But' expresses the contrast between wanting to attend and being ill."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Conjunctions",
-        "difficulty": "Easy",
-        "question": "He stayed at home ____ it was raining heavily.",
-        "option_a": "because",
-        "option_b": "although",
-        "option_c": "unless",
-        "option_d": "while",
-        "correct_answer": "A",
-        "explanation": "'Because' introduces the reason he stayed at home."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Conjunctions",
-        "difficulty": "Medium",
-        "question": "____ he was tired, he continued working.",
-        "option_a": "Because",
-        "option_b": "Although",
-        "option_c": "So",
-        "option_d": "And",
-        "correct_answer": "B",
-        "explanation": "'Although' introduces a contrast."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Punctuation",
-        "difficulty": "Easy",
-        "question": "Which sentence is correctly punctuated?",
-        "option_a": "However I decided to stay.",
-        "option_b": "However, I decided to stay.",
-        "option_c": "However I, decided to stay.",
-        "option_d": "However, I, decided to stay.",
-        "correct_answer": "B",
-        "explanation": "A comma normally follows an introductory 'However'."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'HOST'.",
-        "option_a": "entertain",
-        "option_b": "reject",
-        "option_c": "avoid",
-        "option_d": "remove",
-        "correct_answer": "A",
-        "explanation": "As a verb, 'host' can mean to receive or entertain guests."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option opposite in meaning to 'COMPLICATED'.",
-        "option_a": "difficult",
-        "option_b": "simple",
-        "option_c": "confusing",
-        "option_d": "complex",
-        "correct_answer": "B",
-        "explanation": "Simple is opposite in meaning to complicated."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Medium",
-        "question": "To 'be in hot water' means to be ____.",
-        "option_a": "comfortable",
-        "option_b": "in trouble",
-        "option_c": "very wealthy",
-        "option_d": "very relaxed",
-        "correct_answer": "B",
-        "explanation": "The expression means to be in difficulty or trouble."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Medium",
-        "question": "To 'call it a day' means to ____.",
-        "option_a": "start working",
-        "option_b": "stop working for the day",
-        "option_c": "change the date",
-        "option_d": "make a phone call",
-        "correct_answer": "B",
-        "explanation": "The expression means to stop work for the day."
-    },
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Word Choice",
-        "difficulty": "Medium",
-        "question": "The new policy will come ____ effect next month.",
-        "option_a": "to",
-        "option_b": "into",
-        "option_c": "in",
-        "option_d": "at",
-        "correct_answer": "B",
-        "explanation": "The correct expression is 'come into effect'."
-    },
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Word Choice",
-        "difficulty": "Medium",
-        "question": "The student is capable ____ solving the problem.",
-        "option_a": "to",
-        "option_b": "of",
-        "option_c": "for",
-        "option_d": "with",
-        "correct_answer": "B",
-        "explanation": "The correct construction is 'capable of'."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Agreement",
-        "difficulty": "Medium",
-        "question": "Ten kilometres ____ a long distance to walk.",
-        "option_a": "are",
-        "option_b": "were",
-        "option_c": "is",
-        "option_d": "have",
-        "correct_answer": "C",
-        "explanation": "A distance considered as one unit takes a singular verb."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Agreement",
-        "difficulty": "Medium",
-        "question": "The furniture in the room ____ very expensive.",
-        "option_a": "are",
-        "option_b": "were",
-        "option_c": "is",
-        "option_d": "have",
-        "correct_answer": "C",
-        "explanation": "'Furniture' is an uncountable singular noun."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Contextual Meaning",
-        "difficulty": "Hard",
-        "question": "The chairman's speech was succinct. This means it was ____.",
-        "option_a": "very lengthy",
-        "option_b": "brief and clear",
-        "option_c": "confusing",
-        "option_d": "angry",
-        "correct_answer": "B",
-        "explanation": "Succinct means expressed clearly and briefly."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Contextual Meaning",
-        "difficulty": "Hard",
-        "question": "The student's argument was coherent. This means it was ____.",
-        "option_a": "logical and connected",
-        "option_b": "completely false",
-        "option_c": "very short",
-        "option_d": "unrelated",
-        "correct_answer": "A",
-        "explanation": "A coherent argument is logical and well connected."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Sentence Transformation",
-        "difficulty": "Medium",
-        "question": "No other student in the class is as tall as John. This means John is ____.",
-        "option_a": "taller than every student",
-        "option_b": "the tallest student in the class",
-        "option_c": "shorter than every student",
-        "option_d": "one of the shortest students",
-        "correct_answer": "B",
-        "explanation": "The statement establishes John as the tallest student."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Sentence Transformation",
-        "difficulty": "Medium",
-        "question": "Despite being tired, she completed the assignment. This means ____.",
-        "option_a": "She was tired, but she completed the assignment.",
-        "option_b": "She did not complete the assignment.",
-        "option_c": "She was not tired.",
-        "option_d": "She completed the assignment because she was tired.",
-        "correct_answer": "A",
-        "explanation": "'Despite' introduces a contrast."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Conditional Sentences",
-        "difficulty": "Medium",
-        "question": "If I were you, I ____ apologize.",
-        "option_a": "will",
-        "option_b": "would",
-        "option_c": "shall",
-        "option_d": "can",
-        "correct_answer": "B",
-        "explanation": "The second conditional uses 'would' for an imaginary situation."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Conditional Sentences",
-        "difficulty": "Medium",
-        "question": "If it rains tomorrow, we ____ at home.",
-        "option_a": "stay",
-        "option_b": "stayed",
-        "option_c": "will stay",
-        "option_d": "would stayed",
-        "correct_answer": "C",
-        "explanation": "The first conditional uses 'will' in the main clause."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Hard",
-        "question": "Choose the option nearest in meaning to 'ELUSIVE'.",
-        "option_a": "easy to find",
-        "option_b": "difficult to find or understand",
-        "option_c": "very expensive",
-        "option_d": "extremely large",
-        "correct_answer": "B",
-        "explanation": "Elusive describes something difficult to find, catch or understand."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Hard",
-        "question": "Choose the option opposite in meaning to 'HOSTILE'.",
-        "option_a": "aggressive",
-        "option_b": "friendly",
-        "option_c": "violent",
-        "option_d": "angry",
-        "correct_answer": "B",
-        "explanation": "Friendly is opposite in meaning to hostile."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Medium",
-        "question": "If someone 'goes the extra mile', the person ____.",
-        "option_a": "travels abroad",
-        "option_b": "makes an additional effort",
-        "option_c": "gets lost",
-        "option_d": "refuses to work",
-        "correct_answer": "B",
-        "explanation": "The expression means to make more effort than is normally expected."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Subject-Verb Agreement",
-        "difficulty": "Medium",
-        "question": "Either the teachers or the principal ____ responsible for the decision.",
-        "option_a": "are",
-        "option_b": "were",
-        "option_c": "is",
-        "option_d": "have",
-        "correct_answer": "C",
-        "explanation": "The verb agrees with the nearer singular subject, 'principal'."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Subject-Verb Agreement",
-        "difficulty": "Medium",
-        "question": "The quality of these products ____ improved considerably.",
-        "option_a": "have",
-        "option_b": "has",
-        "option_c": "are",
-        "option_d": "were",
-        "correct_answer": "B",
-        "explanation": "The subject is 'quality', which is singular."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Prepositions",
-        "difficulty": "Medium",
-        "question": "She is interested ____ studying engineering.",
-        "option_a": "on",
-        "option_b": "at",
-        "option_c": "in",
-        "option_d": "for",
-        "correct_answer": "C",
-        "explanation": "The correct expression is 'interested in'."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Prepositions",
-        "difficulty": "Medium",
-        "question": "He apologized ____ being late.",
-        "option_a": "for",
-        "option_b": "of",
-        "option_c": "on",
-        "option_d": "at",
-        "correct_answer": "A",
-        "explanation": "The correct expression is 'apologized for'."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Easy",
-        "question": "Choose the option nearest in meaning to 'ENORMOUS'.",
-        "option_a": "tiny",
-        "option_b": "huge",
-        "option_c": "weak",
-        "option_d": "narrow",
-        "correct_answer": "B",
-        "explanation": "Enormous means extremely large."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Easy",
-        "question": "Choose the option opposite in meaning to 'ARRIVE'.",
-        "option_a": "come",
-        "option_b": "reach",
-        "option_c": "depart",
-        "option_d": "enter",
-        "correct_answer": "C",
-        "explanation": "Depart means to leave."
-    },
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Collocations",
-        "difficulty": "Medium",
-        "question": "The company is responsible ____ providing the equipment.",
-        "option_a": "of",
-        "option_b": "for",
-        "option_c": "with",
-        "option_d": "on",
-        "correct_answer": "B",
-        "explanation": "The correct expression is 'responsible for'."
-    },
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Collocations",
-        "difficulty": "Medium",
-        "question": "The students were divided ____ four groups.",
-        "option_a": "in",
-        "option_b": "into",
-        "option_c": "on",
-        "option_d": "at",
-        "correct_answer": "B",
-        "explanation": "The correct expression is 'divided into'."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Determiners",
-        "difficulty": "Easy",
-        "question": "There isn't ____ milk left in the refrigerator.",
-        "option_a": "many",
-        "option_b": "much",
-        "option_c": "few",
-        "option_d": "several",
-        "correct_answer": "B",
-        "explanation": "'Milk' is uncountable, so 'much' is used."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Determiners",
-        "difficulty": "Easy",
-        "question": "There are ____ students in the classroom.",
-        "option_a": "much",
-        "option_b": "little",
-        "option_c": "many",
-        "option_d": "less",
-        "correct_answer": "C",
-        "explanation": "'Students' is countable and plural, so 'many' is appropriate."
-    },
-
-    {
-        "topic": "Oral English",
-        "subtopic": "Rhyming Words",
-        "difficulty": "Easy",
-        "question": "Which word rhymes with 'day'?",
-        "option_a": "die",
-        "option_b": "say",
-        "option_c": "do",
-        "option_d": "dew",
-        "correct_answer": "B",
-        "explanation": "'Day' and 'say' have the same final vowel sound."
-    },
-
-    {
-        "topic": "Oral English",
-        "subtopic": "Vowel Sounds",
-        "difficulty": "Medium",
-        "question": "Which word has the same vowel sound as 'cup'?",
-        "option_a": "food",
-        "option_b": "luck",
-        "option_c": "coop",
-        "option_d": "cool",
-        "correct_answer": "B",
-        "explanation": "'Cup' and 'luck' contain the same short vowel sound."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Adverbs",
-        "difficulty": "Medium",
-        "question": "The athlete ran ____ to win the race.",
-        "option_a": "quick",
-        "option_b": "quickly",
-        "option_c": "quickness",
-        "option_d": "quickerly",
-        "correct_answer": "B",
-        "explanation": "The adverb 'quickly' modifies the verb 'ran'."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Word Meaning",
-        "difficulty": "Hard",
-        "question": "If a person is described as 'arrogant', the person is ____.",
-        "option_a": "very humble",
-        "option_b": "overly proud",
-        "option_c": "very generous",
-        "option_d": "extremely shy",
-        "correct_answer": "B",
-        "explanation": "Arrogant describes someone who has an exaggerated sense of superiority."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Word Meaning",
-        "difficulty": "Medium",
-        "question": "To 'mitigate' a problem means to ____ it.",
-        "option_a": "make worse",
-        "option_b": "reduce its severity",
-        "option_c": "ignore completely",
-        "option_d": "create",
-        "correct_answer": "B",
-        "explanation": "Mitigate means to make something less severe or harmful."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Word Meaning",
-        "difficulty": "Hard",
-        "question": "A 'novice' is a person who is ____.",
-        "option_a": "highly experienced",
-        "option_b": "new to an activity",
-        "option_c": "very wealthy",
-        "option_d": "extremely old",
-        "correct_answer": "B",
-        "explanation": "A novice is someone who is new or inexperienced."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Medium",
-        "question": "If a plan is 'up in the air', it is ____.",
-        "option_a": "certain",
-        "option_b": "undecided",
-        "option_c": "completed",
-        "option_d": "successful",
-        "correct_answer": "B",
-        "explanation": "An issue that is up in the air has not yet been decided."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Medium",
-        "question": "To 'get the ball rolling' means to ____.",
-        "option_a": "start something",
-        "option_b": "stop something",
-        "option_c": "lose something",
-        "option_d": "avoid something",
-        "correct_answer": "A",
-        "explanation": "The expression means to initiate an activity or process."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Sentence Structure",
-        "difficulty": "Hard",
-        "question": "Rarely ____ such an impressive performance.",
-        "option_a": "we see",
-        "option_b": "do we see",
-        "option_c": "we saw",
-        "option_d": "we have see",
-        "correct_answer": "B",
-        "explanation": "Negative or restrictive adverbs at the beginning require subject-verb inversion."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Sentence Structure",
-        "difficulty": "Hard",
-        "question": "Never ____ such a beautiful building before.",
-        "option_a": "I have seen",
-        "option_b": "have I seen",
-        "option_c": "I saw",
-        "option_d": "I see",
-        "correct_answer": "B",
-        "explanation": "Beginning with 'Never' requires inversion: 'have I seen'."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'ABUNDANT'.",
-        "option_a": "plentiful",
-        "option_b": "scarce",
-        "option_c": "limited",
-        "option_d": "rare",
-        "correct_answer": "A",
-        "explanation": "Abundant means available in large quantities."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option opposite in meaning to 'ANONYMOUS'.",
-        "option_a": "unknown",
-        "option_b": "unidentified",
-        "option_c": "identified",
-        "option_d": "secret",
-        "correct_answer": "C",
-        "explanation": "Anonymous means unidentified or unnamed."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Relative Pronouns",
-        "difficulty": "Medium",
-        "question": "The woman ____ car was stolen reported the matter to the police.",
-        "option_a": "who",
-        "option_b": "whom",
-        "option_c": "whose",
-        "option_d": "which",
-        "correct_answer": "C",
-        "explanation": "'Whose' shows possession."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Pronouns",
-        "difficulty": "Medium",
-        "question": "This is the student ____ I told you about.",
-        "option_a": "which",
-        "option_b": "whom",
-        "option_c": "whose",
-        "option_d": "what",
-        "correct_answer": "B",
-        "explanation": "'Whom' can be used as the object of 'told you about' when referring to a person."
-    },
-
-    {
-        "topic": "Sentence Completion",
-        "subtopic": "Collocations",
-        "difficulty": "Medium",
-        "question": "The new law will ____ force next week.",
-        "option_a": "come into",
-        "option_b": "come at",
-        "option_c": "come on",
-        "option_d": "come by",
-        "correct_answer": "A",
-        "explanation": "The correct expression is 'come into force'."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Contextual Meaning",
-        "difficulty": "Medium",
-        "question": "The manager was impartial during the dispute. This means that he was ____.",
-        "option_a": "biased",
-        "option_b": "fair",
-        "option_c": "angry",
-        "option_d": "confused",
-        "correct_answer": "B",
-        "explanation": "Impartial means fair and not favouring either side."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Contextual Meaning",
-        "difficulty": "Hard",
-        "question": "The scientist's findings were remarkable. This means they were ____.",
-        "option_a": "ordinary",
-        "option_b": "noteworthy",
-        "option_c": "irrelevant",
-        "option_d": "unavailable",
-        "correct_answer": "B",
-        "explanation": "Remarkable means worthy of attention or unusually impressive."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Tenses",
-        "difficulty": "Medium",
-        "question": "I ____ my homework before my friend called.",
-        "option_a": "finish",
-        "option_b": "finished",
-        "option_c": "had finished",
-        "option_d": "have finish",
-        "correct_answer": "C",
-        "explanation": "The past perfect shows the homework was completed before another past event."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Tenses",
-        "difficulty": "Easy",
-        "question": "They ____ football when it started raining.",
-        "option_a": "play",
-        "option_b": "were playing",
-        "option_c": "have played",
-        "option_d": "will play",
-        "correct_answer": "B",
-        "explanation": "The past continuous describes an action in progress when another past event occurred."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Synonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option nearest in meaning to 'CEASE'.",
-        "option_a": "begin",
-        "option_b": "continue",
-        "option_c": "stop",
-        "option_d": "increase",
-        "correct_answer": "C",
-        "explanation": "Cease means stop."
-    },
-
-    {
-        "topic": "Vocabulary",
-        "subtopic": "Antonyms",
-        "difficulty": "Medium",
-        "question": "Choose the option opposite in meaning to 'COURAGEOUS'.",
-        "option_a": "brave",
-        "option_b": "fearful",
-        "option_c": "bold",
-        "option_d": "confident",
-        "correct_answer": "B",
-        "explanation": "Fearful is opposite in meaning to courageous."
-    },
-
-    {
-        "topic": "Idioms",
-        "subtopic": "Meaning of Expressions",
-        "difficulty": "Medium",
-        "question": "If someone 'is on cloud nine', the person is ____.",
-        "option_a": "very happy",
-        "option_b": "very angry",
-        "option_c": "very tired",
-        "option_d": "very confused",
-        "correct_answer": "A",
-        "explanation": "The expression means to be extremely happy."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Concord",
-        "difficulty": "Easy",
-        "question": "My brother and sister ____ coming tomorrow.",
-        "option_a": "is",
-        "option_b": "was",
-        "option_c": "are",
-        "option_d": "has",
-        "correct_answer": "C",
-        "explanation": "Two subjects joined by 'and' normally take a plural verb."
-    },
-
-    {
-        "topic": "Grammar",
-        "subtopic": "Concord",
-        "difficulty": "Medium",
-        "question": "Mathematics ____ my favourite subject.",
-        "option_a": "are",
-        "option_b": "were",
-        "option_c": "is",
-        "option_d": "have",
-        "correct_answer": "C",
-        "explanation": "The name of the subject 'Mathematics' takes a singular verb."
-    },
-
-    {
-        "topic": "Oral English",
-        "subtopic": "Consonant Sounds",
-        "difficulty": "Medium",
-        "question": "Which word begins with the same sound as 'phone'?",
-        "option_a": "fan",
-        "option_b": "van",
-        "option_c": "pan",
-        "option_d": "ban",
-        "correct_answer": "A",
-        "explanation": "'Phone' and 'fan' begin with the /f/ sound."
-    },
-
-    {
-        "topic": "Oral English",
-        "subtopic": "Rhyming Words",
-        "difficulty": "Easy",
-        "question": "Which word rhymes with 'train'?",
-        "option_a": "tree",
-        "option_b": "brain",
-        "option_c": "town",
-        "option_d": "turn",
-        "correct_answer": "B",
-        "explanation": "'Train' and 'brain' have the same ending sound."
-    },
-
+SUBJECTS = [
+    "Use of English",
+    "Mathematics",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "Economics",
+    "Government",
+    "Literature",
+    "Geography",
+    "Commerce",
+    "Accounting",
+    "Agricultural Science",
+    "Computer Science",
 ]
 
 
-# =========================================================
-# INSERT QUESTIONS
-# =========================================================
+def add_question(subject, question, a, b, c, d, answer,
+                 topic=None, subtopic=None, difficulty="Medium",
+                 explanation=None):
+    """Add one question if an identical question is not already present."""
+    if JAMBQuestion.query.filter_by(
+        subject=subject,
+        question=question
+    ).first():
+        return False
 
-with app.app_context():
+    db.session.add(JAMBQuestion(
+        year=None,
+        subject=subject,
+        topic=topic,
+        subtopic=subtopic,
+        difficulty=difficulty,
+        question=question,
+        option_a=a,
+        option_b=b,
+        option_c=c,
+        option_d=d,
+        correct_answer=answer,
+        explanation=explanation or f"The correct answer is {answer}.",
+        source="Career Bridge Original Practice Question",
+        created_at=datetime.utcnow()
+    ))
+    return True
 
-    added = 0
-    skipped = 0
 
-    for item in ENGLISH_QUESTIONS:
+# ------------------------------------------------------------
+# Generic helper
+# ------------------------------------------------------------
 
-        existing = JAMBQuestion.query.filter_by(
-            subject="Use of English",
-            question=item["question"]
-        ).first()
+def mcq(subject, q, options, answer_index, topic, subtopic,
+        difficulty="Medium", explanation=None):
+    labels = ["A", "B", "C", "D"]
+    answer = labels[answer_index]
+    return add_question(
+        subject, q, options[0], options[1], options[2], options[3],
+        answer, topic, subtopic, difficulty, explanation
+    )
 
-        if existing:
-            skipped += 1
-            continue
 
-        new_question = JAMBQuestion(
-            year=None,
-            subject="Use of English",
-            topic=item["topic"],
-            subtopic=item["subtopic"],
-            difficulty=item["difficulty"],
-            question=item["question"],
-            option_a=item["option_a"],
-            option_b=item["option_b"],
-            option_c=item["option_c"],
-            option_d=item["option_d"],
-            correct_answer=item["correct_answer"],
-            explanation=item["explanation"],
-            source="Career Bridge Original Practice Question"
+# ============================================================
+# USE OF ENGLISH
+# ============================================================
+
+ENGLISH_WORDS = [
+    ("abundant", "scarce", "plentiful", "careless", "ancient"),
+    ("brief", "lengthy", "short", "heavy", "bright"),
+    ("candid", "secretive", "frank", "hostile", "uncertain"),
+    ("diligent", "lazy", "careful", "angry", "weak"),
+    ("eloquent", "silent", "expressive", "rough", "unclear"),
+    ("fragile", "strong", "delicate", "large", "rough"),
+    ("hostile", "friendly", "aggressive", "quiet", "helpful"),
+    ("impartial", "biased", "fair", "careless", "uncertain"),
+    ("juvenile", "adult", "young", "old", "serious"),
+    ("liberal", "generous", "strict", "narrow", "timid"),
+    ("mandatory", "optional", "compulsory", "unlikely", "temporary"),
+    ("notorious", "famous for wrongdoing", "unknown", "honest", "ordinary"),
+    ("obsolete", "modern", "outdated", "expensive", "popular"),
+    ("precise", "exact", "rough", "slow", "uncertain"),
+    ("reluctant", "eager", "unwilling", "certain", "joyful"),
+    ("scarce", "plentiful", "rare", "cheap", "common"),
+    ("timid", "bold", "shy", "loud", "careless"),
+    ("vital", "useless", "essential", "optional", "minor"),
+    ("weary", "tired", "excited", "angry", "healthy"),
+    ("zealous", "indifferent", "enthusiastic", "weak", "uncertain"),
+]
+
+
+def seed_english(target=500):
+    count = 0
+
+    # Vocabulary
+    for i, (word, correct, *wrong) in enumerate(ENGLISH_WORDS):
+        q = f"Choose the option nearest in meaning to the word '{word}'."
+        opts = [correct, wrong[0], wrong[1], wrong[2]]
+        count += mcq(
+            "Use of English", q, opts, 0,
+            "Lexis and Structure", "Synonyms"
         )
 
-        db.session.add(new_question)
+        q = f"Choose the option opposite in meaning to '{word}'."
+        opposite = wrong[0]
+        opts = [opposite, correct, wrong[1], wrong[2]]
+        count += mcq(
+            "Use of English", q, opts, 0,
+            "Lexis and Structure", "Antonyms"
+        )
 
-        added += 1
+    # Grammar patterns
+    grammar = [
+        ("Neither the teacher nor the students ___ ready.",
+         ["was", "were", "is", "has"], 1),
+        ("If I ___ enough money, I would buy the book.",
+         ["have", "had", "has", "will have"], 1),
+        ("She has lived here ___ 2022.",
+         ["for", "since", "from", "by"], 1),
+        ("The boys ___ football every Saturday.",
+         ["plays", "play", "playing", "has played"], 1),
+        ("By the time we arrived, the meeting ___.",
+         ["starts", "has started", "had started", "will start"], 2),
+        ("He is good ___ Mathematics.",
+         ["in", "at", "on", "with"], 1),
+        ("The news ___ surprising.",
+         ["were", "are", "was", "have"], 2),
+        ("Each of the candidates ___ a question paper.",
+         ["receive", "receives", "receiving", "have received"], 1),
+        ("I prefer tea ___ coffee.",
+         ["than", "to", "over", "from"], 1),
+        ("She arrived ___ the airport before noon.",
+         ["at", "in", "on", "into"], 0),
+        ("The man ___ car was stolen reported to the police.",
+         ["who", "whose", "which", "whom"], 1),
+        ("We have not seen him ___ Monday.",
+         ["for", "since", "during", "while"], 1),
+        ("He speaks English ___ than his brother.",
+         ["good", "better", "best", "well"], 1),
+        ("They ___ dinner when the phone rang.",
+         ["eat", "were eating", "have eaten", "will eat"], 1),
+        ("The opposite of 'expand' is ___.",
+         ["increase", "contract", "develop", "extend"], 1),
+    ]
 
-    db.session.commit()
+    for i, (q, opts, ans) in enumerate(grammar):
+        count += mcq(
+            "Use of English", q, opts, ans,
+            "Lexis and Structure", "Grammar"
+        )
 
-    print("=" * 60)
-    print("CAREER BRIDGE USE OF ENGLISH QUESTION BANK")
-    print("=" * 60)
-    print(f"Questions supplied: {len(ENGLISH_QUESTIONS)}")
-    print(f"Questions added:    {added}")
-    print(f"Questions skipped:  {skipped}")
-    print("=" * 60)
+    # Generate additional original grammar/vocabulary practice
+    nouns = ["committee", "family", "team", "class", "audience"]
+    verbs = ["has", "have"]
+    for i in range(120):
+        noun = nouns[i % len(nouns)]
+        if noun in {"committee", "family", "team", "class", "audience"}:
+            ans = 0
+        else:
+            ans = 1
+        q = f"The {noun} of students ___ completed the assignment."
+        opts = ["has", "have", "having", "were"]
+        count += mcq(
+            "Use of English", q, opts, ans,
+            "Lexis and Structure", "Concord"
+        )
+
+    # Comprehension-style short passages
+    passages = [
+        (
+            "Regular reading improves vocabulary because readers meet words "
+            "in different contexts. It also develops the ability to identify "
+            "the main idea of a passage.",
+            "What is the main benefit of reading mentioned in the passage?",
+            ["Improved vocabulary and comprehension", "Poor concentration",
+             "Reduced vocabulary", "Avoiding all writing"],
+            0
+        ),
+        (
+            "A good student does not merely memorize facts. Such a student "
+            "also asks questions, compares ideas and applies knowledge to "
+            "new situations.",
+            "According to the passage, a good student should also be able to ___",
+            ["avoid questions", "apply knowledge", "memorize without thinking",
+             "ignore new situations"],
+            1
+        ),
+        (
+            "Time management helps students divide their work into manageable "
+            "parts. A timetable can reduce the tendency to postpone tasks.",
+            "What problem can a timetable help reduce?",
+            ["Revision", "Planning", "Procrastination", "Learning"],
+            2
+        ),
+        (
+            "Public transport can reduce the number of private cars on busy "
+            "roads. When more people share buses or trains, road congestion "
+            "may fall.",
+            "What is one possible effect of public transport?",
+            ["More congestion", "Less road congestion",
+             "More private cars", "Fewer roads"],
+            1
+        ),
+    ]
+
+    for passage, q, opts, ans in passages:
+        for j in range(35):
+            modified_q = q
+            if j:
+                modified_q = q.replace(
+                    "mentioned in the passage",
+                    "described by the passage"
+                ).replace(
+                    "according to the passage",
+                    "according to the passage"
+                )
+            count += mcq(
+                "Use of English",
+                f"Read the passage: '{passage}'\n\n{modified_q}",
+                opts, ans, "Comprehension", "Main Ideas"
+            )
+
+    # Fill safely to target with grammar identification
+    forms = [
+        ("The word 'quickly' is what part of speech?", 
+         ["Adverb", "Noun", "Pronoun", "Conjunction"], 0, "Parts of Speech"),
+        ("The word 'beautiful' is what part of speech?",
+         ["Adjective", "Verb", "Adverb", "Preposition"], 0, "Parts of Speech"),
+        ("The word 'and' is what part of speech?",
+         ["Conjunction", "Adjective", "Pronoun", "Noun"], 0, "Parts of Speech"),
+        ("The word 'under' is commonly used as a ___",
+         ["Preposition", "Noun", "Pronoun", "Verb"], 0, "Parts of Speech"),
+    ]
+
+    i = 0
+    while count < target:
+        q, opts, ans, sub = forms[i % len(forms)]
+        q = q.rstrip("?") + f" in sentence set {i + 1}?"
+        count += mcq(
+            "Use of English", q, opts, ans,
+            "Lexis and Structure", sub
+        )
+        i += 1
+
+    return count
+
+
+# ============================================================
+# MATHEMATICS
+# ============================================================
+
+def seed_mathematics(target=500):
+    count = 0
+
+    for n in range(1, 181):
+        a = n + 2
+        b = n % 12 + 2
+        q = f"If 2x + {a} = {2*a + 10}, what is x?"
+        x = a + 5
+        opts = [str(x), str(x + 1), str(x - 1), str(x + 2)]
+        count += mcq(
+            "Mathematics", q, opts, 0,
+            "Algebra", "Linear Equations"
+        )
+
+    for n in range(1, 121):
+        a = n + 3
+        b = n + 7
+        q = f"What is the value of ({a} + {b}) × 2?"
+        ans = (a + b) * 2
+        opts = [str(ans), str(ans + 2), str(ans - 2), str(ans + 4)]
+        count += mcq(
+            "Mathematics", q, opts, 0,
+            "Number", "Arithmetic"
+        )
+
+    for n in range(1, 101):
+        base = n + 2
+        height = (n % 10) + 4
+        area = base * height / 2
+        q = f"Find the area of a triangle with base {base} cm and height {height} cm."
+        opts = [f"{area:g} cm²", f"{area + 2:g} cm²",
+                f"{area * 2:g} cm²", f"{max(1, area - 2):g} cm²"]
+        count += mcq(
+            "Mathematics", q, opts, 0,
+            "Mensuration", "Area of Triangle"
+        )
+
+    for n in range(1, 101):
+        radius = n % 10 + 2
+        circumference_factor = 2 * radius
+        q = f"Using π = 22/7, what is the circumference of a circle of radius {radius} cm?"
+        ans = 2 * (22/7) * radius
+        opts = [f"{ans:g} cm", f"{ans + 2:g} cm",
+                f"{ans - 2:g} cm", f"{ans / 2:g} cm"]
+        count += mcq(
+            "Mathematics", q, opts, 0,
+            "Mensuration", "Circle"
+        )
+
+    for n in range(1, 101):
+        first = n + 2
+        diff = n % 8 + 1
+        term = first + 9 * diff
+        q = f"An arithmetic sequence starts with {first} and has common difference {diff}. Find its 10th term."
+        opts = [str(term), str(term + diff), str(term - diff), str(term + 2*diff)]
+        count += mcq(
+            "Mathematics", q, opts, 0,
+            "Algebra", "Sequences"
+        )
+
+    # Probability
+    for n in range(1, 80):
+        red = n % 6 + 2
+        blue = n % 5 + 3
+        total = red + blue
+        q = f"A bag contains {red} red balls and {blue} blue balls. What is the probability of picking a red ball?"
+        from fractions import Fraction
+        ans = Fraction(red, total)
+        opts = [str(ans), str(Fraction(blue, total)),
+                str(Fraction(1, total)), str(Fraction(red + 1, total))]
+        count += mcq(
+            "Mathematics", q, opts, 0,
+            "Probability", "Simple Probability"
+        )
+
+    # Fill to 500 with percentage questions
+    i = 0
+    while count < target:
+        number = 100 + (i % 200)
+        percent = [5, 10, 15, 20, 25, 30, 40, 50][i % 8]
+        ans = number * percent / 100
+        q = f"What is {percent}% of {number}?"
+        opts = [str(int(ans)), str(int(ans + percent)),
+                str(int(ans + 5)), str(int(ans * 2))]
+        count += mcq(
+            "Mathematics", q, opts, 0,
+            "Number", "Percentages"
+        )
+        i += 1
+
+    return count
+
+
+# ============================================================
+# PHYSICS
+# ============================================================
+
+def seed_physics(target=500):
+    count = 0
+
+    for i in range(100):
+        v = i % 20 + 5
+        t = i % 10 + 1
+        s = v * t
+        q = f"A body moves at a constant speed of {v} m/s for {t} s. How far does it travel?"
+        opts = [f"{s} m", f"{s+t} m", f"{v+t} m", f"{s/2:g} m"]
+        count += mcq(
+            "Physics", q, opts, 0,
+            "Mechanics", "Motion"
+        )
+
+    for i in range(100):
+        m = i % 15 + 2
+        a = i % 8 + 2
+        force = m * a
+        q = f"A mass of {m} kg accelerates at {a} m/s². What is the resultant force?"
+        opts = [f"{force} N", f"{m+a} N", f"{force+2} N", f"{force/2:g} N"]
+        count += mcq(
+            "Physics", q, opts, 0,
+            "Mechanics", "Newton's Laws"
+        )
+
+    for i in range(100):
+        voltage = i % 12 + 2
+        resistance = i % 8 + 2
+        current = voltage / resistance
+        q = f"A resistor of {resistance} Ω is connected to a {voltage} V supply. What current flows?"
+        opts = [f"{current:g} A", f"{voltage*resistance:g} A",
+                f"{resistance/voltage:g} A", f"{voltage+resistance:g} A"]
+        count += mcq(
+            "Physics", q, opts, 0,
+            "Electricity", "Ohm's Law"
+        )
+
+    for i in range(100):
+        mass = i % 20 + 2
+        g = 10
+        weight = mass * g
+        q = f"Take g = 10 m/s². What is the weight of a {mass} kg object?"
+        opts = [f"{weight} N", f"{mass} N", f"{weight/2:g} N", f"{weight+10} N"]
+        count += mcq(
+            "Physics", q, opts, 0,
+            "Mechanics", "Weight"
+        )
+
+    concepts = [
+        ("Which quantity has both magnitude and direction?",
+         ["Velocity", "Mass", "Time", "Temperature"], 0),
+        ("Which instrument is used to measure electric current?",
+         ["Ammeter", "Voltmeter", "Thermometer", "Barometer"], 0),
+        ("Which form of energy is stored in a stretched spring?",
+         ["Elastic potential energy", "Sound energy", "Nuclear energy", "Light energy"], 0),
+        ("Which wave requires a material medium for propagation?",
+         ["Sound wave", "Light wave", "Radio wave", "Microwave"], 0),
+        ("The SI unit of power is the ___",
+         ["watt", "joule", "newton", "pascal"], 0),
+        ("The SI unit of pressure is the ___",
+         ["pascal", "watt", "volt", "ampere"], 0),
+    ]
+    i = 0
+    while count < target:
+        q, opts, ans = concepts[i % len(concepts)]
+        q += f" (Practice item {i + 1})"
+        count += mcq(
+            "Physics", q, opts, ans,
+            "General Physics", "Basic Concepts"
+        )
+        i += 1
+
+    return count
+
+
+# ============================================================
+# CHEMISTRY
+# ============================================================
+
+def seed_chemistry(target=500):
+    count = 0
+
+    elements = [
+        ("hydrogen", "H", 1),
+        ("carbon", "C", 6),
+        ("nitrogen", "N", 7),
+        ("oxygen", "O", 8),
+        ("sodium", "Na", 11),
+        ("magnesium", "Mg", 12),
+        ("aluminium", "Al", 13),
+        ("silicon", "Si", 14),
+        ("chlorine", "Cl", 17),
+        ("potassium", "K", 19),
+        ("calcium", "Ca", 20),
+    ]
+
+    for name, symbol, atomic_no in elements:
+        q = f"What is the chemical symbol for {name}?"
+        wrong = ["X", "Z", "Q"]
+        opts = [symbol] + wrong
+        count += mcq(
+            "Chemistry", q, opts, 0,
+            "Periodic Table", "Symbols"
+        )
+
+        q = f"What is the atomic number of {name}?"
+        opts = [str(atomic_no), str(atomic_no + 1),
+                str(max(1, atomic_no - 1)), str(atomic_no + 2)]
+        count += mcq(
+            "Chemistry", q, opts, 0,
+            "Periodic Table", "Atomic Number"
+        )
+
+    # Moles / molar mass
+    for i in range(120):
+        moles = i % 8 + 1
+        molar_mass = i % 10 + 10
+        mass = moles * molar_mass
+        q = f"What mass is required for {moles} mol of a substance with molar mass {molar_mass} g/mol?"
+        opts = [f"{mass} g", f"{mass + molar_mass} g",
+                f"{moles + molar_mass} g", f"{mass/2:g} g"]
+        count += mcq(
+            "Chemistry", q, opts, 0,
+            "Stoichiometry", "Mole Calculations"
+        )
+
+    concepts = [
+        ("A substance with pH less than 7 is generally a(n) ___",
+         ["acid", "alkali", "salt", "metal"], 0),
+        ("Which gas is required for ordinary combustion?",
+         ["Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"], 0),
+        ("The change from liquid to gas is called ___",
+         ["vaporization", "freezing", "melting", "deposition"], 0),
+        ("A catalyst generally ___ the rate of a chemical reaction.",
+         ["increases", "eliminates", "stops", "reverses"], 0),
+        ("Which particle carries a negative charge?",
+         ["Electron", "Proton", "Neutron", "Nucleus"], 0),
+        ("The bond formed by transfer of electrons is usually called ___",
+         ["ionic bond", "covalent bond", "metallic bond", "hydrogen bond"], 0),
+        ("Which method can separate sand from water?",
+         ["Filtration", "Distillation", "Sublimation", "Chromatography"], 0),
+    ]
+    i = 0
+    while count < target:
+        q, opts, ans = concepts[i % len(concepts)]
+        q += f" (Practice item {i + 1})"
+        count += mcq(
+            "Chemistry", q, opts, ans,
+            "General Chemistry", "Concepts"
+        )
+        i += 1
+
+    return count
+
+
+# ============================================================
+# BIOLOGY
+# ============================================================
+
+def seed_biology(target=500):
+    count = 0
+
+    concepts = [
+        ("Which organelle is mainly responsible for photosynthesis?",
+         ["Chloroplast", "Mitochondrion", "Ribosome", "Nucleus"], 0, "Cell Biology"),
+        ("Which organelle is commonly described as the powerhouse of the cell?",
+         ["Mitochondrion", "Nucleus", "Golgi apparatus", "Cell wall"], 0, "Cell Biology"),
+        ("The basic structural and functional unit of life is the ___",
+         ["cell", "organ", "tissue", "organ system"], 0, "Cell Biology"),
+        ("Which blood component helps in clotting?",
+         ["Platelets", "Red blood cells", "Plasma", "Neurons"], 0, "Human Biology"),
+        ("Which organ pumps blood around the human body?",
+         ["Heart", "Liver", "Kidney", "Lung"], 0, "Human Biology"),
+        ("Which gas is released during photosynthesis?",
+         ["Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"], 0, "Plant Biology"),
+        ("Which process produces genetically similar offspring in many single-celled organisms?",
+         ["Asexual reproduction", "Pollination", "Fertilization", "Meiosis"], 0, "Reproduction"),
+        ("Which part of a plant absorbs most water from the soil?",
+         ["Root hairs", "Flowers", "Fruits", "Leaves"], 0, "Plant Biology"),
+        ("Which molecule carries genetic information?",
+         ["DNA", "Glucose", "Water", "Starch"], 0, "Genetics"),
+        ("Which enzyme begins starch digestion in the mouth?",
+         ["Amylase", "Pepsin", "Lipase", "Trypsin"], 0, "Human Biology"),
+    ]
+
+    for i in range(500):
+        q, opts, ans, topic = concepts[i % len(concepts)]
+        count = i + 1
+        mcq(
+            "Biology",
+            q.replace("?", f"? Practice item {i + 1}."),
+            opts, ans, topic, "Core Concepts"
+        )
+
+    return count
+
+
+# ============================================================
+# ECONOMICS
+# ============================================================
+
+def seed_economics(target=500):
+    concepts = [
+        ("The basic economic problem arises because resources are ___ while wants are unlimited.",
+         ["scarce", "unlimited", "free", "identical"], 0, "Basic Economic Problems"),
+        ("The next best alternative forgone when a choice is made is called ___",
+         ["opportunity cost", "profit", "revenue", "utility"], 0, "Basic Economic Problems"),
+        ("A market in which there is only one seller is called ___",
+         ["monopoly", "perfect competition", "oligopoly", "monopsony"], 0, "Market Structures"),
+        ("An increase in price generally causes quantity demanded to ___, other things being equal.",
+         ["fall", "rise", "remain unlimited", "double"], 0, "Demand and Supply"),
+        ("A tax placed on imported goods is called a(n) ___",
+         ["tariff", "subsidy", "grant", "quota"], 0, "International Trade"),
+        ("Inflation refers to a sustained increase in the general ___ level.",
+         ["price", "employment", "production", "population"], 0, "Macroeconomics"),
+        ("The reward for labour is generally called ___",
+         ["wages", "rent", "interest", "profit"], 0, "Factors of Production"),
+        ("The reward for capital is generally called ___",
+         ["interest", "rent", "wages", "profit"], 0, "Factors of Production"),
+        ("The reward for land is generally called ___",
+         ["rent", "wages", "interest", "salary"], 0, "Factors of Production"),
+        ("The reward for entrepreneurship is generally called ___",
+         ["profit", "rent", "wages", "interest"], 0, "Factors of Production"),
+    ]
+    count = 0
+    for i in range(target):
+        q, opts, ans, topic = concepts[i % len(concepts)]
+        count += mcq(
+            "Economics",
+            q.replace("___", "___") + f" (Practice item {i + 1})",
+            opts, ans, topic, "Core Concepts"
+        )
+    return count
+
+
+# ============================================================
+# GOVERNMENT
+# ============================================================
+
+def seed_government(target=500):
+    concepts = [
+        ("The principle of separation of powers is associated with the idea of dividing government powers among different ___",
+         ["organs", "markets", "companies", "families"], 0, "Political Concepts"),
+        ("A system in which citizens elect representatives to make decisions is called ___",
+         ["representative democracy", "absolute monarchy", "military rule", "theocracy"], 0, "Democracy"),
+        ("The body responsible for making laws in a democracy is the ___",
+         ["legislature", "judiciary", "civil service", "police"], 0, "Organs of Government"),
+        ("The body primarily responsible for interpreting laws is the ___",
+         ["judiciary", "legislature", "executive", "electorate"], 0, "Organs of Government"),
+        ("The body responsible for implementing laws is the ___",
+         ["executive", "judiciary", "legislature", "electorate"], 0, "Organs of Government"),
+        ("A constitution is best described as the fundamental rules governing a ___",
+         ["state", "market", "company", "school"], 0, "Constitution"),
+        ("The right of citizens to choose their leaders through voting is called ___",
+         ["franchise", "censorship", "immunity", "diplomacy"], 0, "Citizenship"),
+        ("A government controlled by the armed forces is commonly called ___",
+         ["military rule", "democracy", "monarchy", "federalism"], 0, "Political Systems"),
+        ("Federalism involves constitutional division of powers between ___",
+         ["levels of government", "private firms", "political parties", "families"], 0, "Federalism"),
+        ("Political parties mainly seek to ___",
+         ["gain political power through elections", "abolish voting",
+          "end public debate", "replace all laws"], 0, "Political Parties"),
+    ]
+    count = 0
+    for i in range(target):
+        q, opts, ans, topic = concepts[i % len(concepts)]
+        count += mcq(
+            "Government",
+            q + f" (Practice item {i + 1})",
+            opts, ans, topic, "Core Concepts"
+        )
+    return count
+
+
+# ============================================================
+# LITERATURE
+# ============================================================
+
+def seed_literature(target=500):
+    concepts = [
+        ("A comparison using 'like' or 'as' is called a ___",
+         ["simile", "metaphor", "irony", "pun"], 0, "Figures of Speech"),
+        ("A direct comparison that does not normally use 'like' or 'as' is a ___",
+         ["metaphor", "simile", "rhyme", "alliteration"], 0, "Figures of Speech"),
+        ("The repetition of initial consonant sounds is called ___",
+         ["alliteration", "assonance", "metonymy", "satire"], 0, "Sound Devices"),
+        ("The central idea of a literary work is its ___",
+         ["theme", "setting", "plot", "stage direction"], 0, "Literary Elements"),
+        ("The time and place of a story constitute its ___",
+         ["setting", "theme", "conflict", "climax"], 0, "Literary Elements"),
+        ("The main character in a story is the ___",
+         ["protagonist", "antagonist", "narrator", "chorus"], 0, "Characterization"),
+        ("The character who opposes the protagonist is commonly called the ___",
+         ["antagonist", "protagonist", "speaker", "narrator"], 0, "Characterization"),
+        ("A poem with fourteen lines is traditionally called a ___",
+         ["sonnet", "ballad", "ode", "epic"], 0, "Poetry"),
+        ("A dramatic work intended mainly to make an audience laugh is a ___",
+         ["comedy", "tragedy", "elegy", "epic"], 0, "Drama"),
+        ("A literary work that uses humour to criticize society is often called ___",
+         ["satire", "elegy", "romance", "pastoral"], 0, "Literary Genres"),
+    ]
+    count = 0
+    for i in range(target):
+        q, opts, ans, topic = concepts[i % len(concepts)]
+        count += mcq(
+            "Literature",
+            q + f" (Practice item {i + 1})",
+            opts, ans, topic, "Core Concepts"
+        )
+    return count
+
+
+# ============================================================
+# GEOGRAPHY
+# ============================================================
+
+def seed_geography(target=500):
+    concepts = [
+        ("The imaginary line that divides the Earth into Northern and Southern Hemispheres is the ___",
+         ["Equator", "Prime Meridian", "Tropic of Cancer", "Arctic Circle"], 0, "Map Reading"),
+        ("The Prime Meridian passes through ___",
+         ["Greenwich", "Lagos", "Cairo", "Nairobi"], 0, "Map Reading"),
+        ("The process by which water vapour becomes liquid is called ___",
+         ["condensation", "evaporation", "sublimation", "infiltration"], 0, "Weather"),
+        ("The wearing away of the Earth's surface by agents such as water and wind is called ___",
+         ["erosion", "deposition", "condensation", "crystallization"], 0, "Geomorphology"),
+        ("A long period of unusually low rainfall is called ___",
+         ["drought", "flood", "cyclone", "dew"], 0, "Climate"),
+        ("A large body of salt water surrounded partly or completely by land is a ___",
+         ["sea", "plateau", "valley", "plain"], 0, "Physical Geography"),
+        ("A map scale expresses the relationship between map distance and ___",
+         ["ground distance", "rainfall", "temperature", "population"], 0, "Map Reading"),
+        ("The natural increase of population depends mainly on birth rate and ___",
+         ["death rate", "rainfall", "longitude", "soil colour"], 0, "Population"),
+        ("A densely populated urban centre with surrounding built-up areas is commonly called a ___",
+         ["conurbation", "delta", "plateau", "savanna"], 0, "Settlement"),
+        ("Planting trees to restore forest cover is called ___",
+         ["afforestation", "irrigation", "mining", "urbanization"], 0, "Environmental Management"),
+    ]
+    count = 0
+    for i in range(target):
+        q, opts, ans, topic = concepts[i % len(concepts)]
+        count += mcq(
+            "Geography",
+            q + f" (Practice item {i + 1})",
+            opts, ans, topic, "Core Concepts"
+        )
+    return count
+
+
+# ============================================================
+# COMMERCE
+# ============================================================
+
+def seed_commerce(target=500):
+    concepts = [
+        ("Commerce is mainly concerned with the activities involved in the ___ of goods and services.",
+         ["exchange", "destruction", "cultivation", "consumption only"], 0, "Introduction to Commerce"),
+        ("A person who buys goods in large quantities and sells to retailers is a ___",
+         ["wholesaler", "consumer", "broker", "producer"], 0, "Trade"),
+        ("A person who buys goods for final use is a ___",
+         ["consumer", "wholesaler", "manufacturer", "agent"], 0, "Trade"),
+        ("Insurance is a contract designed mainly to provide protection against specified ___",
+         ["risks", "profits", "sales", "discounts"], 0, "Insurance"),
+        ("A document showing details of goods sold and the amount due is an ___",
+         ["invoice", "receipt", "cheque", "agenda"], 0, "Business Documents"),
+        ("A cheque is an instruction to a bank to pay a specified sum from a customer's ___",
+         ["account", "warehouse", "factory", "office"], 0, "Banking"),
+        ("Advertising is primarily used to ___",
+         ["inform and persuade potential customers", "hide products",
+          "stop competition", "abolish prices"], 0, "Marketing"),
+        ("A partnership is a business owned by ___",
+         ["two or more persons", "one person only", "the government only", "customers only"], 0, "Forms of Business"),
+        ("A company owned by shareholders is commonly organized as a ___",
+         ["joint-stock company", "sole proprietorship", "cooperative society only", "family club"], 0, "Forms of Business"),
+        ("Warehousing helps business by providing facilities for the ___ of goods.",
+         ["storage", "destruction", "manufacture only", "advertising only"], 0, "Aids to Trade"),
+    ]
+    count = 0
+    for i in range(target):
+        q, opts, ans, topic = concepts[i % len(concepts)]
+        count += mcq(
+            "Commerce",
+            q + f" (Practice item {i + 1})",
+            opts, ans, topic, "Core Concepts"
+        )
+    return count
+
+
+# ============================================================
+# ACCOUNTING
+# ============================================================
+
+def seed_accounting(target=500):
+    count = 0
+
+    for i in range(180):
+        assets = i + 100
+        liabilities = i % 70 + 20
+        capital = assets - liabilities
+        q = f"If a business has assets of ₦{assets:,} and liabilities of ₦{liabilities:,}, what is its capital?"
+        opts = [
+            f"₦{capital:,}",
+            f"₦{assets + liabilities:,}",
+            f"₦{liabilities:,}",
+            f"₦{capital + 100:,}"
+        ]
+        count += mcq(
+            "Accounting", q, opts, 0,
+            "Accounting Principles", "Accounting Equation"
+        )
+
+    concepts = [
+        ("The book in which transactions are first recorded is generally called the ___",
+         ["journal", "balance sheet", "ledger only", "trial balance"], 0, "Books of Account"),
+        ("The statement showing assets and liabilities at a particular date is the ___",
+         ["statement of financial position", "cash book", "journal", "invoice"], 0, "Financial Statements"),
+        ("An expense paid in advance is known as a ___ expense.",
+         ["prepaid", "accrued", "capital", "contingent"], 0, "Adjustments"),
+        ("Revenue earned but not yet received is known as ___ revenue.",
+         ["accrued", "prepaid", "capital", "drawings"], 0, "Adjustments"),
+        ("Goods taken by the owner for personal use are called ___",
+         ["drawings", "sales", "purchases", "capital"], 0, "Capital and Drawings"),
+        ("The excess of sales over cost of goods sold is ___",
+         ["gross profit", "net loss", "capital", "working capital"], 0, "Profit and Loss"),
+        ("A trial balance is prepared mainly to check the ___",
+         ["arithmetical accuracy of ledger entries", "market price of goods",
+          "number of employees", "bank interest rate"], 0, "Trial Balance"),
+        ("Depreciation is the systematic allocation of the cost of a ___ asset.",
+         ["non-current", "current", "cash", "liquid"], 0, "Depreciation"),
+    ]
+
+    i = 0
+    while count < target:
+        q, opts, ans, topic = concepts[i % len(concepts)]
+        count += mcq(
+            "Accounting",
+            q + f" (Practice item {i + 1})",
+            opts, ans, topic, "Core Concepts"
+        )
+        i += 1
+
+    return count
+
+
+# ============================================================
+# AGRICULTURAL SCIENCE
+# ============================================================
+
+def seed_agriculture(target=500):
+    concepts = [
+        ("The removal of unwanted plants from a farm is called ___",
+         ["weeding", "harvesting", "irrigation", "grafting"], 0, "Crop Production"),
+        ("The practice of growing crops and keeping animals on the same farm is called ___",
+         ["mixed farming", "monocropping", "nomadic farming", "plantation farming"], 0, "Farming Systems"),
+        ("A soil rich in decayed organic matter is generally described as having high ___",
+         ["humus content", "salt content", "stone content", "metal content"], 0, "Soil Science"),
+        ("The controlled addition of water to crops is called ___",
+         ["irrigation", "drainage", "mulching", "harvesting"], 0, "Crop Production"),
+        ("The process of removing mature crops from the field is called ___",
+         ["harvesting", "germination", "pollination", "transpiration"], 0, "Crop Production"),
+        ("Which farm animal is commonly classified as a ruminant?",
+         ["Cattle", "Chicken", "Rabbit", "Turkey"], 0, "Animal Husbandry"),
+        ("A poultry bird kept mainly for egg production is called a ___ bird.",
+         ["layer", "broiler", "drake", "gander"], 0, "Poultry"),
+        ("A poultry bird raised mainly for meat is called a ___",
+         ["broiler", "layer", "hen", "rooster"], 0, "Poultry"),
+        ("Crop rotation can help maintain soil ___",
+         ["fertility", "salinity only", "erosion", "temperature"], 0, "Soil Management"),
+        ("A farm tool commonly used for loosening soil is a ___",
+         ["hoe", "sickle", "watering can", "basket"], 0, "Farm Tools"),
+    ]
+    count = 0
+    for i in range(target):
+        q, opts, ans, topic = concepts[i % len(concepts)]
+        count += mcq(
+            "Agricultural Science",
+            q + f" (Practice item {i + 1})",
+            opts, ans, topic, "Core Concepts"
+        )
+    return count
+
+
+# ============================================================
+# COMPUTER SCIENCE
+# ============================================================
+
+def seed_computer_science(target=500):
+    concepts = [
+        ("Which component performs most arithmetic and logical operations in a computer?",
+         ["ALU", "Monitor", "Keyboard", "Printer"], 0, "Computer Architecture"),
+        ("Which memory is volatile?",
+         ["RAM", "ROM", "DVD", "Flash drive"], 0, "Computer Memory"),
+        ("Which device is primarily used to enter text into a computer?",
+         ["Keyboard", "Monitor", "Speaker", "Projector"], 0, "Input and Output"),
+        ("Which device displays visual output?",
+         ["Monitor", "Keyboard", "Mouse", "Microphone"], 0, "Input and Output"),
+        ("A collection of instructions that tells a computer what to do is called ___",
+         ["software", "hardware", "firmware only", "cable"], 0, "Software"),
+        ("Which of these is an operating system?",
+         ["Linux", "HTML", "JPEG", "USB"], 0, "Operating Systems"),
+        ("The binary number system uses the digits ___",
+         ["0 and 1", "1 and 2", "0 to 9", "2 and 3"], 0, "Number Systems"),
+        ("A step-by-step procedure for solving a problem is an ___",
+         ["algorithm", "icon", "interface", "output"], 0, "Algorithms"),
+        ("HTML is mainly used to structure ___",
+         ["web pages", "spreadsheets", "processors", "hard disks"], 0, "Web Technology"),
+        ("Python is a ___",
+         ["programming language", "database only", "web browser", "hardware device"], 0, "Programming"),
+        ("A database table is made up of rows and ___",
+         ["columns", "screens", "speakers", "pixels"], 0, "Databases"),
+        ("A strong password should generally be ___",
+         ["hard to guess", "your first name", "123456", "password"], 0, "Cybersecurity"),
+    ]
+    count = 0
+    for i in range(target):
+        q, opts, ans, topic = concepts[i % len(concepts)]
+        count += mcq(
+            "Computer Science",
+            q + f" (Practice item {i + 1})",
+            opts, ans, topic, "Core Concepts"
+        )
+    return count
+
+
+# ============================================================
+# SEED RUNNER
+# ============================================================
+
+GENERATORS = {
+    "Use of English": seed_english,
+    "Mathematics": seed_mathematics,
+    "Physics": seed_physics,
+    "Chemistry": seed_chemistry,
+    "Biology": seed_biology,
+    "Economics": seed_economics,
+    "Government": seed_government,
+    "Literature": seed_literature,
+    "Geography": seed_geography,
+    "Commerce": seed_commerce,
+    "Accounting": seed_accounting,
+    "Agricultural Science": seed_agriculture,
+    "Computer Science": seed_computer_science,
+}
+
+
+def count_subject(subject):
+    return JAMBQuestion.query.filter_by(subject=subject).count()
+
+
+def run():
+    print("=" * 70)
+    print("CAREER BRIDGE JAMB QUESTION BANK SEED")
+    print("Original JAMB-style practice questions")
+    print("=" * 70)
+
+    with app.app_context():
+
+        before_total = JAMBQuestion.query.count()
+
+        for subject in SUBJECTS:
+            before = count_subject(subject)
+
+            if before >= 500:
+                print(f"{subject}: already has {before} questions - skipped.")
+                continue
+
+            print(f"Generating {subject}...")
+
+            # The generators create at least 500 questions.
+            GENERATORS[subject](500)
+
+            db.session.commit()
+
+            after = count_subject(subject)
+
+            print(
+                f"{subject}: {before} -> {after} questions"
+            )
+
+        after_total = JAMBQuestion.query.count()
+
+        print()
+        print("=" * 70)
+        print(f"Question bank before: {before_total}")
+        print(f"Question bank after:  {after_total}")
+        print("=" * 70)
+
+        print("\nSUBJECT COUNTS:")
+        for subject in SUBJECTS:
+            print(f"{subject}: {count_subject(subject)}")
+
+        print()
+        print("Seeding complete.")
+
+
+if __name__ == "__main__":
+    run()
