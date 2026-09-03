@@ -276,10 +276,24 @@ class DigitalSkillsProgress(db.Model):
 # JAMB QUESTION MODEL
 # =========================================================
 #
-# These questions are Career Bridge's own JAMB-style
-# practice questions.
+# Career Bridge's own JAMB-style practice questions.
 #
-# They are NOT presented as official JAMB past questions.
+# These are NOT official JAMB past questions.
+#
+# Questions are organized by:
+#
+# - Subject
+# - Topic
+# - Subtopic
+# - Difficulty
+#
+# The year field is kept in the database for compatibility,
+# but the student-facing practice system DOES NOT require
+# students to select a year.
+#
+# Career Bridge can therefore generate thousands of original
+# syllabus-based questions without pretending they are
+# official past questions.
 #
 # =========================================================
 
@@ -632,6 +646,11 @@ def logout():
 
     session.pop(
         "jamb_subjects",
+        None
+    )
+
+    session.pop(
+        "jamb_question_count",
         None
     )
 
@@ -1648,6 +1667,20 @@ def exam_preparation():
 # =========================================================
 # START JAMB EXAM
 # =========================================================
+#
+# NEW SYSTEM:
+#
+# The student no longer selects a year.
+#
+# The student selects:
+#
+# 1. Subjects
+# 2. Number of questions
+#
+# Questions are taken randomly from the Career Bridge
+# question bank.
+#
+# =========================================================
 
 @app.route(
     "/exam-preparation/jamb/start",
@@ -1660,43 +1693,50 @@ def start_jamb_exam():
         "subjects"
     )
 
-    selected_year = request.form.get(
-        "year",
+    selected_question_count = request.form.get(
+        "question_count",
         ""
     ).strip()
 
     # -----------------------------------------------------
-    # CHECK YEAR
+    # CHECK QUESTION COUNT
     # -----------------------------------------------------
 
-    if not selected_year:
+    if not selected_question_count:
 
         return (
-            "Please select an exam year.",
+            "Please select the number of questions.",
             400
         )
 
     try:
 
-        selected_year = int(
-            selected_year
+        selected_question_count = int(
+            selected_question_count
         )
 
     except ValueError:
 
         return (
-            "Invalid exam year.",
+            "Invalid question count.",
             400
         )
 
     # -----------------------------------------------------
-    # CHECK YEAR RANGE
+    # ALLOWED QUESTION COUNTS
     # -----------------------------------------------------
 
-    if selected_year < 2000 or selected_year > 2026:
+    allowed_question_counts = [
+        20,
+        40,
+        60,
+        100
+    ]
+
+    if selected_question_count not in allowed_question_counts:
 
         return (
-            "Invalid exam year.",
+            "Invalid question count.",
             400
         )
 
@@ -1735,12 +1775,56 @@ def start_jamb_exam():
         )
 
     # -----------------------------------------------------
-    # SAVE SELECTION
+    # VERIFY SUBJECTS
     # -----------------------------------------------------
 
-    session["jamb_year"] = selected_year
+    allowed_subjects = [
+        "Use of English",
+        "Mathematics",
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "Economics",
+        "Government",
+        "Literature",
+        "Geography",
+        "Commerce",
+        "Accounting",
+        "Agricultural Science",
+        "Computer Science"
+    ]
+
+    invalid_subjects = [
+        subject
+        for subject in cleaned_subjects
+        if subject not in allowed_subjects
+    ]
+
+    if invalid_subjects:
+
+        return (
+            "One or more selected subjects are invalid.",
+            400
+        )
+
+    # -----------------------------------------------------
+    # SAVE SELECTION
+    # -----------------------------------------------------
+    #
+    # There is intentionally NO jamb_year anymore.
+    #
+    # -----------------------------------------------------
+
+    session.pop(
+        "jamb_year",
+        None
+    )
 
     session["jamb_subjects"] = cleaned_subjects
+
+    session["jamb_question_count"] = (
+        selected_question_count
+    )
 
     session.pop(
         "jamb_question_ids",
@@ -1772,160 +1856,212 @@ def jamb_exam():
         []
     )
 
-    selected_year = session.get(
-        "jamb_year"
+    selected_question_count = session.get(
+        "jamb_question_count"
     )
 
     # -----------------------------------------------------
     # CHECK SELECTION
     # -----------------------------------------------------
 
-    if not selected_subjects or not selected_year:
+    if (
+        not selected_subjects
+        or not selected_question_count
+    ):
+
+        return redirect(
+            url_for("exam_preparation")
+        )
+
+    try:
+
+        selected_question_count = int(
+            selected_question_count
+        )
+
+    except (ValueError, TypeError):
 
         return redirect(
             url_for("exam_preparation")
         )
 
     # -----------------------------------------------------
-    # FIND AVAILABLE QUESTIONS
+    # GET AVAILABLE QUESTIONS
     # -----------------------------------------------------
     #
-    # Our new Career Bridge question bank is syllabus-based.
+    # Only Career Bridge's PostgreSQL/SQLite question bank
+    # is used.
     #
-    # Therefore, questions can have year=None.
-    #
-    # If questions exist for the selected year, they can be
-    # used.
-    #
-    # If not, syllabus questions with year=None are used.
-    #
-    # The selected year is then treated as the student's
-    # chosen practice year/session.
+    # NO ALOC API.
+    # NO external question API.
     #
     # -----------------------------------------------------
 
-    questions = []
-
-    used_question_ids = set()
+    questions_by_subject = {}
 
     for subject in selected_subjects:
 
-        # -------------------------------------------------
-        # EXACT YEAR QUESTIONS
-        # -------------------------------------------------
-
-        year_questions = JAMBQuestion.query.filter(
-            JAMBQuestion.subject == subject,
-            JAMBQuestion.year == selected_year
-        ).order_by(
-            JAMBQuestion.id.asc()
+        subject_questions = JAMBQuestion.query.filter(
+            JAMBQuestion.subject == subject
         ).all()
-
-        for question in year_questions:
-
-            if question.id not in used_question_ids:
-
-                questions.append(
-                    question
-                )
-
-                used_question_ids.add(
-                    question.id
-                )
-
-        # -------------------------------------------------
-        # SYLLABUS QUESTIONS
-        # -------------------------------------------------
-        #
-        # These are questions generated for Career Bridge
-        # and have year=None.
-        #
-        # -------------------------------------------------
-
-        if not year_questions:
-
-            syllabus_questions = JAMBQuestion.query.filter(
-                JAMBQuestion.subject == subject,
-                JAMBQuestion.year.is_(None)
-            ).order_by(
-                JAMBQuestion.id.asc()
-            ).all()
-
-            for question in syllabus_questions:
-
-                if question.id not in used_question_ids:
-
-                    questions.append(
-                        question
-                    )
-
-                    used_question_ids.add(
-                        question.id
-                    )
-
-    # -----------------------------------------------------
-    # NO QUESTIONS
-    # -----------------------------------------------------
-
-    if not questions:
-
-        return (
-            f"No questions are currently available "
-            f"for the selected subjects. "
-            f"Please add questions using seed_jamb.py.",
-            404
-        )
-
-    # -----------------------------------------------------
-    # RANDOMIZE QUESTIONS
-    # -----------------------------------------------------
-
-    random.shuffle(
-        questions
-    )
-
-    # -----------------------------------------------------
-    # LIMIT QUESTIONS FOR SESSION
-    # -----------------------------------------------------
-    #
-    # For now, use up to 40 questions per selected subject.
-    #
-    # This means:
-    #
-    # 1 subject  = up to 40
-    # 2 subjects = up to 80
-    # 3 subjects = up to 120
-    # 4 subjects = up to 160
-    #
-    # Later we can implement the exact JAMB CBT structure.
-    #
-    # -----------------------------------------------------
-
-    final_questions = []
-
-    for subject in selected_subjects:
-
-        subject_questions = [
-            question
-            for question in questions
-            if question.subject == subject
-        ]
 
         random.shuffle(
             subject_questions
         )
 
-        final_questions.extend(
-            subject_questions[:40]
+        questions_by_subject[subject] = (
+            subject_questions
         )
 
     # -----------------------------------------------------
-    # FINAL RANDOMIZATION
+    # CHECK THAT QUESTIONS EXIST
+    # -----------------------------------------------------
+
+    subjects_with_questions = [
+        subject
+        for subject in selected_subjects
+        if questions_by_subject.get(subject)
+    ]
+
+    if not subjects_with_questions:
+
+        return (
+            "No questions are currently available "
+            "for the selected subjects. "
+            "Please add questions using seed_jamb.py.",
+            404
+        )
+
+    # -----------------------------------------------------
+    # CALCULATE QUESTION DISTRIBUTION
+    # -----------------------------------------------------
+    #
+    # We try to distribute questions as evenly as possible
+    # across the selected subjects.
+    #
+    # Example:
+    #
+    # 2 subjects + 40 questions
+    # = approximately 20 questions each.
+    #
+    # 3 subjects + 60 questions
+    # = approximately 20 each.
+    #
+    # If a subject does not have enough questions, the
+    # remaining questions are taken from other selected
+    # subjects that still have available questions.
+    #
+    # -----------------------------------------------------
+
+    subject_count = len(
+        selected_subjects
+    )
+
+    base_questions_per_subject = (
+        selected_question_count // subject_count
+    )
+
+    remainder = (
+        selected_question_count % subject_count
+    )
+
+    final_questions = []
+
+    remaining_question_pool = {}
+
+    # -----------------------------------------------------
+    # FIRST PASS
+    # -----------------------------------------------------
+
+    for index, subject in enumerate(selected_subjects):
+
+        available_questions = questions_by_subject.get(
+            subject,
+            []
+        )
+
+        target_count = base_questions_per_subject
+
+        if index < remainder:
+
+            target_count += 1
+
+        selected_for_subject = (
+            available_questions[:target_count]
+        )
+
+        final_questions.extend(
+            selected_for_subject
+        )
+
+        remaining_question_pool[subject] = (
+            available_questions[target_count:]
+        )
+
+    # -----------------------------------------------------
+    # SECOND PASS
+    # -----------------------------------------------------
+    #
+    # If some subjects did not have enough questions, fill
+    # the remaining spaces using questions from the other
+    # selected subjects.
+    #
+    # -----------------------------------------------------
+
+    if len(final_questions) < selected_question_count:
+
+        remaining_needed = (
+            selected_question_count
+            -
+            len(final_questions)
+        )
+
+        extra_pool = []
+
+        for subject in selected_subjects:
+
+            extra_pool.extend(
+                remaining_question_pool.get(
+                    subject,
+                    []
+                )
+            )
+
+        random.shuffle(
+            extra_pool
+        )
+
+        final_questions.extend(
+            extra_pool[:remaining_needed]
+        )
+
+    # -----------------------------------------------------
+    # FINAL CHECK
+    # -----------------------------------------------------
+
+    if not final_questions:
+
+        return (
+            "No questions are available for this practice "
+            "session yet.",
+            404
+        )
+
+    # -----------------------------------------------------
+    # RANDOMIZE FINAL QUESTION ORDER
     # -----------------------------------------------------
 
     random.shuffle(
         final_questions
     )
+
+    # -----------------------------------------------------
+    # LIMIT TO REQUESTED NUMBER
+    # -----------------------------------------------------
+
+    final_questions = final_questions[
+        :selected_question_count
+    ]
 
     # -----------------------------------------------------
     # SAVE QUESTION IDS
@@ -1944,11 +2080,43 @@ def jamb_exam():
         datetime.utcnow().isoformat()
     )
 
+    # -----------------------------------------------------
+    # CALCULATE PRACTICE TIME
+    # -----------------------------------------------------
+    #
+    # This gives the exam page a useful time value.
+    #
+    # 20 questions  = 30 minutes
+    # 40 questions  = 60 minutes
+    # 60 questions  = 90 minutes
+    # 100 questions = 120 minutes
+    #
+    # The frontend timer can use this value.
+    #
+    # -----------------------------------------------------
+
+    time_map = {
+        20: 30,
+        40: 60,
+        60: 90,
+        100: 120
+    }
+
+    exam_minutes = time_map.get(
+        selected_question_count,
+        60
+    )
+
+    # -----------------------------------------------------
+    # RENDER EXAM
+    # -----------------------------------------------------
+
     return render_template(
         "jamb/exam.html",
         questions=final_questions,
         subjects=selected_subjects,
-        year=selected_year
+        question_count=len(final_questions),
+        exam_minutes=exam_minutes
     )
 
 
@@ -2057,15 +2225,12 @@ def jamb_results():
         percentage = 0
 
     # -----------------------------------------------------
-    # GET SELECTED YEAR
-    # -----------------------------------------------------
-
-    selected_year = session.get(
-        "jamb_year"
-    )
-
-    # -----------------------------------------------------
     # SAVE ATTEMPT
+    # -----------------------------------------------------
+    #
+    # Year is intentionally NULL because this is not a
+    # year-based past-question system.
+    #
     # -----------------------------------------------------
 
     attempt = JAMBExamAttempt(
@@ -2078,7 +2243,7 @@ def jamb_results():
             )
         ),
 
-        year=selected_year,
+        year=None,
 
         total_questions=total_questions,
 
@@ -2466,12 +2631,8 @@ with app.app_context():
 # DATABASE MIGRATION
 # =========================================================
 #
-# This section makes the existing PostgreSQL database
-# compatible with the newer JAMB question-bank structure.
-#
-# db.create_all() does NOT add columns to an existing table.
-#
-# Therefore, we check for missing columns and add them.
+# This keeps the existing PostgreSQL database compatible
+# with the current JAMB question-bank structure.
 #
 # =========================================================
 
