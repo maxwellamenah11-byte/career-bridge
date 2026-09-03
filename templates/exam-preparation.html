@@ -85,24 +85,24 @@
         font-size: 14px;
     }
 
-    /* YEAR SECTION */
+    /* QUESTION COUNT SECTION */
 
-    .year-section {
+    .question-count-section {
         margin-top: 25px;
         margin-bottom: 30px;
     }
 
-    .year-section h3 {
+    .question-count-section h3 {
         margin-bottom: 10px;
         font-size: 21px;
     }
 
-    .year-section p {
+    .question-count-section p {
         color: #94a3b8;
         margin-bottom: 18px;
     }
 
-    .year-select {
+    .question-count-select {
         width: 100%;
         max-width: 400px;
         padding: 15px 16px;
@@ -115,11 +115,11 @@
         outline: none;
     }
 
-    .year-select:focus {
+    .question-count-select:focus {
         border-color: #2563eb;
     }
 
-    .year-select option {
+    .question-count-select option {
         background: #0f172a;
         color: white;
     }
@@ -247,201 +247,212 @@
             font-size: 25px;
         }
 
-        .year-select {
+        .question-count-select {
             max-width: 100%;
         }
     }
 </style>
 
-
 <div class="exam-page">
 
-    <!-- HERO -->
+```
+<!-- HERO -->
 
-    <div class="exam-hero">
+<div class="exam-hero">
 
-        <h1>📝 Exam Preparation</h1>
+    <h1>📝 Exam Preparation</h1>
 
-        <p>
-            Prepare smarter with Career Bridge. Practise past JAMB
-            questions, improve your knowledge and get comfortable with
-            computer-based testing before the real examination.
-        </p>
+    <p>
+        Prepare smarter with Career Bridge. Practise thousands
+        of original JAMB-style questions based on the JAMB
+        syllabus, improve your knowledge and get comfortable
+        with computer-based testing before the real examination.
+    </p>
+
+</div>
+
+
+<!-- JAMB SIMULATOR -->
+
+<div class="simulator-card">
+
+    <h2>🎯 JAMB CBT Simulator</h2>
+
+    <p class="description">
+        Choose your subjects and the number of questions you
+        want to practise. Career Bridge will randomly create
+        a practice session from our question bank.
+    </p>
+
+
+    <!-- INFO -->
+
+    <div class="info-grid">
+
+        <div class="info-box">
+
+            <div class="info-icon">💻</div>
+
+            <strong>CBT</strong>
+
+            <span>
+                Computer-Based Practice
+            </span>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <div class="info-icon">⏱️</div>
+
+            <strong>Timed</strong>
+
+            <span>
+                JAMB-style Practice Time
+            </span>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <div class="info-icon">📊</div>
+
+            <strong>Results</strong>
+
+            <span>
+                View Your Performance
+            </span>
+
+        </div>
 
     </div>
 
 
-    <!-- JAMB SIMULATOR -->
+    <!-- FORM -->
 
-    <div class="simulator-card">
-
-        <h2>🎯 JAMB CBT Simulator</h2>
-
-        <p class="description">
-            Select the year and subjects you want to practise.
-            Career Bridge will create your practice session based
-            on your selections.
-        </p>
+    <form method="POST"
+          action="{{ url_for('start_jamb_exam') }}">
 
 
-        <!-- INFO -->
+        <!-- QUESTION COUNT -->
 
-        <div class="info-grid">
+        <div class="question-count-section">
 
-            <div class="info-box">
+            <h3>🔢 Number of Questions</h3>
 
-                <div class="info-icon">💻</div>
+            <p>
+                Choose how many questions you want in your
+                practice session.
+            </p>
 
-                <strong>CBT</strong>
+            <select
+                name="question_count"
+                class="question-count-select"
+                required
+            >
 
-                <span>
-                    Computer-Based Practice
-                </span>
+                <option value="">
+                    -- Select Number of Questions --
+                </option>
 
-            </div>
+                <option value="20">
+                    20 Questions
+                </option>
+
+                <option value="40">
+                    40 Questions
+                </option>
+
+                <option value="60">
+                    60 Questions
+                </option>
+
+                <option value="100">
+                    100 Questions
+                </option>
+
+            </select>
+
+        </div>
 
 
-            <div class="info-box">
+        <!-- SUBJECTS -->
 
-                <div class="info-icon">⏱️</div>
+        <div class="subject-section">
 
-                <strong>2 Hours</strong>
+            <h3>📚 Select Your Subjects</h3>
 
-                <span>
-                    JAMB-style Practice Time
-                </span>
-
-            </div>
+            <p>
+                Choose the subjects you want to practise.
+            </p>
 
 
-            <div class="info-box">
+            <div class="subjects">
 
-                <div class="info-icon">📊</div>
+                {% for subject in subjects %}
 
-                <strong>Results</strong>
+                <label class="subject">
 
-                <span>
-                    View Your Performance
-                </span>
+                    <input
+                        type="checkbox"
+                        name="subjects"
+                        value="{{ subject }}"
+                    >
+
+                    {{ subject }}
+
+                </label>
+
+                {% endfor %}
 
             </div>
 
         </div>
 
 
-        <!-- FORM -->
+        <!-- NOTICE -->
 
-        <form method="POST"
-              action="{{ url_for('start_jamb_exam') }}">
+        <div class="notice">
 
+            💡 <strong>Practice Tip:</strong>
+            Choose your subjects and the number of questions.
+            Your questions will be randomly selected from
+            Career Bridge's original JAMB-style question bank.
 
-            <!-- YEAR -->
-
-            <div class="year-section">
-
-                <h3>📅 Select Exam Year</h3>
-
-                <p>
-                    Choose the year of the past questions you want
-                    to practise.
-                </p>
-
-                <select
-                    name="year"
-                    class="year-select"
-                    required
-                >
-
-                    <option value="">
-                        -- Select a Year --
-                    </option>
-
-                    {% for year in range(2000, 2027) %}
-
-                    <option value="{{ year }}">
-                        {{ year }}
-                    </option>
-
-                    {% endfor %}
-
-                </select>
-
-            </div>
+        </div>
 
 
-            <!-- SUBJECTS -->
+        <!-- BUTTON -->
 
-            <div class="subject-section">
+        <button
+            type="submit"
+            class="start-button">
 
-                <h3>📚 Select Your Subjects</h3>
+            🚀 Start JAMB Simulator →
 
-                <p>
-                    Choose the subjects you want to practise.
-                </p>
+        </button>
 
+    </form>
 
-                <div class="subjects">
-
-                    {% for subject in subjects %}
-
-                    <label class="subject">
-
-                        <input
-                            type="checkbox"
-                            name="subjects"
-                            value="{{ subject }}"
-                        >
-
-                        {{ subject }}
-
-                    </label>
-
-                    {% endfor %}
-
-                </div>
-
-            </div>
+</div>
 
 
-            <!-- NOTICE -->
+<!-- FUTURE FEATURES -->
 
-            <div class="notice">
+<div class="coming-soon">
 
-                💡 <strong>Practice Tip:</strong>
-                Select the year you want to practise and choose
-                your subjects before starting the CBT session.
+    <h3>🚀 More Exam Preparation Features</h3>
 
-            </div>
+    <p>
+        Career Bridge will include thousands of syllabus-based
+        questions, timed CBT sessions, automatic marking,
+        corrections, performance tracking and practice history.
+    </p>
 
-
-            <!-- BUTTON -->
-
-            <button
-                type="submit"
-                class="start-button">
-
-                🚀 Start JAMB Simulator →
-
-            </button>
-
-        </form>
-
-    </div>
-
-
-    <!-- FUTURE FEATURES -->
-
-    <div class="coming-soon">
-
-        <h3>🚀 More Exam Preparation Features</h3>
-
-        <p>
-            Career Bridge will include year-based past questions,
-            timed CBT sessions, automatic marking, corrections,
-            performance tracking and practice history.
-        </p>
-
-    </div>
+</div>
+```
 
 </div>
 
