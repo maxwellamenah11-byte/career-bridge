@@ -1,1 +1,789 @@
+{% extends "base.html" %}
 
+{% block content %}
+
+<style>
+    .exam-page {
+        min-height: 100vh;
+        background: #020617;
+        color: #f8fafc;
+        padding: 30px 15px 60px;
+    }
+
+    .exam-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .exam-header {
+        background: #0f172a;
+        border: 1px solid #334155;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .exam-title h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+    }
+
+    .exam-title p {
+        margin: 0;
+        color: #94a3b8;
+    }
+
+    .timer-box {
+        background: #1e293b;
+        border: 2px solid #38bdf8;
+        border-radius: 12px;
+        padding: 12px 20px;
+        text-align: center;
+        min-width: 150px;
+    }
+
+    .timer-label {
+        display: block;
+        color: #94a3b8;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+
+    #timer {
+        font-size: 28px;
+        font-weight: bold;
+        color: #38bdf8;
+    }
+
+    .timer-warning {
+        border-color: #f59e0b;
+    }
+
+    .timer-warning #timer {
+        color: #f59e0b;
+    }
+
+    .timer-danger {
+        border-color: #ef4444;
+    }
+
+    .timer-danger #timer {
+        color: #ef4444;
+    }
+
+    .progress-container {
+        background: #0f172a;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        color: #cbd5e1;
+        font-size: 14px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #334155;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: #38bdf8;
+        transition: width 0.3s ease;
+    }
+
+    .question-card {
+        background: #0f172a;
+        border: 1px solid #334155;
+        border-radius: 16px;
+        padding: 30px;
+        margin-bottom: 20px;
+    }
+
+    .question-number {
+        color: #38bdf8;
+        font-size: 15px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .question-text {
+        font-size: 20px;
+        line-height: 1.6;
+        margin-bottom: 25px;
+        color: #f8fafc;
+    }
+
+    .option {
+        display: block;
+        background: #1e293b;
+        border: 1px solid #475569;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .option:hover {
+        border-color: #38bdf8;
+        background: #172554;
+    }
+
+    .option input {
+        margin-right: 12px;
+        transform: scale(1.2);
+    }
+
+    .option.selected {
+        border-color: #38bdf8;
+        background: #172554;
+    }
+
+    .navigation {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .nav-btn,
+    .submit-btn {
+        border: none;
+        border-radius: 10px;
+        padding: 13px 22px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .previous-btn {
+        background: #334155;
+        color: white;
+    }
+
+    .next-btn {
+        background: #38bdf8;
+        color: #020617;
+    }
+
+    .submit-btn {
+        background: #22c55e;
+        color: white;
+    }
+
+    .nav-btn:hover,
+    .submit-btn:hover {
+        opacity: 0.9;
+    }
+
+    .question-numbers {
+        background: #0f172a;
+        border: 1px solid #334155;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .question-numbers h3 {
+        margin-top: 0;
+        color: #f8fafc;
+    }
+
+    .number-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .number-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        border: 1px solid #475569;
+        background: #1e293b;
+        color: #cbd5e1;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .number-btn.current {
+        background: #38bdf8;
+        color: #020617;
+        border-color: #38bdf8;
+    }
+
+    .number-btn.answered {
+        background: #22c55e;
+        color: white;
+        border-color: #22c55e;
+    }
+
+    .number-btn.current.answered {
+        background: #38bdf8;
+        color: #020617;
+    }
+
+    .exam-complete-warning {
+        display: none;
+        background: #451a03;
+        border: 1px solid #f59e0b;
+        color: #fde68a;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 700px) {
+        .exam-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .timer-box {
+            width: auto;
+        }
+
+        .question-card {
+            padding: 20px;
+        }
+
+        .question-text {
+            font-size: 18px;
+        }
+
+        .navigation {
+            flex-direction: column;
+        }
+
+        .nav-btn,
+        .submit-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="exam-page">
+    <div class="exam-container">
+
+        <!-- HEADER -->
+        <div class="exam-header">
+
+            <div class="exam-title">
+                <h1>JAMB Practice Examination</h1>
+
+                <p>
+                    {{ question_count }} Questions
+                    {% if subjects %}
+                        • {{ subjects | join(', ') }}
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="timer-box" id="timerBox">
+                <span class="timer-label">Time Remaining</span>
+                <span id="timer">00:00:00</span>
+            </div>
+
+        </div>
+
+
+        <!-- WARNING -->
+        <div class="exam-complete-warning" id="timeWarning">
+            Time is almost finished. Please review your answers.
+        </div>
+
+
+        <!-- PROGRESS -->
+        <div class="progress-container">
+
+            <div class="progress-info">
+                <span>
+                    Question <span id="currentNumber">1</span>
+                    of {{ question_count }}
+                </span>
+
+                <span>
+                    Answered:
+                    <span id="answeredCount">0</span>
+                    / {{ question_count }}
+                </span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+        </div>
+
+
+        <!-- QUESTION NUMBERS -->
+        <div class="question-numbers">
+
+            <h3>Question Navigator</h3>
+
+            <div class="number-grid">
+
+                {% for question in questions %}
+
+                    <button
+                        type="button"
+                        class="number-btn {% if loop.first %}current{% endif %}"
+                        id="number-{{ loop.index0 }}"
+                        onclick="showQuestion({{ loop.index0 }})"
+                    >
+                        {{ loop.index }}
+                    </button>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- EXAM FORM -->
+        <form
+            method="POST"
+            action="{{ url_for('jamb_results') }}"
+            id="examForm"
+        >
+
+            {% for question in questions %}
+
+                <div
+                    class="question-card question"
+                    id="question-{{ loop.index0 }}"
+                    style="{% if not loop.first %}display: none;{% endif %}"
+                >
+
+                    <div class="question-number">
+                        Question {{ loop.index }}
+                    </div>
+
+
+                    <div class="question-text">
+                        {{ question.question }}
+                    </div>
+
+
+                    <!-- OPTION A -->
+                    <label class="option">
+
+                        <input
+                            type="radio"
+                            name="question_{{ question.id }}"
+                            value="A"
+                            onchange="answerSelected({{ loop.index0 }})"
+                        >
+
+                        <strong>A.</strong>
+                        {{ question.option_a }}
+
+                    </label>
+
+
+                    <!-- OPTION B -->
+                    <label class="option">
+
+                        <input
+                            type="radio"
+                            name="question_{{ question.id }}"
+                            value="B"
+                            onchange="answerSelected({{ loop.index0 }})"
+                        >
+
+                        <strong>B.</strong>
+                        {{ question.option_b }}
+
+                    </label>
+
+
+                    <!-- OPTION C -->
+                    <label class="option">
+
+                        <input
+                            type="radio"
+                            name="question_{{ question.id }}"
+                            value="C"
+                            onchange="answerSelected({{ loop.index0 }})"
+                        >
+
+                        <strong>C.</strong>
+                        {{ question.option_c }}
+
+                    </label>
+
+
+                    <!-- OPTION D -->
+                    <label class="option">
+
+                        <input
+                            type="radio"
+                            name="question_{{ question.id }}"
+                            value="D"
+                            onchange="answerSelected({{ loop.index0 }})"
+                        >
+
+                        <strong>D.</strong>
+                        {{ question.option_d }}
+
+                    </label>
+
+
+                    <!-- NAVIGATION -->
+                    <div class="navigation">
+
+                        <button
+                            type="button"
+                            class="nav-btn previous-btn"
+                            onclick="previousQuestion()"
+                            id="previousBtn-{{ loop.index0 }}"
+                        >
+                            ← Previous
+                        </button>
+
+
+                        {% if not loop.last %}
+
+                            <button
+                                type="button"
+                                class="nav-btn next-btn"
+                                onclick="nextQuestion()"
+                            >
+                                Next →
+                            </button>
+
+                        {% else %}
+
+                            <button
+                                type="button"
+                                class="submit-btn"
+                                onclick="submitExam()"
+                            >
+                                Submit Examination
+                            </button>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </form>
+
+    </div>
+</div>
+
+
+<script>
+
+    /* ==========================================
+       EXAM VARIABLES
+    ========================================== */
+
+    let currentQuestion = 0;
+
+    const totalQuestions = {{ question_count }};
+
+    const examMinutes = {{ exam_minutes }};
+
+    let totalSeconds = examMinutes * 60;
+
+
+    /* ==========================================
+       SHOW QUESTION
+    ========================================== */
+
+    function showQuestion(index) {
+
+        if (index < 0 || index >= totalQuestions) {
+            return;
+        }
+
+        const questions = document.querySelectorAll(".question");
+        const buttons = document.querySelectorAll(".number-btn");
+
+        questions.forEach(function(question) {
+            question.style.display = "none";
+        });
+
+        buttons.forEach(function(button) {
+            button.classList.remove("current");
+        });
+
+        questions[index].style.display = "block";
+
+        buttons[index].classList.add("current");
+
+        currentQuestion = index;
+
+        document.getElementById("currentNumber").textContent = index + 1;
+
+        updateProgress();
+
+        updatePreviousButton();
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    /* ==========================================
+       NEXT QUESTION
+    ========================================== */
+
+    function nextQuestion() {
+
+        if (currentQuestion < totalQuestions - 1) {
+
+            showQuestion(currentQuestion + 1);
+
+        }
+
+    }
+
+
+    /* ==========================================
+       PREVIOUS QUESTION
+    ========================================== */
+
+    function previousQuestion() {
+
+        if (currentQuestion > 0) {
+
+            showQuestion(currentQuestion - 1);
+
+        }
+
+    }
+
+
+    /* ==========================================
+       PREVIOUS BUTTON
+    ========================================== */
+
+    function updatePreviousButton() {
+
+        const buttons = document.querySelectorAll(".previous-btn");
+
+        buttons.forEach(function(button, index) {
+
+            if (index === currentQuestion) {
+
+                button.style.display =
+                    currentQuestion === 0
+                    ? "none"
+                    : "inline-block";
+
+            }
+
+        });
+
+    }
+
+
+    /* ==========================================
+       ANSWER SELECTED
+    ========================================== */
+
+    function answerSelected(questionIndex) {
+
+        const question =
+            document.getElementById("question-" + questionIndex);
+
+        const selected =
+            question.querySelector(
+                'input[type="radio"]:checked'
+            );
+
+        const numberButton =
+            document.getElementById(
+                "number-" + questionIndex
+            );
+
+        const options =
+            question.querySelectorAll(".option");
+
+
+        options.forEach(function(option) {
+
+            option.classList.remove("selected");
+
+        });
+
+
+        if (selected) {
+
+            selected.closest(".option")
+                .classList.add("selected");
+
+            numberButton.classList.add("answered");
+
+        }
+
+        updateProgress();
+
+    }
+
+
+    /* ==========================================
+       UPDATE PROGRESS
+    ========================================== */
+
+    function updateProgress() {
+
+        let answered = 0;
+
+        document
+            .querySelectorAll(".question")
+            .forEach(function(question) {
+
+                const selected =
+                    question.querySelector(
+                        'input[type="radio"]:checked'
+                    );
+
+                if (selected) {
+                    answered++;
+                }
+
+            });
+
+
+        document.getElementById(
+            "answeredCount"
+        ).textContent = answered;
+
+
+        const percentage =
+            totalQuestions > 0
+            ? (answered / totalQuestions) * 100
+            : 0;
+
+
+        document.getElementById(
+            "progressFill"
+        ).style.width = percentage + "%";
+
+    }
+
+
+    /* ==========================================
+       TIMER
+    ========================================== */
+
+    function updateTimer() {
+
+        if (totalSeconds <= 0) {
+
+            document.getElementById("timer").textContent =
+                "00:00:00";
+
+            submitExam(true);
+
+            return;
+
+        }
+
+
+        const hours =
+            Math.floor(totalSeconds / 3600);
+
+        const minutes =
+            Math.floor((totalSeconds % 3600) / 60);
+
+        const seconds =
+            totalSeconds % 60;
+
+
+        const formattedHours =
+            String(hours).padStart(2, "0");
+
+        const formattedMinutes =
+            String(minutes).padStart(2, "0");
+
+        const formattedSeconds =
+            String(seconds).padStart(2, "0");
+
+
+        document.getElementById("timer").textContent =
+            formattedHours + ":" +
+            formattedMinutes + ":" +
+            formattedSeconds;
+
+
+        const timerBox =
+            document.getElementById("timerBox");
+
+
+        if (totalSeconds <= 300) {
+
+            timerBox.classList.add("timer-danger");
+
+            document
+                .getElementById("timeWarning")
+                .style.display = "block";
+
+        }
+
+        else if (totalSeconds <= 600) {
+
+            timerBox.classList.add("timer-warning");
+
+        }
+
+
+        totalSeconds--;
+
+    }
+
+
+    /* ==========================================
+       SUBMIT EXAM
+    ========================================== */
+
+    function submitExam(autoSubmit = false) {
+
+        if (autoSubmit) {
+
+            document.getElementById("examForm").submit();
+
+            return;
+
+        }
+
+
+        const unanswered =
+            totalQuestions -
+            parseInt(
+                document.getElementById("answeredCount").textContent
+            );
+
+
+        if (unanswered > 0) {
+
+            const confirmation = confirm(
+                "You still have " +
+                unanswered +
+                " unanswered question(s). Are you sure you want to submit?"
+            );
