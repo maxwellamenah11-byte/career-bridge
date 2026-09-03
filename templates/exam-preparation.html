@@ -3,179 +3,306 @@
 {% block content %}
 
 <style>
+    body {
+        background: #020617;
+    }
+
     .exam-page {
         max-width: 1100px;
         margin: 0 auto;
         padding: 45px 20px 70px;
-    }
-
-    .hero {
-        background: linear-gradient(135deg, #0f172a, #1e3a8a);
         color: white;
+    }
+
+    /* HERO */
+    .exam-hero {
+        background: linear-gradient(135deg, #0f172a, #1d4ed8, #2563eb);
         border-radius: 24px;
-        padding: 40px;
+        padding: 42px;
         margin-bottom: 30px;
-        box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     }
 
-    .hero h1 {
+    .exam-hero h1 {
         margin: 0 0 12px;
-        font-size: 38px;
+        font-size: 40px;
     }
 
-    .hero p {
+    .exam-hero p {
         margin: 0;
+        max-width: 750px;
         line-height: 1.7;
-        opacity: 0.9;
+        color: #dbeafe;
+        font-size: 16px;
     }
 
+    /* MAIN CARD */
     .simulator-card {
-        background: white;
-        border-radius: 22px;
-        padding: 32px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+        background: #0f172a;
+        border: 1px solid #1e3a8a;
+        border-radius: 24px;
+        padding: 35px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
     .simulator-card h2 {
-        margin-top: 0;
-        font-size: 28px;
+        margin: 0 0 10px;
+        font-size: 30px;
     }
 
+    .description {
+        color: #cbd5e1;
+        line-height: 1.7;
+        margin-bottom: 25px;
+    }
+
+    /* INFO BOXES */
     .info-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 15px;
-        margin: 25px 0;
+        margin: 25px 0 35px;
     }
 
     .info-box {
-        background: #f8fafc;
-        padding: 18px;
-        border-radius: 14px;
+        background: #172554;
+        border: 1px solid #1e40af;
+        padding: 20px;
+        border-radius: 16px;
         text-align: center;
+    }
+
+    .info-icon {
+        font-size: 28px;
+        margin-bottom: 8px;
     }
 
     .info-box strong {
         display: block;
-        font-size: 20px;
+        font-size: 19px;
         margin-bottom: 5px;
     }
 
+    .info-box span {
+        color: #bfdbfe;
+        font-size: 14px;
+    }
+
+    /* SUBJECT SECTION */
     .subject-section {
-        margin-top: 30px;
+        margin-top: 25px;
     }
 
     .subject-section h3 {
         margin-bottom: 15px;
+        font-size: 21px;
+    }
+
+    .subject-section p {
+        color: #94a3b8;
+        margin-bottom: 18px;
     }
 
     .subjects {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+        gap: 14px;
     }
 
     .subject {
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 15px;
+        display: flex;
+        align-items: center;
+        background: #1e293b;
+        border: 2px solid #334155;
+        border-radius: 14px;
+        padding: 16px;
         cursor: pointer;
-        transition: 0.2s;
-        background: white;
+        transition: 0.2s ease;
+        color: white;
+        font-weight: 600;
     }
 
     .subject:hover {
         border-color: #2563eb;
-        background: #eff6ff;
+        background: #172554;
+        transform: translateY(-2px);
     }
 
     .subject input {
-        margin-right: 8px;
+        width: 17px;
+        height: 17px;
+        margin-right: 10px;
+        accent-color: #2563eb;
+        cursor: pointer;
     }
 
+    /* NOTICE */
+    .notice {
+        margin-top: 25px;
+        padding: 17px;
+        border-radius: 14px;
+        background: #172554;
+        border: 1px solid #1e40af;
+        color: #bfdbfe;
+        line-height: 1.6;
+    }
+
+    /* START BUTTON */
     .start-button {
-        display: inline-block;
-        margin-top: 30px;
-        padding: 14px 25px;
+        margin-top: 28px;
+        padding: 15px 27px;
         border: none;
-        border-radius: 11px;
-        background: #111827;
+        border-radius: 12px;
+        background: #2563eb;
         color: white;
         font-size: 16px;
         font-weight: bold;
         cursor: pointer;
+        transition: 0.2s ease;
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3);
     }
 
     .start-button:hover {
-        background: #2563eb;
+        background: #3b82f6;
+        transform: translateY(-2px);
     }
 
-    .notice {
-        margin-top: 20px;
-        padding: 15px;
-        border-radius: 12px;
-        background: #fff7ed;
-        color: #9a3412;
-        line-height: 1.5;
+    /* EXTRA SECTION */
+    .coming-soon {
+        margin-top: 30px;
+        padding: 25px;
+        background: #0f172a;
+        border: 1px solid #1e3a8a;
+        border-radius: 20px;
     }
 
+    .coming-soon h3 {
+        margin-top: 0;
+    }
+
+    .coming-soon p {
+        color: #94a3b8;
+        line-height: 1.6;
+        margin-bottom: 0;
+    }
+
+    /* MOBILE */
     @media (max-width: 750px) {
+
+        .exam-page {
+            padding: 30px 15px 50px;
+        }
+
+        .exam-hero {
+            padding: 30px 24px;
+        }
+
+        .exam-hero h1 {
+            font-size: 31px;
+        }
+
+        .simulator-card {
+            padding: 25px 20px;
+        }
+
         .info-grid,
         .subjects {
             grid-template-columns: 1fr;
         }
 
-        .hero h1 {
-            font-size: 30px;
+        .simulator-card h2 {
+            font-size: 25px;
         }
     }
 </style>
 
+
 <div class="exam-page">
 
-    <div class="hero">
+    <!-- HERO -->
+    <div class="exam-hero">
+
         <h1>📝 Exam Preparation</h1>
 
         <p>
-            Prepare for your exams with Career Bridge.
-            Practice questions, test your knowledge and track your performance.
+            Prepare smarter with Career Bridge. Practice exam questions,
+            improve your knowledge and get comfortable with computer-based
+            testing before the real examination.
         </p>
+
     </div>
 
+
+    <!-- JAMB SIMULATOR -->
     <div class="simulator-card">
 
         <h2>🎯 JAMB CBT Simulator</h2>
 
-        <p>
-            Practice in a computer-based test environment similar to a real
-            examination. Select your subjects and begin your practice session.
+        <p class="description">
+            Test yourself in a computer-based practice environment.
+            Select the subjects you want to practise and start your
+            JAMB preparation session.
         </p>
 
+
+        <!-- INFO -->
         <div class="info-grid">
 
             <div class="info-box">
+
+                <div class="info-icon">💻</div>
+
                 <strong>CBT</strong>
-                Exam Format
+
+                <span>
+                    Computer-Based Practice
+                </span>
+
             </div>
 
+
             <div class="info-box">
+
+                <div class="info-icon">⏱️</div>
+
                 <strong>Timed</strong>
-                Practice Mode
+
+                <span>
+                    Practice Under Time
+                </span>
+
             </div>
 
+
             <div class="info-box">
+
+                <div class="info-icon">📊</div>
+
                 <strong>Results</strong>
-                Instant Score
+
+                <span>
+                    View Your Performance
+                </span>
+
             </div>
 
         </div>
 
+
+        <!-- FORM -->
         <form method="POST"
               action="{{ url_for('start_jamb_exam') }}">
 
+
+            <!-- SUBJECTS -->
             <div class="subject-section">
 
-                <h3>Select Subjects</h3>
+                <h3>📚 Select Your Subjects</h3>
+
+                <p>
+                    Choose the subjects you want to practise.
+                </p>
+
 
                 <div class="subjects">
 
@@ -199,18 +326,42 @@
 
             </div>
 
+
+            <!-- NOTICE -->
             <div class="notice">
-                💡 Select the subjects you want to practise before starting
-                the simulator.
+
+                💡 <strong>Practice Tip:</strong>
+                Choose the subjects you are currently preparing for
+                and try to complete each practice session within the
+                recommended time.
+
             </div>
 
+
+            <!-- BUTTON -->
             <button
                 type="submit"
                 class="start-button">
-                Start JAMB Simulator →
+
+                🚀 Start JAMB Simulator →
+
             </button>
 
         </form>
+
+    </div>
+
+
+    <!-- FUTURE FEATURES -->
+    <div class="coming-soon">
+
+        <h3>🚀 More Exam Preparation Features</h3>
+
+        <p>
+            Career Bridge will continue adding practice questions,
+            performance tracking, mock examinations and other
+            exam-preparation tools.
+        </p>
 
     </div>
 
