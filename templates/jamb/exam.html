@@ -3,23 +3,29 @@
 {% block content %}
 
 <style>
+
     .exam-page {
         min-height: 100vh;
         background: #020617;
         color: #f8fafc;
-        padding: 30px 15px;
+        padding: 25px 15px 50px;
     }
 
     .exam-container {
-        max-width: 900px;
+        max-width: 1100px;
         margin: auto;
     }
+
+    /* ==============================
+       HEADER
+    ============================== */
 
     .exam-header {
         background: #0f172a;
         padding: 20px;
         border-radius: 15px;
         margin-bottom: 20px;
+
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -28,10 +34,11 @@
 
     .exam-header h1 {
         margin: 0 0 8px;
+        font-size: 25px;
     }
 
     .exam-header p {
-        margin: 0;
+        margin: 5px 0;
         color: #94a3b8;
     }
 
@@ -41,18 +48,137 @@
         border-radius: 10px;
         padding: 12px 20px;
         text-align: center;
+        min-width: 130px;
     }
 
     .timer small {
         display: block;
         color: #94a3b8;
+        margin-bottom: 5px;
     }
 
     #countdown {
-        font-size: 25px;
+        font-size: 24px;
         font-weight: bold;
         color: #38bdf8;
     }
+
+
+    /* ==============================
+       SUBJECT NAVIGATION
+    ============================== */
+
+    .subject-navigation {
+        background: #0f172a;
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .subject-navigation h3 {
+        margin: 0 0 12px;
+        font-size: 17px;
+    }
+
+    .subject-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .subject-tab {
+        border: 1px solid #475569;
+        background: #1e293b;
+        color: #cbd5e1;
+
+        padding: 10px 14px;
+        border-radius: 8px;
+
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .subject-tab:hover {
+        border-color: #38bdf8;
+    }
+
+    .subject-tab.active {
+        background: #38bdf8;
+        color: #020617;
+        border-color: #38bdf8;
+    }
+
+
+    /* ==============================
+       QUESTION NAVIGATOR
+    ============================== */
+
+    .question-navigator {
+        background: #0f172a;
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .navigator-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .navigator-title strong {
+        font-size: 17px;
+    }
+
+    .navigator-title span {
+        color: #94a3b8;
+        font-size: 14px;
+    }
+
+    .question-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+    }
+
+    .question-number-button {
+        width: 40px;
+        height: 40px;
+
+        border: 1px solid #475569;
+        background: #1e293b;
+        color: white;
+
+        border-radius: 7px;
+
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .question-number-button:hover {
+        border-color: #38bdf8;
+    }
+
+    .question-number-button.current {
+        border: 2px solid #38bdf8;
+    }
+
+    .question-number-button.answered {
+        background: #166534;
+        border-color: #22c55e;
+    }
+
+    .question-number-button.answered.current {
+        border: 2px solid #38bdf8;
+    }
+
+
+    /* ==============================
+       PROGRESS
+    ============================== */
 
     .progress-box {
         background: #0f172a;
@@ -82,6 +208,11 @@
         transition: width 0.3s;
     }
 
+
+    /* ==============================
+       QUESTIONS
+    ============================== */
+
     .question-card {
         background: #0f172a;
         border: 1px solid #334155;
@@ -92,6 +223,16 @@
     .question-number {
         color: #38bdf8;
         font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .question-subject {
+        display: inline-block;
+        background: #1e293b;
+        color: #94a3b8;
+        border-radius: 6px;
+        padding: 5px 9px;
+        font-size: 13px;
         margin-bottom: 15px;
     }
 
@@ -118,6 +259,11 @@
     .option input {
         margin-right: 10px;
     }
+
+
+    /* ==============================
+       PREVIOUS / NEXT
+    ============================== */
 
     .navigation {
         display: flex;
@@ -150,20 +296,55 @@
         color: white;
     }
 
-    @media (max-width: 650px) {
+
+    /* ==============================
+       MOBILE
+    ============================== */
+
+    @media (max-width: 700px) {
+
         .exam-header {
             flex-direction: column;
             align-items: stretch;
+        }
+
+        .timer {
+            width: auto;
+        }
+
+        .subject-tabs {
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            padding-bottom: 5px;
+        }
+
+        .subject-tab {
+            flex-shrink: 0;
+        }
+
+        .question-card {
+            padding: 18px;
+        }
+
+        .question-text {
+            font-size: 18px;
+        }
+
+        .question-number-button {
+            width: 38px;
+            height: 38px;
         }
 
         .navigation {
             flex-direction: column;
         }
 
-        button {
+        .navigation button {
             width: 100%;
         }
+
     }
+
 </style>
 
 
@@ -171,26 +352,40 @@
 
     <div class="exam-container">
 
-        <!-- EXAM HEADER -->
+
+        <!-- ==========================================
+             EXAM HEADER
+        =========================================== -->
+
         <div class="exam-header">
 
             <div>
-                <h1>JAMB Practice Examination</h1>
+
+                <h1>
+                    JAMB Practice Examination
+                </h1>
 
                 <p>
                     {{ question_count }} Questions
                 </p>
 
                 {% if subjects %}
+
                     <p>
-                        Subjects: {{ subjects | join(', ') }}
+                        Subjects:
+                        {{ subjects | join(', ') }}
                     </p>
+
                 {% endif %}
+
             </div>
+
 
             <div class="timer">
 
-                <small>Time Remaining</small>
+                <small>
+                    Time Remaining
+                </small>
 
                 <span id="countdown">
                     00:00:00
@@ -201,23 +396,100 @@
         </div>
 
 
-        <!-- PROGRESS -->
+
+        <!-- ==========================================
+             SUBJECT NAVIGATION
+        =========================================== -->
+
+        <div class="subject-navigation">
+
+            <h3>
+                Navigate by Subject
+            </h3>
+
+            <div class="subject-tabs">
+
+                {% for subject in subjects %}
+
+                    <button
+                        type="button"
+                        class="subject-tab {% if loop.first %}active{% endif %}"
+                        data-subject="{{ subject }}"
+                        onclick="selectSubject('{{ subject | replace("'", "\\'") }}')"
+                    >
+                        {{ subject }}
+                    </button>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             QUESTION NAVIGATOR
+        =========================================== -->
+
+        <div class="question-navigator">
+
+            <div class="navigator-title">
+
+                <strong id="navigatorSubject">
+                    {{ subjects[0] if subjects else "Questions" }}
+                </strong>
+
+                <span>
+                    Click a number to jump to a question
+                </span>
+
+            </div>
+
+
+            <div
+                class="question-buttons"
+                id="questionButtons"
+            >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             PROGRESS
+        =========================================== -->
+
         <div class="progress-box">
 
             <div class="progress-text">
 
                 <span>
+
                     Question
-                    <span id="questionNumber">1</span>
-                    of {{ question_count }}
+                    <span id="questionNumber">
+                        1
+                    </span>
+
+                    of
+                    {{ question_count }}
+
                 </span>
 
+
                 <span>
+
                     Answered:
-                    <span id="answered">0</span>
+                    <span id="answered">
+                        0
+                    </span>
+
                 </span>
 
             </div>
+
 
             <div class="progress-bar">
 
@@ -228,32 +500,57 @@
         </div>
 
 
-        <!-- EXAM FORM -->
+
+        <!-- ==========================================
+             EXAM FORM
+        =========================================== -->
+
         <form
             method="POST"
             action="{{ url_for('jamb_results') }}"
             id="examForm"
         >
 
+
             {% for question in questions %}
 
                 <div
                     class="question-card exam-question"
                     id="question{{ loop.index0 }}"
+
+                    data-index="{{ loop.index0 }}"
+
+                    data-subject="{{ question.subject }}"
+
                     {% if not loop.first %}
                         style="display:none;"
                     {% endif %}
                 >
 
+
                     <div class="question-number">
+
                         Question {{ loop.index }}
+
+                    </div>
+
+
+                    <div class="question-subject">
+
+                        {{ question.subject }}
+
                     </div>
 
 
                     <div class="question-text">
+
                         {{ question.question }}
+
                     </div>
 
+
+
+                    <!-- OPTION A -->
 
                     <label class="option">
 
@@ -265,10 +562,14 @@
                         >
 
                         <strong>A.</strong>
+
                         {{ question.option_a }}
 
                     </label>
 
+
+
+                    <!-- OPTION B -->
 
                     <label class="option">
 
@@ -280,10 +581,14 @@
                         >
 
                         <strong>B.</strong>
+
                         {{ question.option_b }}
 
                     </label>
 
+
+
+                    <!-- OPTION C -->
 
                     <label class="option">
 
@@ -295,10 +600,14 @@
                         >
 
                         <strong>C.</strong>
+
                         {{ question.option_c }}
 
                     </label>
 
+
+
+                    <!-- OPTION D -->
 
                     <label class="option">
 
@@ -310,12 +619,19 @@
                         >
 
                         <strong>D.</strong>
+
                         {{ question.option_d }}
 
                     </label>
 
 
+
+                    <!-- ==================================
+                         PREVIOUS / NEXT
+                    =================================== -->
+
                     <div class="navigation">
+
 
                         {% if not loop.first %}
 
@@ -332,6 +648,7 @@
                             <div></div>
 
                         {% endif %}
+
 
 
                         {% if not loop.last %}
@@ -356,20 +673,30 @@
 
                         {% endif %}
 
+
                     </div>
+
 
                 </div>
 
             {% endfor %}
 
+
         </form>
+
 
     </div>
 
 </div>
 
 
+
 <script>
+
+
+    /* =================================================
+       GLOBAL VARIABLES
+    ================================================= */
 
     let currentQuestion = 0;
 
@@ -377,102 +704,429 @@
 
     let timeRemaining = {{ exam_minutes }} * 60;
 
+    let currentSubject =
+        "{{ subjects[0] if subjects else '' }}";
+
+
+
+    /* =================================================
+       GET ALL QUESTIONS
+    ================================================= */
+
+    function getQuestions() {
+
+        return document.querySelectorAll(
+            ".exam-question"
+        );
+
+    }
+
+
+
+    /* =================================================
+       GET QUESTION SUBJECT
+    ================================================= */
+
+    function getQuestionSubject(index) {
+
+        const questions = getQuestions();
+
+        if (
+            index < 0 ||
+            index >= questions.length
+        ) {
+            return "";
+        }
+
+        return questions[index].dataset.subject;
+
+    }
+
+
+
+    /* =================================================
+       SHOW QUESTION
+    ================================================= */
 
     function showQuestion(index) {
 
-        const questions =
-            document.querySelectorAll(".exam-question");
+        const questions = getQuestions();
 
-        if (index < 0 || index >= questions.length) {
+        if (
+            index < 0 ||
+            index >= questions.length
+        ) {
             return;
         }
 
+
         questions.forEach(function(question) {
+
             question.style.display = "none";
+
         });
+
 
         questions[index].style.display = "block";
 
+
         currentQuestion = index;
 
-        document.getElementById("questionNumber").textContent =
-            index + 1;
+
+        const subject =
+            questions[index].dataset.subject;
+
+
+        currentSubject = subject;
+
+
+        updateSubjectButtons();
+
+        updateQuestionNavigator();
+
+
+        document.getElementById(
+            "questionNumber"
+        ).textContent = index + 1;
+
 
         updateAnswer();
 
+
         window.scrollTo({
+
             top: 0,
+
             behavior: "smooth"
+
         });
+
     }
 
+
+
+    /* =================================================
+       NEXT QUESTION
+    ================================================= */
 
     function nextQuestion() {
 
-        if (currentQuestion < totalQuestions - 1) {
+        if (
+            currentQuestion <
+            totalQuestions - 1
+        ) {
 
-            showQuestion(currentQuestion + 1);
+            showQuestion(
+                currentQuestion + 1
+            );
 
         }
 
     }
 
+
+
+    /* =================================================
+       PREVIOUS QUESTION
+    ================================================= */
 
     function previousQuestion() {
 
-        if (currentQuestion > 0) {
+        if (
+            currentQuestion > 0
+        ) {
 
-            showQuestion(currentQuestion - 1);
+            showQuestion(
+                currentQuestion - 1
+            );
 
         }
 
     }
 
+
+
+    /* =================================================
+       SELECT SUBJECT
+    ================================================= */
+
+    function selectSubject(subject) {
+
+        currentSubject = subject;
+
+
+        const questions = getQuestions();
+
+
+        let firstQuestionForSubject = -1;
+
+
+        for (
+            let i = 0;
+            i < questions.length;
+            i++
+        ) {
+
+            if (
+                questions[i].dataset.subject ===
+                subject
+            ) {
+
+                firstQuestionForSubject = i;
+
+                break;
+
+            }
+
+        }
+
+
+        updateSubjectButtons();
+
+
+        updateQuestionNavigator();
+
+
+        if (
+            firstQuestionForSubject !== -1
+        ) {
+
+            showQuestion(
+                firstQuestionForSubject
+            );
+
+        }
+
+    }
+
+
+
+    /* =================================================
+       UPDATE SUBJECT BUTTONS
+    ================================================= */
+
+    function updateSubjectButtons() {
+
+        document
+            .querySelectorAll(".subject-tab")
+            .forEach(function(button) {
+
+                if (
+                    button.dataset.subject ===
+                    currentSubject
+                ) {
+
+                    button.classList.add(
+                        "active"
+                    );
+
+                } else {
+
+                    button.classList.remove(
+                        "active"
+                    );
+
+                }
+
+            });
+
+
+        const navigatorSubject =
+            document.getElementById(
+                "navigatorSubject"
+            );
+
+
+        if (navigatorSubject) {
+
+            navigatorSubject.textContent =
+                currentSubject;
+
+        }
+
+    }
+
+
+
+    /* =================================================
+       BUILD QUESTION NAVIGATOR
+    ================================================= */
+
+    function updateQuestionNavigator() {
+
+        const container =
+            document.getElementById(
+                "questionButtons"
+            );
+
+
+        if (!container) {
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        const questions =
+            getQuestions();
+
+
+        for (
+            let i = 0;
+            i < questions.length;
+            i++
+        ) {
+
+
+            if (
+                questions[i].dataset.subject !==
+                currentSubject
+            ) {
+
+                continue;
+
+            }
+
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.type = "button";
+
+
+            button.className =
+                "question-number-button";
+
+
+            button.textContent =
+                i + 1;
+
+
+            if (
+                i === currentQuestion
+            ) {
+
+                button.classList.add(
+                    "current"
+                );
+
+            }
+
+
+            const selected =
+                questions[i].querySelector(
+                    'input[type="radio"]:checked'
+                );
+
+
+            if (selected) {
+
+                button.classList.add(
+                    "answered"
+                );
+
+            }
+
+
+            button.onclick = function() {
+
+                showQuestion(i);
+
+            };
+
+
+            container.appendChild(
+                button
+            );
+
+        }
+
+    }
+
+
+
+    /* =================================================
+       UPDATE ANSWER COUNT
+    ================================================= */
 
     function updateAnswer() {
 
         let answered = 0;
 
+
         document
             .querySelectorAll(".exam-question")
             .forEach(function(question) {
+
 
                 const selected =
                     question.querySelector(
                         'input[type="radio"]:checked'
                     );
 
+
                 if (selected) {
+
                     answered++;
+
                 }
 
             });
 
 
-        document.getElementById("answered").textContent =
-            answered;
+        document.getElementById(
+            "answered"
+        ).textContent = answered;
 
 
         const percentage =
             totalQuestions > 0
-            ? (answered / totalQuestions) * 100
+
+            ? (
+                answered /
+                totalQuestions
+            ) * 100
+
             : 0;
 
 
-        document.getElementById("progress").style.width =
+        document.getElementById(
+            "progress"
+        ).style.width =
             percentage + "%";
+
+
+        updateQuestionNavigator();
 
     }
 
 
+
+    /* =================================================
+       TIMER
+    ================================================= */
+
     function updateTimer() {
 
-        if (timeRemaining <= 0) {
 
-            document.getElementById("countdown").textContent =
+        if (
+            timeRemaining <= 0
+        ) {
+
+            document.getElementById(
+                "countdown"
+            ).textContent =
                 "00:00:00";
 
-            document.getElementById("examForm").submit();
+
+            document.getElementById(
+                "examForm"
+            ).submit();
+
 
             return;
 
@@ -480,22 +1134,50 @@
 
 
         const hours =
-            Math.floor(timeRemaining / 3600);
+            Math.floor(
+                timeRemaining / 3600
+            );
+
 
         const minutes =
-            Math.floor((timeRemaining % 3600) / 60);
+            Math.floor(
+                (
+                    timeRemaining %
+                    3600
+                ) / 60
+            );
+
 
         const seconds =
             timeRemaining % 60;
 
 
-        document.getElementById("countdown").textContent =
+        document.getElementById(
+            "countdown"
+        ).textContent =
 
-            String(hours).padStart(2, "0") +
-            ":" +
-            String(minutes).padStart(2, "0") +
-            ":" +
-            String(seconds).padStart(2, "0");
+            String(hours).padStart(
+                2,
+                "0"
+            )
+
+            + ":"
+
+            +
+
+            String(minutes).padStart(
+                2,
+                "0"
+            )
+
+            + ":"
+
+            +
+
+            String(seconds).padStart(
+                2,
+                "0"
+            );
 
 
         timeRemaining--;
@@ -503,43 +1185,76 @@
     }
 
 
+
+    /* =================================================
+       SUBMIT EXAM
+    ================================================= */
+
     function submitExam() {
 
         const answered =
             parseInt(
-                document.getElementById("answered").textContent
+                document.getElementById(
+                    "answered"
+                ).textContent
             );
 
 
         const unanswered =
-            totalQuestions - answered;
+            totalQuestions -
+            answered;
 
 
-        if (unanswered > 0) {
+        if (
+            unanswered > 0
+        ) {
 
-            const confirmSubmit = confirm(
-                "You have " +
-                unanswered +
-                " unanswered question(s). Are you sure you want to submit?"
-            );
+            const confirmSubmit =
+                confirm(
+
+                    "You have " +
+                    unanswered +
+                    " unanswered question(s). " +
+                    "Are you sure you want to submit?"
+
+                );
+
 
             if (!confirmSubmit) {
+
                 return;
+
             }
 
         }
 
 
-        document.getElementById("examForm").submit();
+        document.getElementById(
+            "examForm"
+        ).submit();
 
     }
 
 
-    updateTimer();
+
+    /* =================================================
+       INITIALIZE
+    ================================================= */
+
+    updateSubjectButtons();
+
+    updateQuestionNavigator();
 
     updateAnswer();
 
-    setInterval(updateTimer, 1000);
+    updateTimer();
+
+
+    setInterval(
+        updateTimer,
+        1000
+    );
+
 
 </script>
 
