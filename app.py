@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime
 import os
-
+import json
 
 # =========================================================
 # APP SETUP
@@ -17,27 +17,20 @@ app.config["SECRET_KEY"] = os.environ.get(
     "career-bridge-development-key"
 )
 
-# ---------------------------------------------------------
-# DATABASE
-# ---------------------------------------------------------
-
 database_url = os.environ.get("DATABASE_URL")
 
-if database_url:
-    if database_url.startswith("postgres://"):
-        database_url = database_url.replace(
-            "postgres://",
-            "postgresql://",
-            1
-        )
+# Works locally even if DATABASE_URL is not configured.
+if not database_url:
+    database_url = "sqlite:///career_bridge.db"
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace(
+        "postgres://",
+        "postgresql://",
+        1
+    )
 
-else:
-    # Local fallback so the app does not crash when
-    # DATABASE_URL is not available.
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///career_bridge.db"
-
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -48,7 +41,6 @@ db = SQLAlchemy(app)
 # =========================================================
 
 class Student(db.Model):
-
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -96,7 +88,6 @@ class Student(db.Model):
 # =========================================================
 
 class Mentor(db.Model):
-
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -148,7 +139,6 @@ class Mentor(db.Model):
 # =========================================================
 
 class Admin(db.Model):
-
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -171,7 +161,6 @@ class Admin(db.Model):
 # =========================================================
 
 class MentorshipRequest(db.Model):
-
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -227,7 +216,6 @@ class MentorshipRequest(db.Model):
 # =========================================================
 
 class DigitalSkillsProgress(db.Model):
-
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -278,7 +266,115 @@ class DigitalSkillsProgress(db.Model):
 
 
 # =========================================================
-# LOGIN REQUIRED
+# JAMB QUESTION MODEL
+# =========================================================
+
+class JAMBQuestion(db.Model):
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    subject = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    question = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    option_a = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    option_b = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    option_c = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    option_d = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    correct_answer = db.Column(
+        db.String(1),
+        nullable=False
+    )
+
+    explanation = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+
+# =========================================================
+# JAMB EXAM ATTEMPT MODEL
+# =========================================================
+
+class JAMBExamAttempt(db.Model):
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    student_id = db.Column(
+        db.Integer,
+        db.ForeignKey("student.id"),
+        nullable=False
+    )
+
+    subjects = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    total_questions = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    correct_answers = db.Column(
+        db.Integer,
+        default=0,
+        nullable=False
+    )
+
+    score = db.Column(
+        db.Integer,
+        default=0,
+        nullable=False
+    )
+
+    started_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    completed_at = db.Column(
+        db.DateTime,
+        nullable=True
+    )
+
+    student = db.relationship(
+        "Student",
+        backref=db.backref(
+            "jamb_attempts",
+            lazy=True
+        )
+    )
+
+
+# =========================================================
+# STUDENT LOGIN REQUIRED
 # =========================================================
 
 def login_required(f):
@@ -316,28 +412,6 @@ def admin_required(f):
 
 
 # =========================================================
-# DIGITAL SKILLS MODULE ACCESS CHECK
-# =========================================================
-
-def digital_module_access_allowed(
-    student_id,
-    module_number
-):
-
-    # Module 1 is always available.
-    if module_number <= 1:
-        return True
-
-    previous_module = DigitalSkillsProgress.query.filter_by(
-        student_id=student_id,
-        module_number=module_number - 1,
-        completed=True
-    ).first()
-
-    return previous_module is not None
-
-
-# =========================================================
 # HOME
 # =========================================================
 
@@ -350,7 +424,7 @@ def home():
 
 
 # =========================================================
-# REGISTER
+# STUDENT REGISTER
 # =========================================================
 
 @app.route(
@@ -410,7 +484,7 @@ def register():
 
 
 # =========================================================
-# LOGIN
+# STUDENT LOGIN
 # =========================================================
 
 @app.route(
@@ -457,7 +531,7 @@ def login():
 
 
 # =========================================================
-# LOGOUT
+# STUDENT LOGOUT
 # =========================================================
 
 @app.route("/logout")
@@ -775,7 +849,7 @@ def request_mentorship(mentor_id):
 
 
 # =========================================================
-# STUDENT MENTORSHIP REQUESTS
+# STUDENT MENTORSHIP INBOX
 # =========================================================
 
 @app.route(
@@ -797,7 +871,7 @@ def my_mentorship_requests():
 
 
 # =========================================================
-# ADMIN MENTORSHIP REQUESTS
+# ADMIN MENTORSHIP INBOX
 # =========================================================
 
 @app.route(
@@ -817,7 +891,7 @@ def admin_mentorship_requests():
 
 
 # =========================================================
-# UPDATE MENTORSHIP REQUEST
+# ADMIN UPDATE MENTORSHIP REQUEST
 # =========================================================
 
 @app.route(
@@ -855,7 +929,7 @@ def update_mentorship_request(
 
 
 # =========================================================
-# DASHBOARD
+# STUDENT DASHBOARD
 # =========================================================
 
 @app.route("/dashboard")
@@ -1069,7 +1143,7 @@ def python_module10():
 
 
 # =========================================================
-# CV + LINKEDIN
+# CV + LINKEDIN COURSE
 # =========================================================
 
 @app.route("/courses/cv-linkedin")
@@ -1153,7 +1227,7 @@ def digital_skills():
 
 
 # =========================================================
-# DIGITAL SKILLS MODULE 1
+# DIGITAL SKILLS MODULES
 # =========================================================
 
 @app.route("/digital-skills/module1")
@@ -1166,23 +1240,9 @@ def digital_skills_module1():
     )
 
 
-# =========================================================
-# DIGITAL SKILLS MODULE 2
-# =========================================================
-
 @app.route("/digital-skills/module2")
 @login_required
 def digital_skills_module2():
-
-    student_id = session["student_id"]
-
-    if not digital_module_access_allowed(
-        student_id,
-        2
-    ):
-        return redirect(
-            url_for("digital_skills")
-        )
 
     return render_template(
         "digital-skills/module2.html",
@@ -1190,23 +1250,9 @@ def digital_skills_module2():
     )
 
 
-# =========================================================
-# DIGITAL SKILLS MODULE 3
-# =========================================================
-
 @app.route("/digital-skills/module3")
 @login_required
 def digital_skills_module3():
-
-    student_id = session["student_id"]
-
-    if not digital_module_access_allowed(
-        student_id,
-        3
-    ):
-        return redirect(
-            url_for("digital_skills")
-        )
 
     return render_template(
         "digital-skills/module3.html",
@@ -1214,23 +1260,9 @@ def digital_skills_module3():
     )
 
 
-# =========================================================
-# DIGITAL SKILLS MODULE 4
-# =========================================================
-
 @app.route("/digital-skills/module4")
 @login_required
 def digital_skills_module4():
-
-    student_id = session["student_id"]
-
-    if not digital_module_access_allowed(
-        student_id,
-        4
-    ):
-        return redirect(
-            url_for("digital_skills")
-        )
 
     return render_template(
         "digital-skills/module4.html",
@@ -1238,23 +1270,9 @@ def digital_skills_module4():
     )
 
 
-# =========================================================
-# DIGITAL SKILLS MODULE 5
-# =========================================================
-
 @app.route("/digital-skills/module5")
 @login_required
 def digital_skills_module5():
-
-    student_id = session["student_id"]
-
-    if not digital_module_access_allowed(
-        student_id,
-        5
-    ):
-        return redirect(
-            url_for("digital_skills")
-        )
 
     return render_template(
         "digital-skills/module5.html",
@@ -1262,23 +1280,9 @@ def digital_skills_module5():
     )
 
 
-# =========================================================
-# DIGITAL SKILLS MODULE 6
-# =========================================================
-
 @app.route("/digital-skills/module6")
 @login_required
 def digital_skills_module6():
-
-    student_id = session["student_id"]
-
-    if not digital_module_access_allowed(
-        student_id,
-        6
-    ):
-        return redirect(
-            url_for("digital_skills")
-        )
 
     return render_template(
         "digital-skills/module6.html",
@@ -1286,23 +1290,9 @@ def digital_skills_module6():
     )
 
 
-# =========================================================
-# DIGITAL SKILLS MODULE 7
-# =========================================================
-
 @app.route("/digital-skills/module7")
 @login_required
 def digital_skills_module7():
-
-    student_id = session["student_id"]
-
-    if not digital_module_access_allowed(
-        student_id,
-        7
-    ):
-        return redirect(
-            url_for("digital_skills")
-        )
 
     return render_template(
         "digital-skills/module7.html",
@@ -1310,23 +1300,9 @@ def digital_skills_module7():
     )
 
 
-# =========================================================
-# DIGITAL SKILLS MODULE 8
-# =========================================================
-
 @app.route("/digital-skills/module8")
 @login_required
 def digital_skills_module8():
-
-    student_id = session["student_id"]
-
-    if not digital_module_access_allowed(
-        student_id,
-        8
-    ):
-        return redirect(
-            url_for("digital_skills")
-        )
 
     return render_template(
         "digital-skills/module8.html",
@@ -1334,23 +1310,9 @@ def digital_skills_module8():
     )
 
 
-# =========================================================
-# DIGITAL SKILLS MODULE 9
-# =========================================================
-
 @app.route("/digital-skills/module9")
 @login_required
 def digital_skills_module9():
-
-    student_id = session["student_id"]
-
-    if not digital_module_access_allowed(
-        student_id,
-        9
-    ):
-        return redirect(
-            url_for("digital_skills")
-        )
 
     return render_template(
         "digital-skills/module9.html",
@@ -1358,23 +1320,9 @@ def digital_skills_module9():
     )
 
 
-# =========================================================
-# DIGITAL SKILLS MODULE 10
-# =========================================================
-
 @app.route("/digital-skills/module10")
 @login_required
 def digital_skills_module10():
-
-    student_id = session["student_id"]
-
-    if not digital_module_access_allowed(
-        student_id,
-        10
-    ):
-        return redirect(
-            url_for("digital_skills")
-        )
 
     return render_template(
         "digital-skills/module10.html",
@@ -1437,37 +1385,15 @@ def complete_digital_skills_module(
     if module_number < 1 or module_number > 10:
         return "Invalid module.", 400
 
-    student_id = session["student_id"]
-
-    # -----------------------------------------------------
-    # IMPORTANT:
-    # A student cannot complete Module N unless the
-    # previous module has already been completed.
-    # -----------------------------------------------------
-
-    if module_number > 1:
-
-        previous_module = DigitalSkillsProgress.query.filter_by(
-            student_id=student_id,
-            module_number=module_number - 1,
-            completed=True
-        ).first()
-
-        if not previous_module:
-
-            return redirect(
-                url_for("digital_skills")
-            )
-
     record = DigitalSkillsProgress.query.filter_by(
-        student_id=student_id,
+        student_id=session["student_id"],
         module_number=module_number
     ).first()
 
     if not record:
 
         record = DigitalSkillsProgress(
-            student_id=student_id,
+            student_id=session["student_id"],
             module_number=module_number,
             completed=False
         )
@@ -1475,7 +1401,6 @@ def complete_digital_skills_module(
         db.session.add(record)
 
     record.completed = True
-
     record.completed_at = datetime.utcnow()
 
     quiz_score = request.form.get(
@@ -1485,13 +1410,11 @@ def complete_digital_skills_module(
     if quiz_score is not None and quiz_score != "":
 
         try:
-
             record.quiz_score = int(
                 quiz_score
             )
 
         except ValueError:
-
             pass
 
     db.session.commit()
@@ -1546,7 +1469,216 @@ def digital_skills_progress_api():
 
 
 # =========================================================
-# CAREER DEVELOPMENT
+# EXAM PREPARATION
+# =========================================================
+
+@app.route("/exam-preparation")
+@login_required
+def exam_preparation():
+
+    subjects = [
+        "English",
+        "Mathematics",
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "Economics",
+        "Government",
+        "Literature",
+        "Geography",
+        "Commerce",
+        "Accounting",
+        "Agricultural Science",
+        "Computer Science"
+    ]
+
+    return render_template(
+        "exam-preparation.html",
+        subjects=subjects
+    )
+
+
+# =========================================================
+# START JAMB EXAM
+# =========================================================
+
+@app.route(
+    "/exam-preparation/jamb/start",
+    methods=["POST"]
+)
+@login_required
+def start_jamb_exam():
+
+    selected_subjects = request.form.getlist(
+        "subjects"
+    )
+
+    if not selected_subjects:
+
+        return (
+            "Please select at least one subject.",
+            400
+        )
+
+    session["jamb_subjects"] = selected_subjects
+
+    return redirect(
+        url_for("jamb_exam")
+    )
+
+
+# =========================================================
+# JAMB EXAM
+# =========================================================
+
+@app.route("/exam-preparation/jamb/exam")
+@login_required
+def jamb_exam():
+
+    selected_subjects = session.get(
+        "jamb_subjects",
+        []
+    )
+
+    if not selected_subjects:
+
+        return redirect(
+            url_for("exam_preparation")
+        )
+
+    questions = JAMBQuestion.query.filter(
+        JAMBQuestion.subject.in_(selected_subjects)
+    ).order_by(
+        JAMBQuestion.id.asc()
+    ).all()
+
+    if not questions:
+
+        return (
+            "There are currently no JAMB questions available "
+            "for the selected subjects.",
+            404
+        )
+
+    session["jamb_question_ids"] = [
+        question.id
+        for question in questions
+    ]
+
+    return render_template(
+        "jamb/exam.html",
+        questions=questions,
+        subjects=selected_subjects
+    )
+
+
+# =========================================================
+# JAMB RESULTS
+# =========================================================
+
+@app.route(
+    "/exam-preparation/jamb/results",
+    methods=["POST"]
+)
+@login_required
+def jamb_results():
+
+    question_ids = session.get(
+        "jamb_question_ids",
+        []
+    )
+
+    if not question_ids:
+
+        return redirect(
+            url_for("exam_preparation")
+        )
+
+    questions = JAMBQuestion.query.filter(
+        JAMBQuestion.id.in_(question_ids)
+    ).all()
+
+    correct_answers = 0
+
+    for question in questions:
+
+        submitted_answer = request.form.get(
+            f"question_{question.id}"
+        )
+
+        if submitted_answer:
+
+            if submitted_answer.upper() == question.correct_answer.upper():
+
+                correct_answers += 1
+
+    total_questions = len(
+        questions
+    )
+
+    if total_questions > 0:
+
+        percentage = int(
+            (correct_answers / total_questions) * 100
+        )
+
+    else:
+
+        percentage = 0
+
+    attempt = JAMBExamAttempt(
+        student_id=session["student_id"],
+        subjects=json.dumps(
+            session.get(
+                "jamb_subjects",
+                []
+            )
+        ),
+        total_questions=total_questions,
+        correct_answers=correct_answers,
+        score=percentage,
+        completed_at=datetime.utcnow()
+    )
+
+    db.session.add(
+        attempt
+    )
+
+    db.session.commit()
+
+    session["jamb_last_attempt_id"] = attempt.id
+
+    return render_template(
+        "jamb/results.html",
+        attempt=attempt,
+        percentage=percentage
+    )
+
+
+# =========================================================
+# JAMB ATTEMPT HISTORY
+# =========================================================
+
+@app.route(
+    "/exam-preparation/jamb/history"
+)
+@login_required
+def jamb_history():
+
+    attempts = JAMBExamAttempt.query.filter_by(
+        student_id=session["student_id"]
+    ).order_by(
+        JAMBExamAttempt.id.desc()
+    ).all()
+
+    return render_template(
+        "jamb/history.html",
+        attempts=attempts
+    )
+
+
+# =========================================================
+# OTHER COURSES
 # =========================================================
 
 @app.route(
@@ -1574,7 +1706,7 @@ def ai_assistant():
 
 
 # =========================================================
-# AI MEMORY GET
+# AI MEMORY - GET
 # =========================================================
 
 @app.route(
@@ -1607,7 +1739,7 @@ def get_ai_memory():
 
 
 # =========================================================
-# AI MEMORY SAVE
+# AI MEMORY - SAVE
 # =========================================================
 
 @app.route(
@@ -1820,7 +1952,7 @@ with app.app_context():
 
 
 # =========================================================
-# CREATE ADMIN ACCOUNT
+# CREATE ADMIN ACCOUNT FROM RENDER ENVIRONMENT VARIABLES
 # =========================================================
 
 with app.app_context():
