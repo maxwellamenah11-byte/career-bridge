@@ -1,1 +1,167 @@
+{% extends "base.html" %}
 
+{% block content %}
+
+<style>
+    .history-container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .history-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 18px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+    }
+
+    .history-card h3 {
+        margin-top: 0;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    .stat {
+        background: #f1f5f9;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .stat strong {
+        display: block;
+        font-size: 22px;
+    }
+
+    .empty {
+        background: white;
+        padding: 40px;
+        text-align: center;
+        border-radius: 16px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 20px;
+    }
+
+    .btn-primary {
+        background: #2563eb;
+        color: white;
+    }
+
+    @media (max-width: 700px) {
+        .stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<div class="history-container">
+
+```
+<h1>JAMB Exam History</h1>
+
+<p>
+    Here you can see your previous Career Bridge
+    JAMB practice attempts.
+</p>
+
+{% if attempts %}
+
+    {% for attempt in attempts %}
+
+        <div class="history-card">
+
+            <h3>
+                Practice Attempt #{{ loop.index }}
+            </h3>
+
+            <p>
+                <strong>Date:</strong>
+                {{ attempt.completed_at.strftime("%d %B %Y, %I:%M %p")
+                   if attempt.completed_at
+                   else "Not available" }}
+            </p>
+
+            <p>
+                <strong>Subjects:</strong>
+
+                {% set subject_list = attempt.subjects|from_json %}
+
+                {% for subject in subject_list %}
+                    {{ subject }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <strong>
+                        {{ attempt.total_questions }}
+                    </strong>
+                    Questions
+                </div>
+
+                <div class="stat">
+                    <strong>
+                        {{ attempt.correct_answers }}
+                    </strong>
+                    Correct
+                </div>
+
+                <div class="stat">
+                    <strong>
+                        {{ attempt.total_questions - attempt.correct_answers }}
+                    </strong>
+                    Wrong
+                </div>
+
+                <div class="stat">
+                    <strong>
+                        {{ attempt.score }}%
+                    </strong>
+                    Score
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <div class="empty">
+
+        <h2>No exam attempts yet.</h2>
+
+        <p>
+            Complete your first JAMB practice exam
+            and your result will appear here.
+        </p>
+
+        <a href="{{ url_for('exam_preparation') }}"
+           class="btn btn-primary">
+            Start JAMB Practice
+        </a>
+
+    </div>
+
+{% endif %}
+```
+
+</div>
+
+{% endblock %}
