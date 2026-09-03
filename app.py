@@ -39,6 +39,94 @@ db = SQLAlchemy(app)
 
 
 # =========================================================
+# JAMB API SETTINGS
+# =========================================================
+
+ALOC_API_URL = "https://questions.aloc.com.ng/api/v2/q"
+
+ALOC_ACCESS_TOKEN = os.environ.get(
+    "ALOC_ACCESS_TOKEN"
+)
+
+
+# =========================================================
+# FETCH JAMB QUESTIONS FROM ALOC
+# =========================================================
+
+def fetch_jamb_questions_from_api(
+    subject,
+    year,
+    limit=40
+):
+
+    if not ALOC_ACCESS_TOKEN:
+        print(
+            "ALOC_ACCESS_TOKEN is not configured."
+        )
+        return []
+
+    params = {
+        "subject": subject.lower(),
+        "year": year,
+        "type": "utme"
+    }
+
+    headers = {
+        "AccessToken": ALOC_ACCESS_TOKEN
+    }
+
+    try:
+
+        response = requests.get(
+            ALOC_API_URL,
+            params=params,
+            headers=headers,
+            timeout=20
+        )
+
+        response.raise_for_status()
+
+        data = response.json()
+
+        # Some API responses return the question
+        # directly while others return a data list.
+
+        if isinstance(data, dict):
+
+            if "data" in data:
+                data = data["data"]
+
+            elif "questions" in data:
+                data = data["questions"]
+
+        if isinstance(data, dict):
+            data = [data]
+
+        if not isinstance(data, list):
+            return []
+
+        return data[:limit]
+
+    except requests.RequestException as error:
+
+        print(
+            "ALOC API request failed:",
+            error
+        )
+
+        return []
+
+    except ValueError as error:
+
+        print(
+            "ALOC API returned invalid JSON:",
+            error
+        )
+
+        return []
+
+
+# =========================================================
 # STUDENT MODEL
 # =========================================================
 
