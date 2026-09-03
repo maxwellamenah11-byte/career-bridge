@@ -14,7 +14,6 @@
         color: white;
     }
 
-    /* HERO */
     .exam-hero {
         background: linear-gradient(135deg, #0f172a, #1d4ed8, #2563eb);
         border-radius: 24px;
@@ -36,7 +35,6 @@
         font-size: 16px;
     }
 
-    /* MAIN CARD */
     .simulator-card {
         background: #0f172a;
         border: 1px solid #1e3a8a;
@@ -56,7 +54,6 @@
         margin-bottom: 25px;
     }
 
-    /* INFO BOXES */
     .info-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -88,7 +85,47 @@
         font-size: 14px;
     }
 
+    /* YEAR SECTION */
+
+    .year-section {
+        margin-top: 25px;
+        margin-bottom: 30px;
+    }
+
+    .year-section h3 {
+        margin-bottom: 10px;
+        font-size: 21px;
+    }
+
+    .year-section p {
+        color: #94a3b8;
+        margin-bottom: 18px;
+    }
+
+    .year-select {
+        width: 100%;
+        max-width: 400px;
+        padding: 15px 16px;
+        border-radius: 12px;
+        border: 2px solid #334155;
+        background: #1e293b;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .year-select:focus {
+        border-color: #2563eb;
+    }
+
+    .year-select option {
+        background: #0f172a;
+        color: white;
+    }
+
     /* SUBJECT SECTION */
+
     .subject-section {
         margin-top: 25px;
     }
@@ -136,7 +173,6 @@
         cursor: pointer;
     }
 
-    /* NOTICE */
     .notice {
         margin-top: 25px;
         padding: 17px;
@@ -147,7 +183,6 @@
         line-height: 1.6;
     }
 
-    /* START BUTTON */
     .start-button {
         margin-top: 28px;
         padding: 15px 27px;
@@ -167,7 +202,6 @@
         transform: translateY(-2px);
     }
 
-    /* EXTRA SECTION */
     .coming-soon {
         margin-top: 30px;
         padding: 25px;
@@ -186,7 +220,6 @@
         margin-bottom: 0;
     }
 
-    /* MOBILE */
     @media (max-width: 750px) {
 
         .exam-page {
@@ -213,6 +246,10 @@
         .simulator-card h2 {
             font-size: 25px;
         }
+
+        .year-select {
+            max-width: 100%;
+        }
     }
 </style>
 
@@ -220,32 +257,35 @@
 <div class="exam-page">
 
     <!-- HERO -->
+
     <div class="exam-hero">
 
         <h1>📝 Exam Preparation</h1>
 
         <p>
-            Prepare smarter with Career Bridge. Practice exam questions,
-            improve your knowledge and get comfortable with computer-based
-            testing before the real examination.
+            Prepare smarter with Career Bridge. Practise past JAMB
+            questions, improve your knowledge and get comfortable with
+            computer-based testing before the real examination.
         </p>
 
     </div>
 
 
     <!-- JAMB SIMULATOR -->
+
     <div class="simulator-card">
 
         <h2>🎯 JAMB CBT Simulator</h2>
 
         <p class="description">
-            Test yourself in a computer-based practice environment.
-            Select the subjects you want to practise and start your
-            JAMB preparation session.
+            Select the year and subjects you want to practise.
+            Career Bridge will create your practice session based
+            on your selections.
         </p>
 
 
         <!-- INFO -->
+
         <div class="info-grid">
 
             <div class="info-box">
@@ -265,10 +305,10 @@
 
                 <div class="info-icon">⏱️</div>
 
-                <strong>Timed</strong>
+                <strong>2 Hours</strong>
 
                 <span>
-                    Practice Under Time
+                    JAMB-style Practice Time
                 </span>
 
             </div>
@@ -290,11 +330,47 @@
 
 
         <!-- FORM -->
+
         <form method="POST"
               action="{{ url_for('start_jamb_exam') }}">
 
 
+            <!-- YEAR -->
+
+            <div class="year-section">
+
+                <h3>📅 Select Exam Year</h3>
+
+                <p>
+                    Choose the year of the past questions you want
+                    to practise.
+                </p>
+
+                <select
+                    name="year"
+                    class="year-select"
+                    required
+                >
+
+                    <option value="">
+                        -- Select a Year --
+                    </option>
+
+                    {% for year in range(2000, 2027) %}
+
+                    <option value="{{ year }}">
+                        {{ year }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
             <!-- SUBJECTS -->
+
             <div class="subject-section">
 
                 <h3>📚 Select Your Subjects</h3>
@@ -328,17 +404,18 @@
 
 
             <!-- NOTICE -->
+
             <div class="notice">
 
                 💡 <strong>Practice Tip:</strong>
-                Choose the subjects you are currently preparing for
-                and try to complete each practice session within the
-                recommended time.
+                Select the year you want to practise and choose
+                your subjects before starting the CBT session.
 
             </div>
 
 
             <!-- BUTTON -->
+
             <button
                 type="submit"
                 class="start-button">
@@ -353,14 +430,15 @@
 
 
     <!-- FUTURE FEATURES -->
+
     <div class="coming-soon">
 
         <h3>🚀 More Exam Preparation Features</h3>
 
         <p>
-            Career Bridge will continue adding practice questions,
-            performance tracking, mock examinations and other
-            exam-preparation tools.
+            Career Bridge will include year-based past questions,
+            timed CBT sessions, automatic marking, corrections,
+            performance tracking and practice history.
         </p>
 
     </div>
