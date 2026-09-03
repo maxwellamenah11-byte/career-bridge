@@ -6,7 +6,7 @@ from datetime import datetime
 from sqlalchemy import inspect, text
 import os
 import json
-import requests
+import random
 
 
 # =========================================================
@@ -36,548 +36,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
-
-
-# =========================================================
-# JAMB / ALOC API SETTINGS
-# =========================================================
-
-ALOC_API_URL = "https://questions.aloc.com.ng/api/v2/q"
-
-ALOC_ACCESS_TOKEN = os.environ.get(
-    "ALOC_ACCESS_TOKEN"
-)
-
-
-# =========================================================
-# ALOC SUBJECT NAME CONVERSION
-# =========================================================
-
-ALOC_SUBJECT_NAMES = {
-    "English": "english",
-    "Mathematics": "mathematics",
-    "Physics": "physics",
-    "Chemistry": "chemistry",
-    "Biology": "biology",
-    "Economics": "economics",
-    "Government": "government",
-    "Literature": "englishlit",
-    "Geography": "geography",
-    "Commerce": "commerce",
-    "Accounting": "accounting",
-    "Agricultural Science": "agricultural",
-    "Computer Science": "computer"
-}
-
-
-# =========================================================
-# CLEAN API VALUE
-# =========================================================
-
-def clean_api_value(value):
-    """
-    Convert API values into safe strings for the database.
-    """
-
-    if value is None:
-        return ""
-
-    if isinstance(value, str):
-        return value.strip()
-
-    return str(value).strip()
-
-
-# =========================================================
-# EXTRACT OPTION
-# =========================================================
-
-def extract_option(options, letter):
-    """
-    Handles several possible ALOC option formats.
-    """
-
-    if not options:
-        return ""
-
-    if isinstance(options, dict):
-
-        value = options.get(letter)
-
-        if value is None:
-            value = options.get(letter.upper())
-
-        if value is None:
-            value = options.get(letter.lower())
-
-        return clean_api_value(value)
-
-    return ""
-
-
-# =========================================================
-# FETCH JAMB QUESTIONS FROM ALOC
-# =========================================================
-
-def fetch_jamb_questions_from_api(
-    subject,
-    year,
-    limit=40
-):
-
-    if not ALOC_ACCESS_TOKEN:
-
-        print(
-            "ALOC_ACCESS_TOKEN is not configured."
-        )
-
-        return []
-
-
-    # Convert our website subject name
-    # into the subject name expected by ALOC.
-
-    api_subject = ALOC_SUBJECT_NAMES.get(
-        subject,
-        subject.lower()
-    )
-
-
-    params = {
-        "subject": api_subject,
-        "year": year,
-        "type": "utme"
-    }
-
-
-    headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "AccessToken": ALOC_ACCESS_TOKEN
-    }
-
-
-    print(
-        f"Requesting ALOC questions: "
-        f"subject={api_subject}, year={year}"
-    )
-
-
-    try:
-
-        response = requests.get(
-            ALOC_API_URL,
-            params=params,
-            headers=headers,
-            timeout=30
-        )
-
-
-        print(
-            "ALOC STATUS:",
-            response.status_code
-        )
-
-
-        print(
-            "ALOC URL:",
-            response.url
-        )
-
-
-        response.raise_for_status()
-
-
-        try:
-
-            data = response.json()
-
-        except ValueError:
-
-            print(
-                "ALOC returned non-JSON response:"
-            )
-
-            print(
-                response.text[:1000]
-            )
-
-            return []
-
-
-        print(
-            "ALOC RESPONSE TYPE:",
-            type(data).__name__
-        )
-
-
-        # -------------------------------------------------
-        # HANDLE COMMON RESPONSE STRUCTURES
-        # -------------------------------------------------
-
-        if isinstance(data, dict):
-
-            # Standard data response
-
-            if isinstance(
-                data.get("data"),
-                list
-            ):
-
-                data = data["data"]
-
-
-            # Questions response
-
-            elif isinstance(
-                data.get("questions"),
-                list
-            ):
-
-                data = data["questions"]
-
-
-            # Sometimes one question is
-            # returned inside data.
-
-            elif isinstance(
-                data.get("data"),
-                dict
-            ):
-
-                data = [
-                    data["data"]
-                ]
-
-
-            # Sometimes the response itself
-            # represents one question.
-
-            elif (
-                "question" in data
-                or "question_text" in data
-            ):
-
-                data = [data]
-
-
-            else:
-
-                print(
-                    "ALOC returned an unexpected dictionary:"
-                )
-
-                print(
-                    str(data)[:2000]
-                )
-
-                return []
-
-
-        if isinstance(data, dict):
-
-            data = [data]
-
-
-        if not isinstance(data, list):
-
-            print(
-                "ALOC response was not a list."
-            )
-
-            return []
-
-
-        print(
-            f"ALOC returned {len(data)} question(s)"
-        )
-
-
-        return data[:limit]
-
-
-    except requests.exceptions.Timeout:
-
-        print(
-            "ALOC API request timed out."
-        )
-
-        return []
-
-
-    except requests.exceptions.ConnectionError as error:
-
-        print(
-            "ALOC API connection error:",
-            error
-        )
-
-        return []
-
-
-    except requests.exceptions.HTTPError as error:
-
-        print(
-            "ALOC API HTTP error:",
-            error
-        )
-
-        try:
-
-            print(
-                "ALOC ERROR RESPONSE:",
-                response.text[:2000]
-            )
-
-        except Exception:
-            pass
-
-        return []
-
-
-    except requests.RequestException as error:
-
-        print(
-            "ALOC API request failed:",
-            error
-        )
-
-        return []
-
-
-    except Exception as error:
-
-        print(
-            "Unexpected ALOC error:",
-            error
-        )
-
-        return []
-
-
-# =========================================================
-# CONVERT ALOC QUESTION TO DATABASE FORMAT
-# =========================================================
-
-def convert_aloc_question(
-    item,
-    subject,
-    year
-):
-
-    if not isinstance(item, dict):
-
-        return None
-
-
-    # -----------------------------------------------------
-    # QUESTION TEXT
-    # -----------------------------------------------------
-
-    question_text = (
-        item.get("question")
-        or item.get("question_text")
-        or item.get("text")
-        or item.get("content")
-    )
-
-
-    question_text = clean_api_value(
-        question_text
-    )
-
-
-    if not question_text:
-
-        return None
-
-
-    # -----------------------------------------------------
-    # OPTIONS
-    # -----------------------------------------------------
-
-    options = item.get(
-        "option"
-    )
-
-    if options is None:
-
-        options = item.get(
-            "options"
-        )
-
-
-    option_a = extract_option(
-        options,
-        "a"
-    )
-
-    option_b = extract_option(
-        options,
-        "b"
-    )
-
-    option_c = extract_option(
-        options,
-        "c"
-    )
-
-    option_d = extract_option(
-        options,
-        "d"
-    )
-
-
-    # Some API responses may return
-    # options directly.
-
-    if not option_a:
-
-        option_a = clean_api_value(
-            item.get("option_a")
-            or item.get("a")
-        )
-
-
-    if not option_b:
-
-        option_b = clean_api_value(
-            item.get("option_b")
-            or item.get("b")
-        )
-
-
-    if not option_c:
-
-        option_c = clean_api_value(
-            item.get("option_c")
-            or item.get("c")
-        )
-
-
-    if not option_d:
-
-        option_d = clean_api_value(
-            item.get("option_d")
-            or item.get("d")
-        )
-
-
-    # -----------------------------------------------------
-    # CORRECT ANSWER
-    # -----------------------------------------------------
-
-    correct_answer = (
-        item.get("answer")
-        or item.get("correct_answer")
-        or item.get("correct")
-    )
-
-
-    # Sometimes answer can be inside
-    # another object.
-
-    if isinstance(
-        correct_answer,
-        dict
-    ):
-
-        correct_answer = (
-            correct_answer.get("answer")
-            or correct_answer.get("option")
-            or correct_answer.get("letter")
-        )
-
-
-    correct_answer = clean_api_value(
-        correct_answer
-    )
-
-
-    # Convert things like:
-    # "A", "a", "Option A"
-    # into just A.
-
-    correct_answer_upper = (
-        correct_answer
-        .strip()
-        .upper()
-    )
-
-
-    if correct_answer_upper.startswith(
-        "OPTION "
-    ):
-
-        correct_answer_upper = (
-            correct_answer_upper
-            .replace(
-                "OPTION ",
-                "",
-                1
-            )
-            .strip()
-        )
-
-
-    if correct_answer_upper not in [
-        "A",
-        "B",
-        "C",
-        "D"
-    ]:
-
-        correct_answer_upper = ""
-
-
-    # -----------------------------------------------------
-    # EXPLANATION
-    # -----------------------------------------------------
-
-    explanation = (
-        item.get("solution")
-        or item.get("explanation")
-        or item.get("answer_explanation")
-        or ""
-    )
-
-
-    explanation = clean_api_value(
-        explanation
-    )
-
-
-    # -----------------------------------------------------
-    # VALIDATE
-    # -----------------------------------------------------
-
-    if not option_a:
-        return None
-
-    if not option_b:
-        return None
-
-    if not option_c:
-        return None
-
-    if not option_d:
-        return None
-
-    if not correct_answer_upper:
-        return None
-
-
-    return {
-        "year": year,
-        "subject": subject,
-        "question": question_text,
-        "option_a": option_a,
-        "option_b": option_b,
-        "option_c": option_c,
-        "option_d": option_d,
-        "correct_answer": correct_answer_upper,
-        "explanation": explanation
-    }
 
 
 # =========================================================
@@ -817,6 +275,13 @@ class DigitalSkillsProgress(db.Model):
 # =========================================================
 # JAMB QUESTION MODEL
 # =========================================================
+#
+# These questions are Career Bridge's own JAMB-style
+# practice questions.
+#
+# They are NOT presented as official JAMB past questions.
+#
+# =========================================================
 
 class JAMBQuestion(db.Model):
 
@@ -835,6 +300,23 @@ class JAMBQuestion(db.Model):
         db.String(100),
         nullable=False,
         index=True
+    )
+
+    topic = db.Column(
+        db.String(150),
+        nullable=True,
+        index=True
+    )
+
+    subtopic = db.Column(
+        db.String(150),
+        nullable=True,
+        index=True
+    )
+
+    difficulty = db.Column(
+        db.String(30),
+        nullable=True
     )
 
     question = db.Column(
@@ -872,6 +354,16 @@ class JAMBQuestion(db.Model):
         nullable=True
     )
 
+    source = db.Column(
+        db.String(200),
+        nullable=True
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
 
 # =========================================================
 # JAMB EXAM ATTEMPT MODEL
@@ -893,6 +385,11 @@ class JAMBExamAttempt(db.Model):
     subjects = db.Column(
         db.Text,
         nullable=False
+    )
+
+    year = db.Column(
+        db.Integer,
+        nullable=True
     )
 
     total_questions = db.Column(
@@ -946,10 +443,7 @@ def login_required(f):
                 url_for("login")
             )
 
-        return f(
-            *args,
-            **kwargs
-        )
+        return f(*args, **kwargs)
 
     return decorated_function
 
@@ -969,10 +463,7 @@ def admin_required(f):
                 url_for("admin_login")
             )
 
-        return f(
-            *args,
-            **kwargs
-        )
+        return f(*args, **kwargs)
 
     return decorated_function
 
@@ -1151,6 +642,11 @@ def logout():
 
     session.pop(
         "jamb_started_at",
+        None
+    )
+
+    session.pop(
+        "jamb_last_attempt_id",
         None
     )
 
@@ -1496,7 +992,7 @@ def request_mentorship(mentor_id):
 @login_required
 def my_mentorship_requests():
 
-    requests_list = MentorshipRequest.query.filter_by(
+    requests = MentorshipRequest.query.filter_by(
         student_id=session["student_id"]
     ).order_by(
         MentorshipRequest.id.desc()
@@ -1504,7 +1000,7 @@ def my_mentorship_requests():
 
     return render_template(
         "my-mentorship-requests.html",
-        requests=requests_list
+        requests=requests
     )
 
 
@@ -1518,13 +1014,13 @@ def my_mentorship_requests():
 @admin_required
 def admin_mentorship_requests():
 
-    requests_list = MentorshipRequest.query.order_by(
+    requests = MentorshipRequest.query.order_by(
         MentorshipRequest.id.desc()
     ).all()
 
     return render_template(
         "admin-mentorship-requests.html",
-        requests=requests_list
+        requests=requests
     )
 
 
@@ -2128,7 +1624,7 @@ def digital_skills_progress_api():
 def exam_preparation():
 
     subjects = [
-        "English",
+        "Use of English",
         "Mathematics",
         "Physics",
         "Chemistry",
@@ -2169,6 +1665,9 @@ def start_jamb_exam():
         ""
     ).strip()
 
+    # -----------------------------------------------------
+    # CHECK YEAR
+    # -----------------------------------------------------
 
     if not selected_year:
 
@@ -2176,7 +1675,6 @@ def start_jamb_exam():
             "Please select an exam year.",
             400
         )
-
 
     try:
 
@@ -2191,6 +1689,9 @@ def start_jamb_exam():
             400
         )
 
+    # -----------------------------------------------------
+    # CHECK YEAR RANGE
+    # -----------------------------------------------------
 
     if selected_year < 2000 or selected_year > 2026:
 
@@ -2199,6 +1700,9 @@ def start_jamb_exam():
             400
         )
 
+    # -----------------------------------------------------
+    # CHECK SUBJECTS
+    # -----------------------------------------------------
 
     if not selected_subjects:
 
@@ -2207,20 +1711,36 @@ def start_jamb_exam():
             400
         )
 
+    # -----------------------------------------------------
+    # CLEAN SUBJECTS
+    # -----------------------------------------------------
 
-    # Remove duplicate subjects.
+    cleaned_subjects = []
 
-    selected_subjects = list(
-        dict.fromkeys(
-            selected_subjects
+    for subject in selected_subjects:
+
+        subject = subject.strip()
+
+        if subject and subject not in cleaned_subjects:
+
+            cleaned_subjects.append(
+                subject
+            )
+
+    if not cleaned_subjects:
+
+        return (
+            "Please select at least one subject.",
+            400
         )
-    )
 
+    # -----------------------------------------------------
+    # SAVE SELECTION
+    # -----------------------------------------------------
 
     session["jamb_year"] = selected_year
 
-    session["jamb_subjects"] = selected_subjects
-
+    session["jamb_subjects"] = cleaned_subjects
 
     session.pop(
         "jamb_question_ids",
@@ -2231,7 +1751,6 @@ def start_jamb_exam():
         "jamb_started_at",
         None
     )
-
 
     return redirect(
         url_for("jamb_exam")
@@ -2257,6 +1776,9 @@ def jamb_exam():
         "jamb_year"
     )
 
+    # -----------------------------------------------------
+    # CHECK SELECTION
+    # -----------------------------------------------------
 
     if not selected_subjects or not selected_year:
 
@@ -2264,236 +1786,167 @@ def jamb_exam():
             url_for("exam_preparation")
         )
 
+    # -----------------------------------------------------
+    # FIND AVAILABLE QUESTIONS
+    # -----------------------------------------------------
+    #
+    # Our new Career Bridge question bank is syllabus-based.
+    #
+    # Therefore, questions can have year=None.
+    #
+    # If questions exist for the selected year, they can be
+    # used.
+    #
+    # If not, syllabus questions with year=None are used.
+    #
+    # The selected year is then treated as the student's
+    # chosen practice year/session.
+    #
+    # -----------------------------------------------------
 
-    # =====================================================
-    # STEP 1
-    # LOOK FOR QUESTIONS ALREADY IN DATABASE
-    # =====================================================
+    questions = []
 
-    all_questions = []
-
+    used_question_ids = set()
 
     for subject in selected_subjects:
 
-        local_questions = JAMBQuestion.query.filter_by(
-            year=selected_year,
-            subject=subject
+        # -------------------------------------------------
+        # EXACT YEAR QUESTIONS
+        # -------------------------------------------------
+
+        year_questions = JAMBQuestion.query.filter(
+            JAMBQuestion.subject == subject,
+            JAMBQuestion.year == selected_year
         ).order_by(
             JAMBQuestion.id.asc()
         ).all()
 
+        for question in year_questions:
 
-        if local_questions:
+            if question.id not in used_question_ids:
 
-            print(
-                f"Found {len(local_questions)} "
-                f"local questions for "
-                f"{subject} {selected_year}"
-            )
-
-
-            all_questions.extend(
-                local_questions
-            )
-
-
-            continue
-
-
-        # =================================================
-        # STEP 2
-        # NO LOCAL QUESTIONS
-        # FETCH FROM ALOC
-        # =================================================
-
-        print(
-            f"No local questions for "
-            f"{subject} {selected_year}. "
-            f"Fetching from ALOC..."
-        )
-
-
-        api_questions = fetch_jamb_questions_from_api(
-            subject=subject,
-            year=selected_year,
-            limit=40
-        )
-
-
-        if not api_questions:
-
-            print(
-                f"ALOC returned no questions "
-                f"for {subject} {selected_year}"
-            )
-
-            continue
-
-
-        saved_for_subject = 0
-
-
-        for item in api_questions:
-
-            converted = convert_aloc_question(
-                item=item,
-                subject=subject,
-                year=selected_year
-            )
-
-
-            if not converted:
-
-                print(
-                    "Skipped invalid ALOC question."
+                questions.append(
+                    question
                 )
 
-                continue
-
-
-            # -------------------------------------------------
-            # PREVENT DUPLICATES
-            # -------------------------------------------------
-
-            existing = JAMBQuestion.query.filter_by(
-                year=converted["year"],
-                subject=converted["subject"],
-                question=converted["question"]
-            ).first()
-
-
-            if existing:
-
-                all_questions.append(
-                    existing
+                used_question_ids.add(
+                    question.id
                 )
 
-                continue
+        # -------------------------------------------------
+        # SYLLABUS QUESTIONS
+        # -------------------------------------------------
+        #
+        # These are questions generated for Career Bridge
+        # and have year=None.
+        #
+        # -------------------------------------------------
 
+        if not year_questions:
 
-            new_question = JAMBQuestion(
-                year=converted["year"],
-                subject=converted["subject"],
-                question=converted["question"],
-                option_a=converted["option_a"],
-                option_b=converted["option_b"],
-                option_c=converted["option_c"],
-                option_d=converted["option_d"],
-                correct_answer=converted["correct_answer"],
-                explanation=converted["explanation"]
-            )
+            syllabus_questions = JAMBQuestion.query.filter(
+                JAMBQuestion.subject == subject,
+                JAMBQuestion.year.is_(None)
+            ).order_by(
+                JAMBQuestion.id.asc()
+            ).all()
 
+            for question in syllabus_questions:
 
-            db.session.add(
-                new_question
-            )
+                if question.id not in used_question_ids:
 
+                    questions.append(
+                        question
+                    )
 
-            db.session.flush()
+                    used_question_ids.add(
+                        question.id
+                    )
 
-
-            all_questions.append(
-                new_question
-            )
-
-
-            saved_for_subject += 1
-
-
-        print(
-            f"Saved {saved_for_subject} "
-            f"new questions for "
-            f"{subject} {selected_year}"
-        )
-
-
-    # =====================================================
-    # COMMIT ALL API QUESTIONS
-    # =====================================================
-
-    try:
-
-        db.session.commit()
-
-    except Exception as error:
-
-        db.session.rollback()
-
-        print(
-            "Failed to save JAMB questions:",
-            error
-        )
-
-        return (
-            "There was a problem saving the JAMB questions.",
-            500
-        )
-
-
-    # =====================================================
-    # REMOVE DUPLICATE OBJECTS
-    # =====================================================
-
-    unique_questions = []
-
-    seen_ids = set()
-
-
-    for question in all_questions:
-
-        if question.id in seen_ids:
-
-            continue
-
-        seen_ids.add(
-            question.id
-        )
-
-        unique_questions.append(
-            question
-        )
-
-
-    all_questions = unique_questions
-
-
-    # =====================================================
+    # -----------------------------------------------------
     # NO QUESTIONS
-    # =====================================================
+    # -----------------------------------------------------
 
-    if not all_questions:
+    if not questions:
 
         return (
-            f"No questions were found for "
-            f"{selected_year} in the selected subjects. "
-            f"The selected year may not currently be "
-            f"available from the question provider.",
+            f"No questions are currently available "
+            f"for the selected subjects. "
+            f"Please add questions using seed_jamb.py.",
             404
         )
 
+    # -----------------------------------------------------
+    # RANDOMIZE QUESTIONS
+    # -----------------------------------------------------
 
-    # =====================================================
+    random.shuffle(
+        questions
+    )
+
+    # -----------------------------------------------------
+    # LIMIT QUESTIONS FOR SESSION
+    # -----------------------------------------------------
+    #
+    # For now, use up to 40 questions per selected subject.
+    #
+    # This means:
+    #
+    # 1 subject  = up to 40
+    # 2 subjects = up to 80
+    # 3 subjects = up to 120
+    # 4 subjects = up to 160
+    #
+    # Later we can implement the exact JAMB CBT structure.
+    #
+    # -----------------------------------------------------
+
+    final_questions = []
+
+    for subject in selected_subjects:
+
+        subject_questions = [
+            question
+            for question in questions
+            if question.subject == subject
+        ]
+
+        random.shuffle(
+            subject_questions
+        )
+
+        final_questions.extend(
+            subject_questions[:40]
+        )
+
+    # -----------------------------------------------------
+    # FINAL RANDOMIZATION
+    # -----------------------------------------------------
+
+    random.shuffle(
+        final_questions
+    )
+
+    # -----------------------------------------------------
     # SAVE QUESTION IDS
-    # =====================================================
+    # -----------------------------------------------------
 
     session["jamb_question_ids"] = [
         question.id
-        for question in all_questions
+        for question in final_questions
     ]
 
-
-    # =====================================================
+    # -----------------------------------------------------
     # START TIME
-    # =====================================================
+    # -----------------------------------------------------
 
     session["jamb_started_at"] = (
         datetime.utcnow().isoformat()
     )
 
-
     return render_template(
         "jamb/exam.html",
-        questions=all_questions,
+        questions=final_questions,
         subjects=selected_subjects,
         year=selected_year
     )
@@ -2515,74 +1968,107 @@ def jamb_results():
         []
     )
 
-
     if not question_ids:
 
         return redirect(
             url_for("exam_preparation")
         )
 
+    # -----------------------------------------------------
+    # GET QUESTIONS
+    # -----------------------------------------------------
 
     questions = JAMBQuestion.query.filter(
         JAMBQuestion.id.in_(question_ids)
-    ).order_by(
-        JAMBQuestion.id.asc()
     ).all()
 
+    # -----------------------------------------------------
+    # PRESERVE EXAM ORDER
+    # -----------------------------------------------------
+
+    question_map = {
+        question.id: question
+        for question in questions
+    }
+
+    ordered_questions = [
+        question_map[question_id]
+        for question_id in question_ids
+        if question_id in question_map
+    ]
+
+    # -----------------------------------------------------
+    # MARK ANSWERS
+    # -----------------------------------------------------
 
     correct_answers = 0
 
+    answer_details = []
 
-    # =====================================================
-    # MARK ANSWERS
-    # =====================================================
-
-    for question in questions:
+    for question in ordered_questions:
 
         submitted_answer = request.form.get(
             f"question_{question.id}"
         )
 
+        is_correct = False
 
         if submitted_answer:
 
             if (
-                submitted_answer.upper()
-                == question.correct_answer.upper()
+                submitted_answer.upper().strip()
+                ==
+                question.correct_answer.upper().strip()
             ):
 
                 correct_answers += 1
 
+                is_correct = True
 
-    # =====================================================
-    # SCORE
-    # =====================================================
+        answer_details.append({
+            "question_id": question.id,
+            "submitted_answer": submitted_answer,
+            "correct_answer": question.correct_answer,
+            "is_correct": is_correct
+        })
+
+    # -----------------------------------------------------
+    # CALCULATE SCORE
+    # -----------------------------------------------------
 
     total_questions = len(
-        questions
+        ordered_questions
     )
-
 
     if total_questions > 0:
 
         percentage = int(
             (
                 correct_answers
-                / total_questions
-            ) * 100
+                /
+                total_questions
+            )
+            *
+            100
         )
 
     else:
 
         percentage = 0
 
+    # -----------------------------------------------------
+    # GET SELECTED YEAR
+    # -----------------------------------------------------
 
-    # =====================================================
+    selected_year = session.get(
+        "jamb_year"
+    )
+
+    # -----------------------------------------------------
     # SAVE ATTEMPT
-    # =====================================================
+    # -----------------------------------------------------
 
     attempt = JAMBExamAttempt(
-
         student_id=session["student_id"],
 
         subjects=json.dumps(
@@ -2592,15 +2078,18 @@ def jamb_results():
             )
         ),
 
+        year=selected_year,
+
         total_questions=total_questions,
 
         correct_answers=correct_answers,
 
         score=percentage,
 
+        started_at=datetime.utcnow(),
+
         completed_at=datetime.utcnow()
     )
-
 
     db.session.add(
         attempt
@@ -2608,13 +2097,15 @@ def jamb_results():
 
     db.session.commit()
 
+    # -----------------------------------------------------
+    # SAVE LAST ATTEMPT
+    # -----------------------------------------------------
 
     session["jamb_last_attempt_id"] = attempt.id
 
-
-    # =====================================================
+    # -----------------------------------------------------
     # CLEAR ACTIVE EXAM
-    # =====================================================
+    # -----------------------------------------------------
 
     session.pop(
         "jamb_question_ids",
@@ -2626,11 +2117,12 @@ def jamb_results():
         None
     )
 
-
     return render_template(
         "jamb/results.html",
         attempt=attempt,
-        percentage=percentage
+        percentage=percentage,
+        questions=ordered_questions,
+        answer_details=answer_details
     )
 
 
@@ -2653,6 +2145,46 @@ def jamb_history():
     return render_template(
         "jamb/history.html",
         attempts=attempts
+    )
+
+
+# =========================================================
+# JAMB QUESTION BANK INFORMATION
+# =========================================================
+
+@app.route(
+    "/exam-preparation/jamb/question-bank"
+)
+@login_required
+def jamb_question_bank():
+
+    total_questions = JAMBQuestion.query.count()
+
+    subjects = db.session.query(
+        JAMBQuestion.subject
+    ).distinct().order_by(
+        JAMBQuestion.subject.asc()
+    ).all()
+
+    subject_counts = []
+
+    for row in subjects:
+
+        subject_name = row[0]
+
+        count = JAMBQuestion.query.filter_by(
+            subject=subject_name
+        ).count()
+
+        subject_counts.append({
+            "subject": subject_name,
+            "count": count
+        })
+
+    return render_template(
+        "jamb/question-bank.html",
+        total_questions=total_questions,
+        subject_counts=subject_counts
     )
 
 
@@ -2699,14 +2231,12 @@ def get_ai_memory():
         session["student_id"]
     )
 
-
     if not student:
 
         return jsonify({
             "success": False,
             "message": "Student not found."
         }), 404
-
 
     return jsonify({
         "success": True,
@@ -2734,7 +2264,6 @@ def save_ai_memory():
         session["student_id"]
     )
 
-
     if not student:
 
         return jsonify({
@@ -2742,11 +2271,9 @@ def save_ai_memory():
             "message": "Student not found."
         }), 404
 
-
     data = request.get_json(
         silent=True
     ) or {}
-
 
     student.subjects = str(
         data.get(
@@ -2755,14 +2282,12 @@ def save_ai_memory():
         )
     ).strip()
 
-
     student.skills = str(
         data.get(
             "skills",
             ""
         )
     ).strip()
-
 
     student.interests = str(
         data.get(
@@ -2771,7 +2296,6 @@ def save_ai_memory():
         )
     ).strip()
 
-
     student.career_goal = str(
         data.get(
             "career_goal",
@@ -2779,9 +2303,7 @@ def save_ai_memory():
         )
     ).strip()
 
-
     db.session.commit()
-
 
     return jsonify({
         "success": True,
@@ -2859,7 +2381,6 @@ def opportunities():
         }
 
     ]
-
 
     return render_template(
         "opportunities.html",
@@ -2944,6 +2465,15 @@ with app.app_context():
 # =========================================================
 # DATABASE MIGRATION
 # =========================================================
+#
+# This section makes the existing PostgreSQL database
+# compatible with the newer JAMB question-bank structure.
+#
+# db.create_all() does NOT add columns to an existing table.
+#
+# Therefore, we check for missing columns and add them.
+#
+# =========================================================
 
 with app.app_context():
 
@@ -2955,6 +2485,9 @@ with app.app_context():
 
         table_names = inspector.get_table_names()
 
+        # -------------------------------------------------
+        # JAMB QUESTION TABLE
+        # -------------------------------------------------
 
         if "jamb_question" in table_names:
 
@@ -2962,28 +2495,110 @@ with app.app_context():
                 "jamb_question"
             )
 
-            column_names = {
+            existing_columns = {
                 column["name"]
                 for column in columns
             }
 
+            jamb_question_columns = {
 
-            if "year" not in column_names:
+                "year": """
+                    ALTER TABLE jamb_question
+                    ADD COLUMN year INTEGER
+                """,
 
-                with db.engine.begin() as connection:
+                "topic": """
+                    ALTER TABLE jamb_question
+                    ADD COLUMN topic VARCHAR(150)
+                """,
 
-                    connection.execute(
-                        text(
-                            "ALTER TABLE jamb_question "
-                            "ADD COLUMN year INTEGER"
+                "subtopic": """
+                    ALTER TABLE jamb_question
+                    ADD COLUMN subtopic VARCHAR(150)
+                """,
+
+                "difficulty": """
+                    ALTER TABLE jamb_question
+                    ADD COLUMN difficulty VARCHAR(30)
+                """,
+
+                "source": """
+                    ALTER TABLE jamb_question
+                    ADD COLUMN source VARCHAR(200)
+                """,
+
+                "created_at": """
+                    ALTER TABLE jamb_question
+                    ADD COLUMN created_at TIMESTAMP
+                """
+            }
+
+            for column_name, sql_statement in jamb_question_columns.items():
+
+                if column_name not in existing_columns:
+
+                    try:
+
+                        with db.engine.begin() as connection:
+
+                            connection.execute(
+                                text(
+                                    sql_statement
+                                )
+                            )
+
+                        print(
+                            f"JAMB column added: {column_name}"
                         )
+
+                    except Exception as migration_error:
+
+                        print(
+                            f"Could not add JAMB column "
+                            f"{column_name}:",
+                            migration_error
+                        )
+
+        # -------------------------------------------------
+        # JAMB EXAM ATTEMPT TABLE
+        # -------------------------------------------------
+
+        if "jamb_exam_attempt" in table_names:
+
+            columns = inspector.get_columns(
+                "jamb_exam_attempt"
+            )
+
+            existing_columns = {
+                column["name"]
+                for column in columns
+            }
+
+            if "year" not in existing_columns:
+
+                try:
+
+                    with db.engine.begin() as connection:
+
+                        connection.execute(
+                            text(
+                                """
+                                ALTER TABLE jamb_exam_attempt
+                                ADD COLUMN year INTEGER
+                                """
+                            )
+                        )
+
+                    print(
+                        "JAMB attempt year column added."
                     )
 
+                except Exception as migration_error:
 
-                print(
-                    "JAMB year column added successfully."
-                )
-
+                    print(
+                        "Could not add JAMB attempt year column:",
+                        migration_error
+                    )
 
     except Exception as error:
 
@@ -3007,13 +2622,11 @@ with app.app_context():
         "ADMIN_PASSWORD"
     )
 
-
     if admin_username and admin_password:
 
         existing_admin = Admin.query.filter_by(
             username=admin_username
         ).first()
-
 
         if not existing_admin:
 
@@ -3024,13 +2637,11 @@ with app.app_context():
                 )
             )
 
-
             db.session.add(
                 admin
             )
 
             db.session.commit()
-
 
             print(
                 "Admin account created successfully."
@@ -3038,7 +2649,7 @@ with app.app_context():
 
 
 # =========================================================
-# RUN
+# APPLICATION START
 # =========================================================
 
 if __name__ == "__main__":
