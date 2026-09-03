@@ -39,7 +39,7 @@ db = SQLAlchemy(app)
 
 
 # =========================================================
-# JAMB API SETTINGS
+# JAMB / ALOC API SETTINGS
 # =========================================================
 
 ALOC_API_URL = "https://questions.aloc.com.ng/api/v2/q"
@@ -47,6 +47,72 @@ ALOC_API_URL = "https://questions.aloc.com.ng/api/v2/q"
 ALOC_ACCESS_TOKEN = os.environ.get(
     "ALOC_ACCESS_TOKEN"
 )
+
+
+# =========================================================
+# ALOC SUBJECT NAME CONVERSION
+# =========================================================
+
+ALOC_SUBJECT_NAMES = {
+    "English": "english",
+    "Mathematics": "mathematics",
+    "Physics": "physics",
+    "Chemistry": "chemistry",
+    "Biology": "biology",
+    "Economics": "economics",
+    "Government": "government",
+    "Literature": "englishlit",
+    "Geography": "geography",
+    "Commerce": "commerce",
+    "Accounting": "accounting",
+    "Agricultural Science": "agricultural",
+    "Computer Science": "computer"
+}
+
+
+# =========================================================
+# CLEAN API VALUE
+# =========================================================
+
+def clean_api_value(value):
+    """
+    Convert API values into safe strings for the database.
+    """
+
+    if value is None:
+        return ""
+
+    if isinstance(value, str):
+        return value.strip()
+
+    return str(value).strip()
+
+
+# =========================================================
+# EXTRACT OPTION
+# =========================================================
+
+def extract_option(options, letter):
+    """
+    Handles several possible ALOC option formats.
+    """
+
+    if not options:
+        return ""
+
+    if isinstance(options, dict):
+
+        value = options.get(letter)
+
+        if value is None:
+            value = options.get(letter.upper())
+
+        if value is None:
+            value = options.get(letter.lower())
+
+        return clean_api_value(value)
+
+    return ""
 
 
 # =========================================================
@@ -60,20 +126,42 @@ def fetch_jamb_questions_from_api(
 ):
 
     if not ALOC_ACCESS_TOKEN:
+
         print(
             "ALOC_ACCESS_TOKEN is not configured."
         )
+
         return []
 
+
+    # Convert our website subject name
+    # into the subject name expected by ALOC.
+
+    api_subject = ALOC_SUBJECT_NAMES.get(
+        subject,
+        subject.lower()
+    )
+
+
     params = {
-        "subject": subject.lower(),
+        "subject": api_subject,
         "year": year,
         "type": "utme"
     }
 
+
     headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
         "AccessToken": ALOC_ACCESS_TOKEN
     }
+
+
+    print(
+        f"Requesting ALOC questions: "
+        f"subject={api_subject}, year={year}"
+    )
+
 
     try:
 
@@ -81,31 +169,171 @@ def fetch_jamb_questions_from_api(
             ALOC_API_URL,
             params=params,
             headers=headers,
-            timeout=20
+            timeout=30
         )
+
+
+        print(
+            "ALOC STATUS:",
+            response.status_code
+        )
+
+
+        print(
+            "ALOC URL:",
+            response.url
+        )
+
 
         response.raise_for_status()
 
-        data = response.json()
 
-        # Some API responses return the question
-        # directly while others return a data list.
+        try:
 
-        if isinstance(data, dict):
+            data = response.json()
 
-            if "data" in data:
-                data = data["data"]
+        except ValueError:
 
-            elif "questions" in data:
-                data = data["questions"]
+            print(
+                "ALOC returned non-JSON response:"
+            )
 
-        if isinstance(data, dict):
-            data = [data]
+            print(
+                response.text[:1000]
+            )
 
-        if not isinstance(data, list):
             return []
 
+
+        print(
+            "ALOC RESPONSE TYPE:",
+            type(data).__name__
+        )
+
+
+        # -------------------------------------------------
+        # HANDLE COMMON RESPONSE STRUCTURES
+        # -------------------------------------------------
+
+        if isinstance(data, dict):
+
+            # Standard data response
+
+            if isinstance(
+                data.get("data"),
+                list
+            ):
+
+                data = data["data"]
+
+
+            # Questions response
+
+            elif isinstance(
+                data.get("questions"),
+                list
+            ):
+
+                data = data["questions"]
+
+
+            # Sometimes one question is
+            # returned inside data.
+
+            elif isinstance(
+                data.get("data"),
+                dict
+            ):
+
+                data = [
+                    data["data"]
+                ]
+
+
+            # Sometimes the response itself
+            # represents one question.
+
+            elif (
+                "question" in data
+                or "question_text" in data
+            ):
+
+                data = [data]
+
+
+            else:
+
+                print(
+                    "ALOC returned an unexpected dictionary:"
+                )
+
+                print(
+                    str(data)[:2000]
+                )
+
+                return []
+
+
+        if isinstance(data, dict):
+
+            data = [data]
+
+
+        if not isinstance(data, list):
+
+            print(
+                "ALOC response was not a list."
+            )
+
+            return []
+
+
+        print(
+            f"ALOC returned {len(data)} question(s)"
+        )
+
+
         return data[:limit]
+
+
+    except requests.exceptions.Timeout:
+
+        print(
+            "ALOC API request timed out."
+        )
+
+        return []
+
+
+    except requests.exceptions.ConnectionError as error:
+
+        print(
+            "ALOC API connection error:",
+            error
+        )
+
+        return []
+
+
+    except requests.exceptions.HTTPError as error:
+
+        print(
+            "ALOC API HTTP error:",
+            error
+        )
+
+        try:
+
+            print(
+                "ALOC ERROR RESPONSE:",
+                response.text[:2000]
+            )
+
+        except Exception:
+            pass
+
+        return []
+
 
     except requests.RequestException as error:
 
@@ -116,10 +344,11 @@ def fetch_jamb_questions_from_api(
 
         return []
 
-    except ValueError as error:
+
+    except Exception as error:
 
         print(
-            "ALOC API returned invalid JSON:",
+            "Unexpected ALOC error:",
             error
         )
 
@@ -127,10 +356,236 @@ def fetch_jamb_questions_from_api(
 
 
 # =========================================================
+# CONVERT ALOC QUESTION TO DATABASE FORMAT
+# =========================================================
+
+def convert_aloc_question(
+    item,
+    subject,
+    year
+):
+
+    if not isinstance(item, dict):
+
+        return None
+
+
+    # -----------------------------------------------------
+    # QUESTION TEXT
+    # -----------------------------------------------------
+
+    question_text = (
+        item.get("question")
+        or item.get("question_text")
+        or item.get("text")
+        or item.get("content")
+    )
+
+
+    question_text = clean_api_value(
+        question_text
+    )
+
+
+    if not question_text:
+
+        return None
+
+
+    # -----------------------------------------------------
+    # OPTIONS
+    # -----------------------------------------------------
+
+    options = item.get(
+        "option"
+    )
+
+    if options is None:
+
+        options = item.get(
+            "options"
+        )
+
+
+    option_a = extract_option(
+        options,
+        "a"
+    )
+
+    option_b = extract_option(
+        options,
+        "b"
+    )
+
+    option_c = extract_option(
+        options,
+        "c"
+    )
+
+    option_d = extract_option(
+        options,
+        "d"
+    )
+
+
+    # Some API responses may return
+    # options directly.
+
+    if not option_a:
+
+        option_a = clean_api_value(
+            item.get("option_a")
+            or item.get("a")
+        )
+
+
+    if not option_b:
+
+        option_b = clean_api_value(
+            item.get("option_b")
+            or item.get("b")
+        )
+
+
+    if not option_c:
+
+        option_c = clean_api_value(
+            item.get("option_c")
+            or item.get("c")
+        )
+
+
+    if not option_d:
+
+        option_d = clean_api_value(
+            item.get("option_d")
+            or item.get("d")
+        )
+
+
+    # -----------------------------------------------------
+    # CORRECT ANSWER
+    # -----------------------------------------------------
+
+    correct_answer = (
+        item.get("answer")
+        or item.get("correct_answer")
+        or item.get("correct")
+    )
+
+
+    # Sometimes answer can be inside
+    # another object.
+
+    if isinstance(
+        correct_answer,
+        dict
+    ):
+
+        correct_answer = (
+            correct_answer.get("answer")
+            or correct_answer.get("option")
+            or correct_answer.get("letter")
+        )
+
+
+    correct_answer = clean_api_value(
+        correct_answer
+    )
+
+
+    # Convert things like:
+    # "A", "a", "Option A"
+    # into just A.
+
+    correct_answer_upper = (
+        correct_answer
+        .strip()
+        .upper()
+    )
+
+
+    if correct_answer_upper.startswith(
+        "OPTION "
+    ):
+
+        correct_answer_upper = (
+            correct_answer_upper
+            .replace(
+                "OPTION ",
+                "",
+                1
+            )
+            .strip()
+        )
+
+
+    if correct_answer_upper not in [
+        "A",
+        "B",
+        "C",
+        "D"
+    ]:
+
+        correct_answer_upper = ""
+
+
+    # -----------------------------------------------------
+    # EXPLANATION
+    # -----------------------------------------------------
+
+    explanation = (
+        item.get("solution")
+        or item.get("explanation")
+        or item.get("answer_explanation")
+        or ""
+    )
+
+
+    explanation = clean_api_value(
+        explanation
+    )
+
+
+    # -----------------------------------------------------
+    # VALIDATE
+    # -----------------------------------------------------
+
+    if not option_a:
+        return None
+
+    if not option_b:
+        return None
+
+    if not option_c:
+        return None
+
+    if not option_d:
+        return None
+
+    if not correct_answer_upper:
+        return None
+
+
+    return {
+        "year": year,
+        "subject": subject,
+        "question": question_text,
+        "option_a": option_a,
+        "option_b": option_b,
+        "option_c": option_c,
+        "option_d": option_d,
+        "correct_answer": correct_answer_upper,
+        "explanation": explanation
+    }
+
+
+# =========================================================
 # STUDENT MODEL
 # =========================================================
 
 class Student(db.Model):
+
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -178,6 +633,7 @@ class Student(db.Model):
 # =========================================================
 
 class Mentor(db.Model):
+
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -229,6 +685,7 @@ class Mentor(db.Model):
 # =========================================================
 
 class Admin(db.Model):
+
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -251,6 +708,7 @@ class Admin(db.Model):
 # =========================================================
 
 class MentorshipRequest(db.Model):
+
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -306,6 +764,7 @@ class MentorshipRequest(db.Model):
 # =========================================================
 
 class DigitalSkillsProgress(db.Model):
+
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -360,12 +819,12 @@ class DigitalSkillsProgress(db.Model):
 # =========================================================
 
 class JAMBQuestion(db.Model):
+
     id = db.Column(
         db.Integer,
         primary_key=True
     )
 
-    # NEW: QUESTION YEAR
     year = db.Column(
         db.Integer,
         nullable=True,
@@ -419,6 +878,7 @@ class JAMBQuestion(db.Model):
 # =========================================================
 
 class JAMBExamAttempt(db.Model):
+
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -481,11 +941,15 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
 
         if "student_id" not in session:
+
             return redirect(
                 url_for("login")
             )
 
-        return f(*args, **kwargs)
+        return f(
+            *args,
+            **kwargs
+        )
 
     return decorated_function
 
@@ -500,11 +964,15 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
 
         if "admin_id" not in session:
+
             return redirect(
                 url_for("admin_login")
             )
 
-        return f(*args, **kwargs)
+        return f(
+            *args,
+            **kwargs
+        )
 
     return decorated_function
 
@@ -549,14 +1017,22 @@ def register():
         )
 
         if not name or not email or not password:
-            return "Please fill in all fields."
+
+            return (
+                "Please fill in all fields.",
+                400
+            )
 
         existing_student = Student.query.filter_by(
             email=email
         ).first()
 
         if existing_student:
-            return "An account with this email already exists."
+
+            return (
+                "An account with this email already exists.",
+                400
+            )
 
         student = Student(
             name=name,
@@ -566,10 +1042,14 @@ def register():
             )
         )
 
-        db.session.add(student)
+        db.session.add(
+            student
+        )
+
         db.session.commit()
 
         session["student_id"] = student.id
+
         session["student_name"] = student.name
 
         return redirect(
@@ -608,15 +1088,24 @@ def login():
         ).first()
 
         if not student:
-            return "Account not found."
+
+            return (
+                "Account not found.",
+                404
+            )
 
         if not check_password_hash(
             student.password,
             password
         ):
-            return "Incorrect password."
+
+            return (
+                "Incorrect password.",
+                401
+            )
 
         session["student_id"] = student.id
+
         session["student_name"] = student.name
 
         return redirect(
@@ -660,6 +1149,11 @@ def logout():
         None
     )
 
+    session.pop(
+        "jamb_started_at",
+        None
+    )
+
     return redirect(
         url_for("login")
     )
@@ -692,15 +1186,24 @@ def admin_login():
         ).first()
 
         if not admin:
-            return "Admin account not found."
+
+            return (
+                "Admin account not found.",
+                404
+            )
 
         if not check_password_hash(
             admin.password,
             password
         ):
-            return "Incorrect admin password."
+
+            return (
+                "Incorrect admin password.",
+                401
+            )
 
         session["admin_id"] = admin.id
+
         session["admin_username"] = admin.username
 
         return redirect(
@@ -811,7 +1314,11 @@ def add_mentor():
         ).strip()
 
         if not name or not profession or not field:
-            return "Name, profession and field are required."
+
+            return (
+                "Name, profession and field are required.",
+                400
+            )
 
         mentor = Mentor(
             name=name,
@@ -824,7 +1331,10 @@ def add_mentor():
             verified=True
         )
 
-        db.session.add(mentor)
+        db.session.add(
+            mentor
+        )
+
         db.session.commit()
 
         return redirect(
@@ -857,7 +1367,10 @@ def delete_mentor(mentor_id):
         synchronize_session=False
     )
 
-    db.session.delete(mentor)
+    db.session.delete(
+        mentor
+    )
+
     db.session.commit()
 
     return redirect(
@@ -900,7 +1413,11 @@ def mentor_profile(mentor_id):
     )
 
     if not mentor.verified:
-        return "Mentor not available.", 404
+
+        return (
+            "Mentor not available.",
+            404
+        )
 
     return render_template(
         "mentor-profile.html",
@@ -924,7 +1441,11 @@ def request_mentorship(mentor_id):
     )
 
     if not mentor.verified:
-        return "Mentor not available.", 404
+
+        return (
+            "Mentor not available.",
+            404
+        )
 
     if request.method == "POST":
 
@@ -934,7 +1455,11 @@ def request_mentorship(mentor_id):
         ).strip()
 
         if not message:
-            return "Please enter a message."
+
+            return (
+                "Please enter a message.",
+                400
+            )
 
         mentorship_request = MentorshipRequest(
             student_id=session["student_id"],
@@ -971,7 +1496,7 @@ def request_mentorship(mentor_id):
 @login_required
 def my_mentorship_requests():
 
-    requests = MentorshipRequest.query.filter_by(
+    requests_list = MentorshipRequest.query.filter_by(
         student_id=session["student_id"]
     ).order_by(
         MentorshipRequest.id.desc()
@@ -979,7 +1504,7 @@ def my_mentorship_requests():
 
     return render_template(
         "my-mentorship-requests.html",
-        requests=requests
+        requests=requests_list
     )
 
 
@@ -993,13 +1518,13 @@ def my_mentorship_requests():
 @admin_required
 def admin_mentorship_requests():
 
-    requests = MentorshipRequest.query.order_by(
+    requests_list = MentorshipRequest.query.order_by(
         MentorshipRequest.id.desc()
     ).all()
 
     return render_template(
         "admin-mentorship-requests.html",
-        requests=requests
+        requests=requests_list
     )
 
 
@@ -1024,7 +1549,11 @@ def update_mentorship_request(
     ]
 
     if status not in allowed_statuses:
-        return "Invalid status.", 400
+
+        return (
+            "Invalid status.",
+            400
+        )
 
     mentorship_request = MentorshipRequest.query.get_or_404(
         request_id
@@ -1496,7 +2025,11 @@ def complete_digital_skills_module(
 ):
 
     if module_number < 1 or module_number > 10:
-        return "Invalid module.", 400
+
+        return (
+            "Invalid module.",
+            400
+        )
 
     record = DigitalSkillsProgress.query.filter_by(
         student_id=session["student_id"],
@@ -1511,9 +2044,12 @@ def complete_digital_skills_module(
             completed=False
         )
 
-        db.session.add(record)
+        db.session.add(
+            record
+        )
 
     record.completed = True
+
     record.completed_at = datetime.utcnow()
 
     quiz_score = request.form.get(
@@ -1523,11 +2059,13 @@ def complete_digital_skills_module(
     if quiz_score is not None and quiz_score != "":
 
         try:
+
             record.quiz_score = int(
                 quiz_score
             )
 
         except ValueError:
+
             pass
 
     db.session.commit()
@@ -1631,9 +2169,6 @@ def start_jamb_exam():
         ""
     ).strip()
 
-    # -----------------------------------------
-    # CHECK YEAR
-    # -----------------------------------------
 
     if not selected_year:
 
@@ -1641,6 +2176,7 @@ def start_jamb_exam():
             "Please select an exam year.",
             400
         )
+
 
     try:
 
@@ -1655,9 +2191,6 @@ def start_jamb_exam():
             400
         )
 
-    # -----------------------------------------
-    # CHECK YEAR RANGE
-    # -----------------------------------------
 
     if selected_year < 2000 or selected_year > 2026:
 
@@ -1666,9 +2199,6 @@ def start_jamb_exam():
             400
         )
 
-    # -----------------------------------------
-    # CHECK SUBJECTS
-    # -----------------------------------------
 
     if not selected_subjects:
 
@@ -1677,20 +2207,31 @@ def start_jamb_exam():
             400
         )
 
-    # -----------------------------------------
-    # SAVE SELECTION
-    # -----------------------------------------
+
+    # Remove duplicate subjects.
+
+    selected_subjects = list(
+        dict.fromkeys(
+            selected_subjects
+        )
+    )
+
 
     session["jamb_year"] = selected_year
 
     session["jamb_subjects"] = selected_subjects
 
-    # Clear any previous exam questions
 
     session.pop(
         "jamb_question_ids",
         None
     )
+
+    session.pop(
+        "jamb_started_at",
+        None
+    )
+
 
     return redirect(
         url_for("jamb_exam")
@@ -1716,9 +2257,6 @@ def jamb_exam():
         "jamb_year"
     )
 
-    # -----------------------------------------
-    # CHECK SELECTION
-    # -----------------------------------------
 
     if not selected_subjects or not selected_year:
 
@@ -1726,50 +2264,236 @@ def jamb_exam():
             url_for("exam_preparation")
         )
 
-    # -----------------------------------------
-    # FIND QUESTIONS
-    # -----------------------------------------
 
-    questions = JAMBQuestion.query.filter(
-        JAMBQuestion.year == selected_year,
-        JAMBQuestion.subject.in_(
-            selected_subjects
+    # =====================================================
+    # STEP 1
+    # LOOK FOR QUESTIONS ALREADY IN DATABASE
+    # =====================================================
+
+    all_questions = []
+
+
+    for subject in selected_subjects:
+
+        local_questions = JAMBQuestion.query.filter_by(
+            year=selected_year,
+            subject=subject
+        ).order_by(
+            JAMBQuestion.id.asc()
+        ).all()
+
+
+        if local_questions:
+
+            print(
+                f"Found {len(local_questions)} "
+                f"local questions for "
+                f"{subject} {selected_year}"
+            )
+
+
+            all_questions.extend(
+                local_questions
+            )
+
+
+            continue
+
+
+        # =================================================
+        # STEP 2
+        # NO LOCAL QUESTIONS
+        # FETCH FROM ALOC
+        # =================================================
+
+        print(
+            f"No local questions for "
+            f"{subject} {selected_year}. "
+            f"Fetching from ALOC..."
         )
-    ).order_by(
-        JAMBQuestion.id.asc()
-    ).all()
 
-    # -----------------------------------------
-    # NO QUESTIONS
-    # -----------------------------------------
 
-    if not questions:
+        api_questions = fetch_jamb_questions_from_api(
+            subject=subject,
+            year=selected_year,
+            limit=40
+        )
+
+
+        if not api_questions:
+
+            print(
+                f"ALOC returned no questions "
+                f"for {subject} {selected_year}"
+            )
+
+            continue
+
+
+        saved_for_subject = 0
+
+
+        for item in api_questions:
+
+            converted = convert_aloc_question(
+                item=item,
+                subject=subject,
+                year=selected_year
+            )
+
+
+            if not converted:
+
+                print(
+                    "Skipped invalid ALOC question."
+                )
+
+                continue
+
+
+            # -------------------------------------------------
+            # PREVENT DUPLICATES
+            # -------------------------------------------------
+
+            existing = JAMBQuestion.query.filter_by(
+                year=converted["year"],
+                subject=converted["subject"],
+                question=converted["question"]
+            ).first()
+
+
+            if existing:
+
+                all_questions.append(
+                    existing
+                )
+
+                continue
+
+
+            new_question = JAMBQuestion(
+                year=converted["year"],
+                subject=converted["subject"],
+                question=converted["question"],
+                option_a=converted["option_a"],
+                option_b=converted["option_b"],
+                option_c=converted["option_c"],
+                option_d=converted["option_d"],
+                correct_answer=converted["correct_answer"],
+                explanation=converted["explanation"]
+            )
+
+
+            db.session.add(
+                new_question
+            )
+
+
+            db.session.flush()
+
+
+            all_questions.append(
+                new_question
+            )
+
+
+            saved_for_subject += 1
+
+
+        print(
+            f"Saved {saved_for_subject} "
+            f"new questions for "
+            f"{subject} {selected_year}"
+        )
+
+
+    # =====================================================
+    # COMMIT ALL API QUESTIONS
+    # =====================================================
+
+    try:
+
+        db.session.commit()
+
+    except Exception as error:
+
+        db.session.rollback()
+
+        print(
+            "Failed to save JAMB questions:",
+            error
+        )
 
         return (
-            f"There are currently no JAMB questions "
-            f"available for {selected_year} in the "
-            f"selected subjects.",
+            "There was a problem saving the JAMB questions.",
+            500
+        )
+
+
+    # =====================================================
+    # REMOVE DUPLICATE OBJECTS
+    # =====================================================
+
+    unique_questions = []
+
+    seen_ids = set()
+
+
+    for question in all_questions:
+
+        if question.id in seen_ids:
+
+            continue
+
+        seen_ids.add(
+            question.id
+        )
+
+        unique_questions.append(
+            question
+        )
+
+
+    all_questions = unique_questions
+
+
+    # =====================================================
+    # NO QUESTIONS
+    # =====================================================
+
+    if not all_questions:
+
+        return (
+            f"No questions were found for "
+            f"{selected_year} in the selected subjects. "
+            f"The selected year may not currently be "
+            f"available from the question provider.",
             404
         )
 
-    # -----------------------------------------
+
+    # =====================================================
     # SAVE QUESTION IDS
-    # -----------------------------------------
+    # =====================================================
 
     session["jamb_question_ids"] = [
         question.id
-        for question in questions
+        for question in all_questions
     ]
 
-    # -----------------------------------------
-    # START TIME
-    # -----------------------------------------
 
-    session["jamb_started_at"] = datetime.utcnow().isoformat()
+    # =====================================================
+    # START TIME
+    # =====================================================
+
+    session["jamb_started_at"] = (
+        datetime.utcnow().isoformat()
+    )
+
 
     return render_template(
         "jamb/exam.html",
-        questions=questions,
+        questions=all_questions,
         subjects=selected_subjects,
         year=selected_year
     )
@@ -1791,27 +2515,34 @@ def jamb_results():
         []
     )
 
+
     if not question_ids:
 
         return redirect(
             url_for("exam_preparation")
         )
 
+
     questions = JAMBQuestion.query.filter(
         JAMBQuestion.id.in_(question_ids)
+    ).order_by(
+        JAMBQuestion.id.asc()
     ).all()
+
 
     correct_answers = 0
 
-    # -----------------------------------------
+
+    # =====================================================
     # MARK ANSWERS
-    # -----------------------------------------
+    # =====================================================
 
     for question in questions:
 
         submitted_answer = request.form.get(
             f"question_{question.id}"
         )
+
 
         if submitted_answer:
 
@@ -1822,29 +2553,36 @@ def jamb_results():
 
                 correct_answers += 1
 
-    # -----------------------------------------
-    # CALCULATE SCORE
-    # -----------------------------------------
+
+    # =====================================================
+    # SCORE
+    # =====================================================
 
     total_questions = len(
         questions
     )
 
+
     if total_questions > 0:
 
         percentage = int(
-            (correct_answers / total_questions) * 100
+            (
+                correct_answers
+                / total_questions
+            ) * 100
         )
 
     else:
 
         percentage = 0
 
-    # -----------------------------------------
+
+    # =====================================================
     # SAVE ATTEMPT
-    # -----------------------------------------
+    # =====================================================
 
     attempt = JAMBExamAttempt(
+
         student_id=session["student_id"],
 
         subjects=json.dumps(
@@ -1863,21 +2601,20 @@ def jamb_results():
         completed_at=datetime.utcnow()
     )
 
+
     db.session.add(
         attempt
     )
 
     db.session.commit()
 
-    # -----------------------------------------
-    # SAVE LAST ATTEMPT
-    # -----------------------------------------
 
     session["jamb_last_attempt_id"] = attempt.id
 
-    # -----------------------------------------
+
+    # =====================================================
     # CLEAR ACTIVE EXAM
-    # -----------------------------------------
+    # =====================================================
 
     session.pop(
         "jamb_question_ids",
@@ -1888,6 +2625,7 @@ def jamb_results():
         "jamb_started_at",
         None
     )
+
 
     return render_template(
         "jamb/results.html",
@@ -1961,12 +2699,14 @@ def get_ai_memory():
         session["student_id"]
     )
 
+
     if not student:
 
         return jsonify({
             "success": False,
             "message": "Student not found."
         }), 404
+
 
     return jsonify({
         "success": True,
@@ -1994,6 +2734,7 @@ def save_ai_memory():
         session["student_id"]
     )
 
+
     if not student:
 
         return jsonify({
@@ -2001,9 +2742,11 @@ def save_ai_memory():
             "message": "Student not found."
         }), 404
 
+
     data = request.get_json(
         silent=True
     ) or {}
+
 
     student.subjects = str(
         data.get(
@@ -2012,12 +2755,14 @@ def save_ai_memory():
         )
     ).strip()
 
+
     student.skills = str(
         data.get(
             "skills",
             ""
         )
     ).strip()
+
 
     student.interests = str(
         data.get(
@@ -2026,6 +2771,7 @@ def save_ai_memory():
         )
     ).strip()
 
+
     student.career_goal = str(
         data.get(
             "career_goal",
@@ -2033,7 +2779,9 @@ def save_ai_memory():
         )
     ).strip()
 
+
     db.session.commit()
+
 
     return jsonify({
         "success": True,
@@ -2111,6 +2859,7 @@ def opportunities():
         }
 
     ]
+
 
     return render_template(
         "opportunities.html",
@@ -2195,22 +2944,17 @@ with app.app_context():
 # =========================================================
 # DATABASE MIGRATION
 # =========================================================
-#
-# The JAMBQuestion model now has a "year" column.
-#
-# db.create_all() does NOT add new columns to an existing
-# table, so this checks whether the column exists and adds
-# it if necessary.
-#
-# =========================================================
 
 with app.app_context():
 
     try:
 
-        inspector = inspect(db.engine)
+        inspector = inspect(
+            db.engine
+        )
 
         table_names = inspector.get_table_names()
+
 
         if "jamb_question" in table_names:
 
@@ -2223,37 +2967,23 @@ with app.app_context():
                 for column in columns
             }
 
+
             if "year" not in column_names:
 
-                if db.engine.dialect.name == "postgresql":
+                with db.engine.begin() as connection:
 
-                    with db.engine.begin() as connection:
-
-                        connection.execute(
-                            text(
-                                "ALTER TABLE jamb_question "
-                                "ADD COLUMN year INTEGER"
-                            )
+                    connection.execute(
+                        text(
+                            "ALTER TABLE jamb_question "
+                            "ADD COLUMN year INTEGER"
                         )
-
-                    print(
-                        "JAMB year column added to PostgreSQL."
                     )
 
-                elif db.engine.dialect.name == "sqlite":
 
-                    with db.engine.begin() as connection:
+                print(
+                    "JAMB year column added successfully."
+                )
 
-                        connection.execute(
-                            text(
-                                "ALTER TABLE jamb_question "
-                                "ADD COLUMN year INTEGER"
-                            )
-                        )
-
-                    print(
-                        "JAMB year column added to SQLite."
-                    )
 
     except Exception as error:
 
@@ -2264,7 +2994,7 @@ with app.app_context():
 
 
 # =========================================================
-# CREATE ADMIN ACCOUNT FROM RENDER ENVIRONMENT VARIABLES
+# CREATE ADMIN ACCOUNT FROM ENVIRONMENT VARIABLES
 # =========================================================
 
 with app.app_context():
@@ -2277,11 +3007,13 @@ with app.app_context():
         "ADMIN_PASSWORD"
     )
 
+
     if admin_username and admin_password:
 
         existing_admin = Admin.query.filter_by(
             username=admin_username
         ).first()
+
 
         if not existing_admin:
 
@@ -2292,11 +3024,13 @@ with app.app_context():
                 )
             )
 
+
             db.session.add(
                 admin
             )
 
             db.session.commit()
+
 
             print(
                 "Admin account created successfully."
