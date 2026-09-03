@@ -12,34 +12,48 @@ import random
 # =========================================================
 # APP SETUP
 # =========================================================
+
 app = Flask(__name__)
+
 
 @app.template_filter("from_json")
 def from_json_filter(value):
+
     try:
         return json.loads(value)
+
     except (TypeError, ValueError):
+
         return []
+
 
 app.config["SECRET_KEY"] = os.environ.get(
     "SECRET_KEY",
     "career-bridge-development-key"
 )
 
+
 database_url = os.environ.get("DATABASE_URL")
 
+
 if not database_url:
+
     database_url = "sqlite:///career_bridge.db"
 
+
 if database_url.startswith("postgres://"):
+
     database_url = database_url.replace(
         "postgres://",
         "postgresql://",
         1
     )
 
+
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 
 db = SQLAlchemy(app)
 
@@ -289,8 +303,6 @@ class JAMBQuestion(db.Model):
         primary_key=True
     )
 
-    # Kept for old database compatibility.
-    # Career Bridge no longer uses year selection.
     year = db.Column(
         db.Integer,
         nullable=True,
@@ -388,8 +400,6 @@ class JAMBExamAttempt(db.Model):
         nullable=False
     )
 
-    # Kept for database compatibility.
-    # New Career Bridge attempts use NULL.
     year = db.Column(
         db.Integer,
         nullable=True
@@ -543,6 +553,7 @@ def register():
         db.session.commit()
 
         session["student_id"] = student.id
+
         session["student_name"] = student.name
 
         return redirect(
@@ -598,6 +609,7 @@ def login():
             )
 
         session["student_id"] = student.id
+
         session["student_name"] = student.name
 
         return redirect(
@@ -705,6 +717,7 @@ def admin_login():
             )
 
         session["admin_id"] = admin.id
+
         session["admin_username"] = admin.username
 
         return redirect(
@@ -1550,6 +1563,7 @@ def complete_digital_skills_module(
         )
 
     record.completed = True
+
     record.completed_at = datetime.utcnow()
 
     quiz_score = request.form.get(
@@ -1601,7 +1615,10 @@ def digital_skills_progress_api():
     ]
 
     total = 10
-    completed = len(completed_modules)
+
+    completed = len(
+        completed_modules
+    )
 
     percentage = int(
         (completed / total) * 100
@@ -1666,6 +1683,7 @@ def start_jamb_exam():
         ""
     ).strip()
 
+
     # -----------------------------------------------------
     # QUESTION COUNT
     # -----------------------------------------------------
@@ -1704,6 +1722,7 @@ def start_jamb_exam():
             400
         )
 
+
     # -----------------------------------------------------
     # SUBJECTS
     # -----------------------------------------------------
@@ -1733,6 +1752,7 @@ def start_jamb_exam():
             "Please select at least one subject.",
             400
         )
+
 
     # -----------------------------------------------------
     # ALLOWED SUBJECTS
@@ -1767,6 +1787,7 @@ def start_jamb_exam():
             400
         )
 
+
     # -----------------------------------------------------
     # SAVE SELECTION
     # -----------------------------------------------------
@@ -1791,6 +1812,7 @@ def start_jamb_exam():
         "jamb_started_at",
         None
     )
+
 
     return redirect(
         url_for("jamb_exam")
@@ -1837,6 +1859,7 @@ def jamb_exam():
             url_for("exam_preparation")
         )
 
+
     # -----------------------------------------------------
     # GET QUESTIONS
     # -----------------------------------------------------
@@ -1863,6 +1886,7 @@ def jamb_exam():
             subject_questions
         )
 
+
     # -----------------------------------------------------
     # TOTAL AVAILABLE QUESTIONS
     # -----------------------------------------------------
@@ -1876,10 +1900,12 @@ def jamb_exam():
         return (
             """
             <h2>No questions are currently available.</h2>
+
             <p>
                 The Career Bridge question bank has not been
                 populated yet.
             </p>
+
             <p>
                 Please make sure <strong>seed_jamb.py</strong>
                 is present in your project and redeploy the app.
@@ -1887,6 +1913,7 @@ def jamb_exam():
             """,
             404
         )
+
 
     # -----------------------------------------------------
     # NOT ENOUGH QUESTIONS
@@ -1919,6 +1946,7 @@ def jamb_exam():
             400
         )
 
+
     # -----------------------------------------------------
     # FAIR DISTRIBUTION
     # -----------------------------------------------------
@@ -1942,6 +1970,7 @@ def jamb_exam():
     final_questions = []
 
     remaining_question_pool = {}
+
 
     # -----------------------------------------------------
     # FIRST PASS
@@ -1974,6 +2003,7 @@ def jamb_exam():
             available_questions[target_count:]
         )
 
+
     # -----------------------------------------------------
     # SECOND PASS
     # -----------------------------------------------------
@@ -2005,6 +2035,7 @@ def jamb_exam():
             extra_pool[:remaining_needed]
         )
 
+
     # -----------------------------------------------------
     # FINAL SAFETY CHECK
     # -----------------------------------------------------
@@ -2016,6 +2047,7 @@ def jamb_exam():
             "to create this practice session.",
             400
         )
+
 
     # -----------------------------------------------------
     # RANDOMIZE
@@ -2029,6 +2061,7 @@ def jamb_exam():
         :selected_question_count
     ]
 
+
     # -----------------------------------------------------
     # SAVE QUESTION IDS
     # -----------------------------------------------------
@@ -2038,6 +2071,7 @@ def jamb_exam():
         for question in final_questions
     ]
 
+
     # -----------------------------------------------------
     # START TIME
     # -----------------------------------------------------
@@ -2045,6 +2079,7 @@ def jamb_exam():
     session["jamb_started_at"] = (
         datetime.utcnow().isoformat()
     )
+
 
     # -----------------------------------------------------
     # EXAM TIME
@@ -2062,6 +2097,7 @@ def jamb_exam():
         60
     )
 
+
     # -----------------------------------------------------
     # RENDER EXAM
     # -----------------------------------------------------
@@ -2076,7 +2112,7 @@ def jamb_exam():
 
 
 # =========================================================
-# JAMB RESULTS
+# JAMB RESULTS - SUBMIT EXAM
 # =========================================================
 
 @app.route(
@@ -2097,14 +2133,17 @@ def jamb_results():
             url_for("exam_preparation")
         )
 
+
     questions = JAMBQuestion.query.filter(
         JAMBQuestion.id.in_(question_ids)
     ).all()
+
 
     question_map = {
         question.id: question
         for question in questions
     }
+
 
     ordered_questions = [
         question_map[question_id]
@@ -2112,9 +2151,15 @@ def jamb_results():
         if question_id in question_map
     ]
 
+
     correct_answers = 0
 
     answer_details = []
+
+
+    # -----------------------------------------------------
+    # MARK ANSWERS
+    # -----------------------------------------------------
 
     for question in ordered_questions:
 
@@ -2136,6 +2181,7 @@ def jamb_results():
 
                 is_correct = True
 
+
         answer_details.append({
             "question_id": question.id,
             "submitted_answer": submitted_answer,
@@ -2143,9 +2189,15 @@ def jamb_results():
             "is_correct": is_correct
         })
 
+
+    # -----------------------------------------------------
+    # CALCULATE SCORE
+    # -----------------------------------------------------
+
     total_questions = len(
         ordered_questions
     )
+
 
     if total_questions > 0:
 
@@ -2163,7 +2215,36 @@ def jamb_results():
 
         percentage = 0
 
+
+    # -----------------------------------------------------
+    # GET START TIME
+    # -----------------------------------------------------
+
+    started_at = datetime.utcnow()
+
+    stored_started_at = session.get(
+        "jamb_started_at"
+    )
+
+    if stored_started_at:
+
+        try:
+
+            started_at = datetime.fromisoformat(
+                stored_started_at
+            )
+
+        except (ValueError, TypeError):
+
+            started_at = datetime.utcnow()
+
+
+    # -----------------------------------------------------
+    # SAVE ATTEMPT
+    # -----------------------------------------------------
+
     attempt = JAMBExamAttempt(
+
         student_id=session["student_id"],
 
         subjects=json.dumps(
@@ -2181,10 +2262,11 @@ def jamb_results():
 
         score=percentage,
 
-        started_at=datetime.utcnow(),
+        started_at=started_at,
 
         completed_at=datetime.utcnow()
     )
+
 
     db.session.add(
         attempt
@@ -2192,7 +2274,17 @@ def jamb_results():
 
     db.session.commit()
 
+
+    # -----------------------------------------------------
+    # SAVE LAST ATTEMPT
+    # -----------------------------------------------------
+
     session["jamb_last_attempt_id"] = attempt.id
+
+
+    # -----------------------------------------------------
+    # CLEAR CURRENT EXAM
+    # -----------------------------------------------------
 
     session.pop(
         "jamb_question_ids",
@@ -2204,12 +2296,46 @@ def jamb_results():
         None
     )
 
+
+    # -----------------------------------------------------
+    # SHOW RESULT
+    # -----------------------------------------------------
+
     return render_template(
         "jamb/results.html",
         attempt=attempt,
         percentage=percentage,
         questions=ordered_questions,
         answer_details=answer_details
+    )
+
+
+# =========================================================
+# STUDENT RESULTS PAGE
+# =========================================================
+#
+# This page displays all completed JAMB practice attempts
+# belonging ONLY to the currently logged-in student.
+#
+# =========================================================
+
+@app.route(
+    "/results"
+)
+@login_required
+def results():
+
+    student_id = session["student_id"]
+
+    attempts = JAMBExamAttempt.query.filter_by(
+        student_id=student_id
+    ).order_by(
+        JAMBExamAttempt.id.desc()
+    ).all()
+
+    return render_template(
+        "results.html",
+        attempts=attempts
     )
 
 
@@ -2563,6 +2689,7 @@ with app.app_context():
 
         table_names = inspector.get_table_names()
 
+
         # -------------------------------------------------
         # JAMB QUESTION TABLE
         # -------------------------------------------------
@@ -2611,6 +2738,7 @@ with app.app_context():
                 """
             }
 
+
             for column_name, sql_statement in jamb_question_columns.items():
 
                 if column_name not in existing_columns:
@@ -2636,6 +2764,7 @@ with app.app_context():
                             f"{column_name}:",
                             migration_error
                         )
+
 
         # -------------------------------------------------
         # JAMB EXAM ATTEMPT TABLE
@@ -2678,6 +2807,7 @@ with app.app_context():
                         migration_error
                     )
 
+
     except Exception as error:
 
         print(
@@ -2688,17 +2818,6 @@ with app.app_context():
 
 # =========================================================
 # AUTOMATIC JAMB QUESTION SEEDING
-# =========================================================
-#
-# This automatically loads the questions from seed_jamb.py
-# into the current database when the application starts.
-#
-# The seed script already contains the Career Bridge
-# original JAMB-style questions.
-#
-# Existing questions are not duplicated because
-# seed_questions() checks for existing question text.
-#
 # =========================================================
 
 with app.app_context():
