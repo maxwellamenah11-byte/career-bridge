@@ -3,8 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime
+from sqlalchemy import inspect, text
 import os
 import json
+
 
 # =========================================================
 # APP SETUP
@@ -19,7 +21,6 @@ app.config["SECRET_KEY"] = os.environ.get(
 
 database_url = os.environ.get("DATABASE_URL")
 
-# Works locally even if DATABASE_URL is not configured.
 if not database_url:
     database_url = "sqlite:///career_bridge.db"
 
@@ -275,9 +276,17 @@ class JAMBQuestion(db.Model):
         primary_key=True
     )
 
+    # NEW: QUESTION YEAR
+    year = db.Column(
+        db.Integer,
+        nullable=True,
+        index=True
+    )
+
     subject = db.Column(
         db.String(100),
-        nullable=False
+        nullable=False,
+        index=True
     )
 
     question = db.Column(
@@ -544,6 +553,21 @@ def logout():
 
     session.pop(
         "student_name",
+        None
+    )
+
+    session.pop(
+        "jamb_year",
+        None
+    )
+
+    session.pop(
+        "jamb_subjects",
+        None
+    )
+
+    session.pop(
+        "jamb_question_ids",
         None
     )
 
@@ -1513,6 +1537,50 @@ def start_jamb_exam():
         "subjects"
     )
 
+    selected_year = request.form.get(
+        "year",
+        ""
+    ).strip()
+
+    # -----------------------------------------
+    # CHECK YEAR
+    # -----------------------------------------
+
+    if not selected_year:
+
+        return (
+            "Please select an exam year.",
+            400
+        )
+
+    try:
+
+        selected_year = int(
+            selected_year
+        )
+
+    except ValueError:
+
+        return (
+            "Invalid exam year.",
+            400
+        )
+
+    # -----------------------------------------
+    # CHECK YEAR RANGE
+    # -----------------------------------------
+
+    if selected_year < 2000 or selected_year > 2026:
+
+        return (
+            "Invalid exam year.",
+            400
+        )
+
+    # -----------------------------------------
+    # CHECK SUBJECTS
+    # -----------------------------------------
+
     if not selected_subjects:
 
         return (
@@ -1520,7 +1588,20 @@ def start_jamb_exam():
             400
         )
 
+    # -----------------------------------------
+    # SAVE SELECTION
+    # -----------------------------------------
+
+    session["jamb_year"] = selected_year
+
     session["jamb_subjects"] = selected_subjects
+
+    # Clear any previous exam questions
+
+    session.pop(
+        "jamb_question_ids",
+        None
+    )
 
     return redirect(
         url_for("jamb_exam")
@@ -1531,7 +1612,9 @@ def start_jamb_exam():
 # JAMB EXAM
 # =========================================================
 
-@app.route("/exam-preparation/jamb/exam")
+@app.route(
+    "/exam-preparation/jamb/exam"
+)
 @login_required
 def jamb_exam():
 
@@ -1540,35 +1623,66 @@ def jamb_exam():
         []
     )
 
-    if not selected_subjects:
+    selected_year = session.get(
+        "jamb_year"
+    )
+
+    # -----------------------------------------
+    # CHECK SELECTION
+    # -----------------------------------------
+
+    if not selected_subjects or not selected_year:
 
         return redirect(
             url_for("exam_preparation")
         )
 
+    # -----------------------------------------
+    # FIND QUESTIONS
+    # -----------------------------------------
+
     questions = JAMBQuestion.query.filter(
-        JAMBQuestion.subject.in_(selected_subjects)
+        JAMBQuestion.year == selected_year,
+        JAMBQuestion.subject.in_(
+            selected_subjects
+        )
     ).order_by(
         JAMBQuestion.id.asc()
     ).all()
 
+    # -----------------------------------------
+    # NO QUESTIONS
+    # -----------------------------------------
+
     if not questions:
 
         return (
-            "There are currently no JAMB questions available "
-            "for the selected subjects.",
+            f"There are currently no JAMB questions "
+            f"available for {selected_year} in the "
+            f"selected subjects.",
             404
         )
+
+    # -----------------------------------------
+    # SAVE QUESTION IDS
+    # -----------------------------------------
 
     session["jamb_question_ids"] = [
         question.id
         for question in questions
     ]
 
+    # -----------------------------------------
+    # START TIME
+    # -----------------------------------------
+
+    session["jamb_started_at"] = datetime.utcnow().isoformat()
+
     return render_template(
         "jamb/exam.html",
         questions=questions,
-        subjects=selected_subjects
+        subjects=selected_subjects,
+        year=selected_year
     )
 
 
@@ -1600,6 +1714,10 @@ def jamb_results():
 
     correct_answers = 0
 
+    # -----------------------------------------
+    # MARK ANSWERS
+    # -----------------------------------------
+
     for question in questions:
 
         submitted_answer = request.form.get(
@@ -1608,9 +1726,16 @@ def jamb_results():
 
         if submitted_answer:
 
-            if submitted_answer.upper() == question.correct_answer.upper():
+            if (
+                submitted_answer.upper()
+                == question.correct_answer.upper()
+            ):
 
                 correct_answers += 1
+
+    # -----------------------------------------
+    # CALCULATE SCORE
+    # -----------------------------------------
 
     total_questions = len(
         questions
@@ -1626,17 +1751,26 @@ def jamb_results():
 
         percentage = 0
 
+    # -----------------------------------------
+    # SAVE ATTEMPT
+    # -----------------------------------------
+
     attempt = JAMBExamAttempt(
         student_id=session["student_id"],
+
         subjects=json.dumps(
             session.get(
                 "jamb_subjects",
                 []
             )
         ),
+
         total_questions=total_questions,
+
         correct_answers=correct_answers,
+
         score=percentage,
+
         completed_at=datetime.utcnow()
     )
 
@@ -1646,7 +1780,25 @@ def jamb_results():
 
     db.session.commit()
 
+    # -----------------------------------------
+    # SAVE LAST ATTEMPT
+    # -----------------------------------------
+
     session["jamb_last_attempt_id"] = attempt.id
+
+    # -----------------------------------------
+    # CLEAR ACTIVE EXAM
+    # -----------------------------------------
+
+    session.pop(
+        "jamb_question_ids",
+        None
+    )
+
+    session.pop(
+        "jamb_started_at",
+        None
+    )
 
     return render_template(
         "jamb/results.html",
@@ -1952,6 +2104,77 @@ with app.app_context():
 
 
 # =========================================================
+# DATABASE MIGRATION
+# =========================================================
+#
+# The JAMBQuestion model now has a "year" column.
+#
+# db.create_all() does NOT add new columns to an existing
+# table, so this checks whether the column exists and adds
+# it if necessary.
+#
+# =========================================================
+
+with app.app_context():
+
+    try:
+
+        inspector = inspect(db.engine)
+
+        table_names = inspector.get_table_names()
+
+        if "jamb_question" in table_names:
+
+            columns = inspector.get_columns(
+                "jamb_question"
+            )
+
+            column_names = {
+                column["name"]
+                for column in columns
+            }
+
+            if "year" not in column_names:
+
+                if db.engine.dialect.name == "postgresql":
+
+                    with db.engine.begin() as connection:
+
+                        connection.execute(
+                            text(
+                                "ALTER TABLE jamb_question "
+                                "ADD COLUMN year INTEGER"
+                            )
+                        )
+
+                    print(
+                        "JAMB year column added to PostgreSQL."
+                    )
+
+                elif db.engine.dialect.name == "sqlite":
+
+                    with db.engine.begin() as connection:
+
+                        connection.execute(
+                            text(
+                                "ALTER TABLE jamb_question "
+                                "ADD COLUMN year INTEGER"
+                            )
+                        )
+
+                    print(
+                        "JAMB year column added to SQLite."
+                    )
+
+    except Exception as error:
+
+        print(
+            "JAMB database migration check failed:",
+            error
+        )
+
+
+# =========================================================
 # CREATE ADMIN ACCOUNT FROM RENDER ENVIRONMENT VARIABLES
 # =========================================================
 
@@ -1980,7 +2203,9 @@ with app.app_context():
                 )
             )
 
-            db.session.add(admin)
+            db.session.add(
+                admin
+            )
 
             db.session.commit()
 
