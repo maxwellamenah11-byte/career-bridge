@@ -1,3 +1,4 @@
+```python
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -22,10 +23,8 @@ app = Flask(__name__)
 
 @app.template_filter("from_json")
 def from_json_filter(value):
-
     try:
         return json.loads(value)
-
     except (TypeError, ValueError, json.JSONDecodeError):
         return []
 
@@ -47,23 +46,17 @@ app.config["SECRET_KEY"] = os.environ.get(
 database_url = os.environ.get("DATABASE_URL")
 
 if not database_url:
-
     database_url = "sqlite:///career_bridge.db"
 
-
 if database_url.startswith("postgres://"):
-
     database_url = database_url.replace(
         "postgres://",
         "postgresql://",
         1
     )
 
-
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
-
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
 
 db = SQLAlchemy(app)
 
@@ -461,7 +454,6 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
 
         if "student_id" not in session:
-
             return redirect(
                 url_for("login")
             )
@@ -481,7 +473,6 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
 
         if "admin_id" not in session:
-
             return redirect(
                 url_for("admin_login")
             )
@@ -530,7 +521,6 @@ def register():
             ""
         )
 
-
         if not name or not email or not password:
 
             return (
@@ -538,11 +528,9 @@ def register():
                 400
             )
 
-
         existing_student = Student.query.filter_by(
             email=email
         ).first()
-
 
         if existing_student:
 
@@ -550,7 +538,6 @@ def register():
                 "An account with this email already exists.",
                 400
             )
-
 
         student = Student(
             name=name,
@@ -560,23 +547,18 @@ def register():
             )
         )
 
-
         db.session.add(
             student
         )
 
         db.session.commit()
 
-
         session["student_id"] = student.id
-
         session["student_name"] = student.name
-
 
         return redirect(
             url_for("dashboard")
         )
-
 
     return render_template(
         "register.html"
@@ -605,11 +587,9 @@ def login():
             ""
         )
 
-
         student = Student.query.filter_by(
             email=email
         ).first()
-
 
         if not student:
 
@@ -617,7 +597,6 @@ def login():
                 "Account not found.",
                 404
             )
-
 
         if not check_password_hash(
             student.password,
@@ -629,16 +608,12 @@ def login():
                 401
             )
 
-
         session["student_id"] = student.id
-
         session["student_name"] = student.name
-
 
         return redirect(
             url_for("dashboard")
         )
-
 
     return render_template(
         "login.html"
@@ -692,7 +667,6 @@ def logout():
         None
     )
 
-
     return redirect(
         url_for("login")
     )
@@ -720,11 +694,9 @@ def admin_login():
             ""
         )
 
-
         admin = Admin.query.filter_by(
             username=username
         ).first()
-
 
         if not admin:
 
@@ -732,7 +704,6 @@ def admin_login():
                 "Admin account not found.",
                 404
             )
-
 
         if not check_password_hash(
             admin.password,
@@ -744,16 +715,12 @@ def admin_login():
                 401
             )
 
-
         session["admin_id"] = admin.id
-
         session["admin_username"] = admin.username
-
 
         return redirect(
             url_for("admin_dashboard")
         )
-
 
     return render_template(
         "admin-login.html"
@@ -777,7 +744,6 @@ def admin_logout():
         None
     )
 
-
     return redirect(
         url_for("admin_login")
     )
@@ -795,16 +761,13 @@ def admin_dashboard():
         Mentor.name.asc()
     ).all()
 
-
     mentorship_requests = MentorshipRequest.query.order_by(
         MentorshipRequest.id.desc()
     ).all()
 
-
     students = Student.query.order_by(
         Student.id.desc()
     ).all()
-
 
     return render_template(
         "admin-dashboard.html",
@@ -862,14 +825,12 @@ def add_mentor():
             ""
         ).strip()
 
-
         if not name or not profession or not field:
 
             return (
                 "Name, profession and field are required.",
                 400
             )
-
 
         mentor = Mentor(
             name=name,
@@ -882,18 +843,15 @@ def add_mentor():
             verified=True
         )
 
-
         db.session.add(
             mentor
         )
 
         db.session.commit()
 
-
         return redirect(
             url_for("admin_dashboard")
         )
-
 
     return render_template(
         "add-mentor.html"
@@ -915,20 +873,17 @@ def delete_mentor(mentor_id):
         mentor_id
     )
 
-
     MentorshipRequest.query.filter_by(
         mentor_id=mentor.id
     ).delete(
         synchronize_session=False
     )
 
-
     db.session.delete(
         mentor
     )
 
     db.session.commit()
-
 
     return redirect(
         url_for("admin_dashboard")
@@ -948,7 +903,6 @@ def mentors():
     ).order_by(
         Mentor.name.asc()
     ).all()
-
 
     return render_template(
         "mentors.html",
@@ -970,14 +924,12 @@ def mentor_profile(mentor_id):
         mentor_id
     )
 
-
     if not mentor.verified:
 
         return (
             "Mentor not available.",
             404
         )
-
 
     return render_template(
         "mentor-profile.html",
@@ -1000,14 +952,12 @@ def request_mentorship(mentor_id):
         mentor_id
     )
 
-
     if not mentor.verified:
 
         return (
             "Mentor not available.",
             404
         )
-
 
     if request.method == "POST":
 
@@ -1016,14 +966,12 @@ def request_mentorship(mentor_id):
             ""
         ).strip()
 
-
         if not message:
 
             return (
                 "Please enter a message.",
                 400
             )
-
 
         mentorship_request = MentorshipRequest(
             student_id=session["student_id"],
@@ -1032,20 +980,17 @@ def request_mentorship(mentor_id):
             status="Pending"
         )
 
-
         db.session.add(
             mentorship_request
         )
 
         db.session.commit()
 
-
         return redirect(
             url_for(
                 "my_mentorship_requests"
             )
         )
-
 
     return render_template(
         "request-mentorship.html",
@@ -1069,7 +1014,6 @@ def my_mentorship_requests():
         MentorshipRequest.id.desc()
     ).all()
 
-
     return render_template(
         "my-mentorship-requests.html",
         requests=requests
@@ -1089,7 +1033,6 @@ def admin_mentorship_requests():
     requests = MentorshipRequest.query.order_by(
         MentorshipRequest.id.desc()
     ).all()
-
 
     return render_template(
         "admin-mentorship-requests.html",
@@ -1117,7 +1060,6 @@ def update_mentorship_request(
         "Declined"
     ]
 
-
     if status not in allowed_statuses:
 
         return (
@@ -1125,16 +1067,13 @@ def update_mentorship_request(
             400
         )
 
-
     mentorship_request = MentorshipRequest.query.get_or_404(
         request_id
     )
 
-
     mentorship_request.status = status
 
     db.session.commit()
-
 
     return redirect(
         url_for(
@@ -1153,24 +1092,20 @@ def dashboard():
 
     student_id = session["student_id"]
 
-
     completed_modules = DigitalSkillsProgress.query.filter_by(
         student_id=student_id,
         completed=True
     ).count()
 
-
     progress_percent = int(
         (completed_modules / 10) * 100
     )
-
 
     mentorship_requests = MentorshipRequest.query.filter_by(
         student_id=student_id
     ).order_by(
         MentorshipRequest.id.desc()
     ).all()
-
 
     return render_template(
         "dashboard.html",
@@ -1192,7 +1127,6 @@ def certificate():
         student_id=session["student_id"],
         completed=True
     ).count()
-
 
     return render_template(
         "certificate.html",
@@ -1430,17 +1364,14 @@ def digital_skills():
 
     student_id = session["student_id"]
 
-
     completed_modules = DigitalSkillsProgress.query.filter_by(
         student_id=student_id,
         completed=True
     ).count()
 
-
     progress_percent = int(
         (completed_modules / 10) * 100
     )
-
 
     return render_template(
         "digital-skills.html",
@@ -1563,13 +1494,11 @@ def digital_skills_progress():
 
     student_id = session["student_id"]
 
-
     progress_records = DigitalSkillsProgress.query.filter_by(
         student_id=student_id
     ).order_by(
         DigitalSkillsProgress.module_number.asc()
     ).all()
-
 
     completed_numbers = {
         record.module_number
@@ -1577,16 +1506,13 @@ def digital_skills_progress():
         if record.completed
     }
 
-
     completed_modules = len(
         completed_numbers
     )
 
-
     progress_percent = int(
         (completed_modules / 10) * 100
     )
-
 
     return render_template(
         "digital-skills-progress.html",
@@ -1617,12 +1543,10 @@ def complete_digital_skills_module(
             400
         )
 
-
     record = DigitalSkillsProgress.query.filter_by(
         student_id=session["student_id"],
         module_number=module_number
     ).first()
-
 
     if not record:
 
@@ -1636,16 +1560,12 @@ def complete_digital_skills_module(
             record
         )
 
-
     record.completed = True
-
     record.completed_at = datetime.utcnow()
-
 
     quiz_score = request.form.get(
         "quiz_score"
     )
-
 
     if quiz_score is not None and quiz_score != "":
 
@@ -1659,9 +1579,7 @@ def complete_digital_skills_module(
 
             pass
 
-
     db.session.commit()
-
 
     return redirect(
         url_for(
@@ -1688,12 +1606,10 @@ def digital_skills_progress_api():
         DigitalSkillsProgress.module_number.asc()
     ).all()
 
-
     completed_modules = [
         record.module_number
         for record in records
     ]
-
 
     total = 10
 
@@ -1701,11 +1617,9 @@ def digital_skills_progress_api():
         completed_modules
     )
 
-
     percentage = int(
         (completed / total) * 100
     )
-
 
     return jsonify({
         "success": True,
@@ -1740,7 +1654,6 @@ def exam_preparation():
         "Computer Science"
     ]
 
-
     return render_template(
         "exam-preparation.html",
         subjects=subjects
@@ -1762,16 +1675,10 @@ def start_jamb_exam():
         "subjects"
     )
 
-
     selected_question_count = request.form.get(
         "question_count",
         ""
     ).strip()
-
-
-    # -----------------------------------------------------
-    # QUESTION COUNT
-    # -----------------------------------------------------
 
     if not selected_question_count:
 
@@ -1779,7 +1686,6 @@ def start_jamb_exam():
             "Please select the number of questions.",
             400
         )
-
 
     try:
 
@@ -1794,14 +1700,12 @@ def start_jamb_exam():
             400
         )
 
-
     allowed_question_counts = [
         20,
         40,
         60,
         100
     ]
-
 
     if selected_question_count not in allowed_question_counts:
 
@@ -1810,11 +1714,6 @@ def start_jamb_exam():
             400
         )
 
-
-    # -----------------------------------------------------
-    # SUBJECTS
-    # -----------------------------------------------------
-
     if not selected_subjects:
 
         return (
@@ -1822,14 +1721,11 @@ def start_jamb_exam():
             400
         )
 
-
     cleaned_subjects = []
-
 
     for subject in selected_subjects:
 
         subject = subject.strip()
-
 
         if subject and subject not in cleaned_subjects:
 
@@ -1837,18 +1733,12 @@ def start_jamb_exam():
                 subject
             )
 
-
     if not cleaned_subjects:
 
         return (
             "Please select at least one subject.",
             400
         )
-
-
-    # -----------------------------------------------------
-    # ALLOWED SUBJECTS
-    # -----------------------------------------------------
 
     allowed_subjects = [
         "Use of English",
@@ -1866,13 +1756,11 @@ def start_jamb_exam():
         "Computer Science"
     ]
 
-
     invalid_subjects = [
         subject
         for subject in cleaned_subjects
         if subject not in allowed_subjects
     ]
-
 
     if invalid_subjects:
 
@@ -1881,36 +1769,26 @@ def start_jamb_exam():
             400
         )
 
-
-    # -----------------------------------------------------
-    # SAVE EXAM SETTINGS
-    # -----------------------------------------------------
-
     session.pop(
         "jamb_year",
         None
     )
 
-
     session["jamb_subjects"] = cleaned_subjects
-
 
     session["jamb_question_count"] = (
         selected_question_count
     )
-
 
     session.pop(
         "jamb_question_ids",
         None
     )
 
-
     session.pop(
         "jamb_started_at",
         None
     )
-
 
     return redirect(
         url_for("jamb_exam")
@@ -1932,11 +1810,9 @@ def jamb_exam():
         []
     )
 
-
     selected_question_count = session.get(
         "jamb_question_count"
     )
-
 
     if (
         not selected_subjects
@@ -1946,7 +1822,6 @@ def jamb_exam():
         return redirect(
             url_for("exam_preparation")
         )
-
 
     try:
 
@@ -1960,15 +1835,9 @@ def jamb_exam():
             url_for("exam_preparation")
         )
 
-
-    # -----------------------------------------------------
-    # GET QUESTIONS
-    # -----------------------------------------------------
-
     all_available_questions = []
 
     questions_by_subject = {}
-
 
     for subject in selected_subjects:
 
@@ -1976,30 +1845,21 @@ def jamb_exam():
             JAMBQuestion.subject == subject
         ).all()
 
-
         random.shuffle(
             subject_questions
         )
-
 
         questions_by_subject[subject] = (
             subject_questions
         )
 
-
         all_available_questions.extend(
             subject_questions
         )
 
-
-    # -----------------------------------------------------
-    # TOTAL AVAILABLE
-    # -----------------------------------------------------
-
     total_available = len(
         all_available_questions
     )
-
 
     if total_available == 0:
 
@@ -2020,11 +1880,6 @@ def jamb_exam():
             """,
             404
         )
-
-
-    # -----------------------------------------------------
-    # NOT ENOUGH QUESTIONS
-    # -----------------------------------------------------
 
     if total_available < selected_question_count:
 
@@ -2052,15 +1907,9 @@ def jamb_exam():
             400
         )
 
-
-    # -----------------------------------------------------
-    # FAIR DISTRIBUTION
-    # -----------------------------------------------------
-
     subject_count = len(
         selected_subjects
     )
-
 
     base_questions_per_subject = (
         selected_question_count
@@ -2068,22 +1917,15 @@ def jamb_exam():
         subject_count
     )
 
-
     remainder = (
         selected_question_count
         %
         subject_count
     )
 
-
     final_questions = []
 
     remaining_question_pool = {}
-
-
-    # -----------------------------------------------------
-    # FIRST PASS
-    # -----------------------------------------------------
 
     for index, subject in enumerate(
         selected_subjects
@@ -2094,35 +1936,25 @@ def jamb_exam():
             []
         )
 
-
         target_count = (
             base_questions_per_subject
         )
-
 
         if index < remainder:
 
             target_count += 1
 
-
         selected_for_subject = (
             available_questions[:target_count]
         )
-
 
         final_questions.extend(
             selected_for_subject
         )
 
-
         remaining_question_pool[subject] = (
             available_questions[target_count:]
         )
-
-
-    # -----------------------------------------------------
-    # SECOND PASS
-    # -----------------------------------------------------
 
     if len(final_questions) < selected_question_count:
 
@@ -2132,9 +1964,7 @@ def jamb_exam():
             len(final_questions)
         )
 
-
         extra_pool = []
-
 
         for subject in selected_subjects:
 
@@ -2145,20 +1975,13 @@ def jamb_exam():
                 )
             )
 
-
         random.shuffle(
             extra_pool
         )
 
-
         final_questions.extend(
             extra_pool[:remaining_needed]
         )
-
-
-    # -----------------------------------------------------
-    # FINAL CHECK
-    # -----------------------------------------------------
 
     if len(final_questions) < selected_question_count:
 
@@ -2168,43 +1991,22 @@ def jamb_exam():
             400
         )
 
-
-    # -----------------------------------------------------
-    # RANDOMIZE QUESTION ORDER
-    # -----------------------------------------------------
-
     random.shuffle(
         final_questions
     )
 
-
     final_questions = final_questions[
         :selected_question_count
     ]
-
-
-    # -----------------------------------------------------
-    # SAVE QUESTION IDS
-    # -----------------------------------------------------
 
     session["jamb_question_ids"] = [
         question.id
         for question in final_questions
     ]
 
-
-    # -----------------------------------------------------
-    # START TIME
-    # -----------------------------------------------------
-
     session["jamb_started_at"] = (
         datetime.utcnow().isoformat()
     )
-
-
-    # -----------------------------------------------------
-    # EXAM TIME
-    # -----------------------------------------------------
 
     time_map = {
         20: 30,
@@ -2213,16 +2015,10 @@ def jamb_exam():
         100: 120
     }
 
-
     exam_minutes = time_map.get(
         selected_question_count,
         60
     )
-
-
-    # -----------------------------------------------------
-    # RENDER EXAM
-    # -----------------------------------------------------
 
     return render_template(
         "jamb/exam.html",
@@ -2235,15 +2031,6 @@ def jamb_exam():
 
 # =========================================================
 # JAMB SUBMIT EXAM
-# =========================================================
-# THERE IS NO RESULT PAGE.
-#
-# The student's answers are:
-#
-# 1. Marked automatically
-# 2. Score calculated
-# 3. Attempt saved
-# 4. Student redirected to History
 # =========================================================
 
 @app.route(
@@ -2258,32 +2045,20 @@ def jamb_results():
         []
     )
 
-
-    # -----------------------------------------------------
-    # NO ACTIVE EXAM
-    # -----------------------------------------------------
-
     if not question_ids:
 
         return redirect(
             url_for("exam_preparation")
         )
 
-
-    # -----------------------------------------------------
-    # GET QUESTIONS
-    # -----------------------------------------------------
-
     questions = JAMBQuestion.query.filter(
         JAMBQuestion.id.in_(question_ids)
     ).all()
-
 
     question_map = {
         question.id: question
         for question in questions
     }
-
 
     ordered_questions = [
         question_map[question_id]
@@ -2291,20 +2066,13 @@ def jamb_results():
         if question_id in question_map
     ]
 
-
-    # -----------------------------------------------------
-    # MARK ANSWERS
-    # -----------------------------------------------------
-
     correct_answers = 0
-
 
     for question in ordered_questions:
 
         submitted_answer = request.form.get(
             f"question_{question.id}"
         )
-
 
         if submitted_answer:
 
@@ -2314,31 +2082,19 @@ def jamb_results():
                 .strip()
             )
 
-
             correct_answer = (
                 question.correct_answer
                 .upper()
                 .strip()
             )
 
-
             if submitted_answer == correct_answer:
 
                 correct_answers += 1
 
-
-    # -----------------------------------------------------
-    # TOTAL QUESTIONS
-    # -----------------------------------------------------
-
     total_questions = len(
         ordered_questions
     )
-
-
-    # -----------------------------------------------------
-    # CALCULATE SCORE
-    # -----------------------------------------------------
 
     if total_questions > 0:
 
@@ -2355,18 +2111,11 @@ def jamb_results():
 
         percentage = 0
 
-
-    # -----------------------------------------------------
-    # GET START TIME
-    # -----------------------------------------------------
-
     started_at = datetime.utcnow()
-
 
     stored_started_at = session.get(
         "jamb_started_at"
     )
-
 
     if stored_started_at:
 
@@ -2379,11 +2128,6 @@ def jamb_results():
         except (ValueError, TypeError):
 
             started_at = datetime.utcnow()
-
-
-    # -----------------------------------------------------
-    # SAVE ATTEMPT
-    # -----------------------------------------------------
 
     attempt = JAMBExamAttempt(
 
@@ -2409,44 +2153,23 @@ def jamb_results():
         completed_at=datetime.utcnow()
     )
 
-
     db.session.add(
         attempt
     )
 
-
     db.session.commit()
 
-
-    # -----------------------------------------------------
-    # SAVE LAST ATTEMPT
-    # -----------------------------------------------------
-
     session["jamb_last_attempt_id"] = attempt.id
-
-
-    # -----------------------------------------------------
-    # CLEAR CURRENT EXAM
-    # -----------------------------------------------------
 
     session.pop(
         "jamb_question_ids",
         None
     )
 
-
     session.pop(
         "jamb_started_at",
         None
     )
-
-
-    # -----------------------------------------------------
-    # IMPORTANT:
-    # NO RESULT PAGE
-    #
-    # Redirect directly to HISTORY.
-    # -----------------------------------------------------
 
     return redirect(
         url_for("jamb_history")
@@ -2469,7 +2192,6 @@ def jamb_history():
         JAMBExamAttempt.id.desc()
     ).all()
 
-
     return render_template(
         "jamb/history.html",
         attempts=attempts
@@ -2488,32 +2210,26 @@ def jamb_question_bank():
 
     total_questions = JAMBQuestion.query.count()
 
-
     subjects = db.session.query(
         JAMBQuestion.subject
     ).distinct().order_by(
         JAMBQuestion.subject.asc()
     ).all()
 
-
     subject_counts = []
-
 
     for row in subjects:
 
         subject_name = row[0]
 
-
         count = JAMBQuestion.query.filter_by(
             subject=subject_name
         ).count()
-
 
         subject_counts.append({
             "subject": subject_name,
             "count": count
         })
-
 
     return render_template(
         "jamb/question-bank.html",
@@ -2565,14 +2281,12 @@ def get_ai_memory():
         session["student_id"]
     )
 
-
     if not student:
 
         return jsonify({
             "success": False,
             "message": "Student not found."
         }), 404
-
 
     return jsonify({
         "success": True,
@@ -2600,7 +2314,6 @@ def save_ai_memory():
         session["student_id"]
     )
 
-
     if not student:
 
         return jsonify({
@@ -2608,11 +2321,9 @@ def save_ai_memory():
             "message": "Student not found."
         }), 404
 
-
     data = request.get_json(
         silent=True
     ) or {}
-
 
     student.subjects = str(
         data.get(
@@ -2621,14 +2332,12 @@ def save_ai_memory():
         )
     ).strip()
 
-
     student.skills = str(
         data.get(
             "skills",
             ""
         )
     ).strip()
-
 
     student.interests = str(
         data.get(
@@ -2637,7 +2346,6 @@ def save_ai_memory():
         )
     ).strip()
 
-
     student.career_goal = str(
         data.get(
             "career_goal",
@@ -2645,9 +2353,7 @@ def save_ai_memory():
         )
     ).strip()
 
-
     db.session.commit()
-
 
     return jsonify({
         "success": True,
@@ -2725,7 +2431,6 @@ def opportunities():
         }
 
     ]
-
 
     return render_template(
         "opportunities.html",
@@ -2819,9 +2524,7 @@ with app.app_context():
             db.engine
         )
 
-
         table_names = inspector.get_table_names()
-
 
         # -------------------------------------------------
         # JAMB QUESTION TABLE
@@ -2833,12 +2536,10 @@ with app.app_context():
                 "jamb_question"
             )
 
-
             existing_columns = {
                 column["name"]
                 for column in columns
             }
-
 
             jamb_question_columns = {
 
@@ -2873,7 +2574,6 @@ with app.app_context():
                 """
             }
 
-
             for column_name, sql_statement in jamb_question_columns.items():
 
                 if column_name not in existing_columns:
@@ -2888,11 +2588,9 @@ with app.app_context():
                                 )
                             )
 
-
                         print(
                             f"JAMB column added: {column_name}"
                         )
-
 
                     except Exception as migration_error:
 
@@ -2901,7 +2599,6 @@ with app.app_context():
                             f"{column_name}:",
                             migration_error
                         )
-
 
         # -------------------------------------------------
         # JAMB EXAM ATTEMPT TABLE
@@ -2913,12 +2610,10 @@ with app.app_context():
                 "jamb_exam_attempt"
             )
 
-
             existing_columns = {
                 column["name"]
                 for column in columns
             }
-
 
             if "year" not in existing_columns:
 
@@ -2935,11 +2630,9 @@ with app.app_context():
                             )
                         )
 
-
                     print(
                         "JAMB attempt year column added."
                     )
-
 
                 except Exception as migration_error:
 
@@ -2947,7 +2640,6 @@ with app.app_context():
                         "Could not add JAMB attempt year column:",
                         migration_error
                     )
-
 
     except Exception as error:
 
@@ -2960,30 +2652,37 @@ with app.app_context():
 # =========================================================
 # AUTOMATIC JAMB QUESTION SEEDING
 # =========================================================
+#
+# IMPORTANT:
+# seed_jamb.py contains:
+#
+#     def run():
+#
+# It does NOT contain seed_questions().
+#
+# Therefore we import run and give it the local name
+# seed_jamb_questions.
+#
+# =========================================================
 
 with app.app_context():
 
     try:
 
-        from seed_jamb import seed_questions
-
+        from seed_jamb import run as seed_jamb_questions
 
         print(
             "Checking Career Bridge JAMB question bank..."
         )
 
-
-        seed_questions()
-
+        seed_jamb_questions()
 
         total_jamb_questions = JAMBQuestion.query.count()
-
 
         print(
             f"JAMB question bank ready: "
             f"{total_jamb_questions} questions."
         )
-
 
     except ModuleNotFoundError:
 
@@ -2992,11 +2691,9 @@ with app.app_context():
             "JAMB questions were not automatically seeded."
         )
 
-
     except Exception as seed_error:
 
         db.session.rollback()
-
 
         print(
             "Automatic JAMB question seeding failed:",
@@ -3014,18 +2711,15 @@ with app.app_context():
         "ADMIN_USERNAME"
     )
 
-
     admin_password = os.environ.get(
         "ADMIN_PASSWORD"
     )
-
 
     if admin_username and admin_password:
 
         existing_admin = Admin.query.filter_by(
             username=admin_username
         ).first()
-
 
         if not existing_admin:
 
@@ -3036,14 +2730,11 @@ with app.app_context():
                 )
             )
 
-
             db.session.add(
                 admin
             )
 
-
             db.session.commit()
-
 
             print(
                 "Admin account created successfully."
@@ -3059,3 +2750,4 @@ if __name__ == "__main__":
     app.run(
         debug=True
     )
+```
