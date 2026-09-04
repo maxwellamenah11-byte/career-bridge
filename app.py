@@ -2320,10 +2320,10 @@ def jamb_results():
 # =========================================================
 
 @app.route(
-    "/results"
+    "/exam-preparation/jamb/results"
 )
 @login_required
-def results():
+def jamb_results():
 
     student_id = session["student_id"]
 
@@ -2334,7 +2334,7 @@ def results():
     ).all()
 
     return render_template(
-        "results.html",
+        "jamb/results.html",
         attempts=attempts
     )
 
