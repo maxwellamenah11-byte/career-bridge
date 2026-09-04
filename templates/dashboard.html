@@ -3,10 +3,15 @@
 {% block content %}
 
 <style>
+    body {
+        background: #020617;
+    }
+
     .dashboard-page {
         max-width: 1150px;
         margin: 0 auto;
         padding: 45px 20px 70px;
+        color: #111827;
     }
 
     .dashboard-header {
@@ -14,7 +19,7 @@
         border-radius: 20px;
         padding: 35px;
         margin-bottom: 30px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
 
     .dashboard-header h1 {
@@ -24,7 +29,8 @@
 
     .dashboard-header p {
         margin: 0;
-        opacity: 0.7;
+        color: #64748b;
+        line-height: 1.6;
     }
 
     .dashboard-grid {
@@ -37,12 +43,13 @@
         background: white;
         border-radius: 18px;
         padding: 28px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.07);
-        transition: transform 0.2s ease;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .dashboard-card:hover {
         transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
     }
 
     .dashboard-icon {
@@ -53,11 +60,12 @@
     .dashboard-card h2 {
         margin: 0 0 10px;
         font-size: 21px;
+        color: #111827;
     }
 
     .dashboard-card p {
         line-height: 1.6;
-        opacity: 0.7;
+        color: #64748b;
         margin-bottom: 20px;
     }
 
@@ -69,6 +77,12 @@
         text-decoration: none;
         border-radius: 9px;
         font-weight: bold;
+        transition: 0.2s ease;
+    }
+
+    .dashboard-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
     }
 
     .logout-section {
@@ -84,9 +98,18 @@
         text-decoration: none;
         border-radius: 9px;
         font-weight: bold;
+        transition: 0.2s ease;
+    }
+
+    .logout-button:hover {
+        background: #cbd5e1;
     }
 
     @media (max-width: 600px) {
+
+        .dashboard-page {
+            padding: 30px 15px 50px;
+        }
 
         .dashboard-header {
             padding: 25px;
@@ -94,6 +117,10 @@
 
         .dashboard-header h1 {
             font-size: 28px;
+        }
+
+        .dashboard-card {
+            padding: 24px;
         }
     }
 </style>
@@ -389,34 +416,60 @@
     </div>
 
 
-    <!-- JAMB RESULTS -->
+    <!-- JAMB PREPARATION -->
 
-<div class="dashboard-card">
+    <div class="dashboard-card">
 
-    <div class="dashboard-icon">
-        📊
+        <div class="dashboard-icon">
+            📝
+        </div>
+
+        <h2>
+            JAMB Preparation
+        </h2>
+
+        <p>
+            Practise JAMB CBT questions with timed
+            practice sessions.
+        </p>
+
+        <a
+            href="{{ url_for('exam_preparation') }}"
+            class="dashboard-button"
+        >
+            Start JAMB Practice
+        </a>
+
     </div>
 
-    <h2>
-        JAMB Results
-    </h2>
 
-    <p>
-        View your previous JAMB practice exam results,
-        scores and performance history.
-    </p>
+    <!-- JAMB RESULTS -->
 
-    <a
-        href="{{ url_for('results') }}"
-        class="dashboard-button"
-    >
-        View Results
-    </a>
+    <div class="dashboard-card">
 
-</div>
+        <div class="dashboard-icon">
+            📊
+        </div>
+
+        <h2>
+            JAMB Results
+        </h2>
+
+        <p>
+            View your previous JAMB practice exam
+            scores and performance history.
+        </p>
+
+        <a
+            href="{{ url_for('jamb_history') }}"
+            class="dashboard-button"
+        >
+            View Results
+        </a>
+
+    </div>
 
 
-    
     <!-- BLOG -->
 
     <div class="dashboard-card">
@@ -467,6 +520,7 @@
         </a>
 
     </div>
+
 
 </div>
 
