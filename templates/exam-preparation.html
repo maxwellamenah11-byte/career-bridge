@@ -85,7 +85,36 @@
         font-size: 14px;
     }
 
-    /* QUESTION COUNT SECTION */
+    /* CLICKABLE RESULTS BUTTON */
+
+    .results-button-container {
+        margin-bottom: 30px;
+    }
+
+    .results-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px 24px;
+        border-radius: 12px;
+        background: #172554;
+        border: 2px solid #2563eb;
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: bold;
+        transition: 0.2s ease;
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.2);
+    }
+
+    .results-button:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.35);
+    }
+
+    /* QUESTION COUNT */
 
     .question-count-section {
         margin-top: 25px;
@@ -250,6 +279,10 @@
         .question-count-select {
             max-width: 100%;
         }
+
+        .results-button {
+            width: 100%;
+        }
     }
 </style>
 
@@ -330,10 +363,28 @@
     </div>
 
 
+    <!-- RESULTS BUTTON -->
+
+    <div class="results-button-container">
+
+        <a
+            href="{{ url_for('jamb_history') }}"
+            class="results-button"
+        >
+
+            📊 View My JAMB Results
+
+        </a>
+
+    </div>
+
+
     <!-- FORM -->
 
-    <form method="POST"
-          action="{{ url_for('start_jamb_exam') }}">
+    <form
+        method="POST"
+        action="{{ url_for('start_jamb_exam') }}"
+    >
 
 
         <!-- QUESTION COUNT -->
@@ -417,6 +468,7 @@
         <div class="notice">
 
             💡 <strong>Practice Tip:</strong>
+
             Choose your subjects and the number of questions.
             Your questions will be randomly selected from
             Career Bridge's original JAMB-style question bank.
@@ -428,7 +480,8 @@
 
         <button
             type="submit"
-            class="start-button">
+            class="start-button"
+        >
 
             🚀 Start JAMB Simulator →
 
