@@ -3,163 +3,365 @@
 {% block content %}
 
 <style>
-    .history-container {
+
+    body {
+        background: #020617;
+    }
+
+    .history-page {
         max-width: 1100px;
-        margin: 40px auto;
-        padding: 20px;
-    }
-
-    .history-card {
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 25px;
-        margin-bottom: 18px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.07);
-    }
-
-    .history-card h3 {
-        margin-top: 0;
-    }
-
-    .stats {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-        margin-top: 15px;
-    }
-
-    .stat {
-        background: #f1f5f9;
-        padding: 15px;
-        border-radius: 10px;
-        text-align: center;
-    }
-
-    .stat strong {
-        display: block;
-        font-size: 22px;
-    }
-
-    .empty {
-        background: white;
-        padding: 40px;
-        text-align: center;
-        border-radius: 16px;
-    }
-
-    .btn {
-        display: inline-block;
-        padding: 12px 20px;
-        border-radius: 10px;
-        text-decoration: none;
-        font-weight: 600;
-        margin-top: 20px;
-    }
-
-    .btn-primary {
-        background: #2563eb;
+        margin: 0 auto;
+        padding: 45px 20px 70px;
         color: white;
     }
 
-    @media (max-width: 700px) {
-        .stats {
-            grid-template-columns: repeat(2, 1fr);
-        }
+    .history-hero {
+        background: linear-gradient(
+            135deg,
+            #0f172a,
+            #1d4ed8,
+            #2563eb
+        );
+        border-radius: 24px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     }
+
+    .history-hero h1 {
+        margin: 0 0 10px;
+        font-size: 38px;
+    }
+
+    .history-hero p {
+        margin: 0;
+        color: #dbeafe;
+        line-height: 1.7;
+    }
+
+    .history-card {
+        background: #0f172a;
+        border: 1px solid #1e3a8a;
+        border-radius: 24px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .history-card h2 {
+        margin-top: 0;
+        font-size: 28px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: #94a3b8;
+    }
+
+    .empty-state .icon {
+        font-size: 55px;
+        margin-bottom: 15px;
+    }
+
+    .empty-state h3 {
+        color: white;
+        font-size: 23px;
+        margin-bottom: 10px;
+    }
+
+    .start-button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 14px 24px;
+        border-radius: 12px;
+        background: #2563eb;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .start-button:hover {
+        background: #3b82f6;
+    }
+
+    .attempt {
+        background: #172554;
+        border: 1px solid #1e40af;
+        border-radius: 18px;
+        padding: 22px;
+        margin-bottom: 18px;
+    }
+
+    .attempt-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 18px;
+    }
+
+    .attempt-title {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .attempt-date {
+        color: #93c5fd;
+        font-size: 14px;
+    }
+
+    .score {
+        font-size: 28px;
+        font-weight: bold;
+        color: #60a5fa;
+    }
+
+    .details {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .detail-box {
+        background: #0f172a;
+        border-radius: 12px;
+        padding: 15px;
+        border: 1px solid #334155;
+    }
+
+    .detail-box span {
+        display: block;
+        color: #94a3b8;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .detail-box strong {
+        font-size: 17px;
+    }
+
+    .subjects {
+        margin-top: 15px;
+        color: #bfdbfe;
+        line-height: 1.6;
+    }
+
+    .back-button {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 13px 20px;
+        border-radius: 10px;
+        border: 1px solid #334155;
+        color: white;
+        text-decoration: none;
+        background: #1e293b;
+    }
+
+    .back-button:hover {
+        background: #334155;
+    }
+
+    @media (max-width: 700px) {
+
+        .history-page {
+            padding: 30px 15px 50px;
+        }
+
+        .history-hero {
+            padding: 30px 22px;
+        }
+
+        .history-hero h1 {
+            font-size: 30px;
+        }
+
+        .history-card {
+            padding: 22px 18px;
+        }
+
+        .attempt-top {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .details {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
 </style>
 
-<div class="history-container">
+<div class="history-page">
 
 ```
-<h1>JAMB Exam History</h1>
+<!-- HERO -->
 
-<p>
-    Here you can see your previous Career Bridge
-    JAMB practice attempts.
-</p>
+<div class="history-hero">
 
-{% if attempts %}
+    <h1>📚 JAMB Practice History</h1>
 
-    {% for attempt in attempts %}
+    <p>
+        Review your previous Career Bridge JAMB practice
+        sessions, scores and subjects. Your history is
+        private and only shows your own completed attempts.
+    </p>
 
-        <div class="history-card">
+</div>
 
-            <h3>
-                Practice Attempt #{{ loop.index }}
-            </h3>
 
-            <p>
-                <strong>Date:</strong>
-                {{ attempt.completed_at.strftime("%d %B %Y, %I:%M %p")
-                   if attempt.completed_at
-                   else "Not available" }}
-            </p>
+<!-- HISTORY -->
 
-            <p>
-                <strong>Subjects:</strong>
+<div class="history-card">
 
-                {% set subject_list = attempt.subjects|from_json %}
+    <h2>📊 Your Previous Attempts</h2>
 
-                {% for subject in subject_list %}
-                    {{ subject }}{% if not loop.last %}, {% endif %}
-                {% endfor %}
-            </p>
 
-            <div class="stats">
+    {% if attempts %}
 
-                <div class="stat">
-                    <strong>
-                        {{ attempt.total_questions }}
-                    </strong>
-                    Questions
-                </div>
+        {% for attempt in attempts %}
 
-                <div class="stat">
-                    <strong>
-                        {{ attempt.correct_answers }}
-                    </strong>
-                    Correct
-                </div>
+            <div class="attempt">
 
-                <div class="stat">
-                    <strong>
-                        {{ attempt.total_questions - attempt.correct_answers }}
-                    </strong>
-                    Wrong
-                </div>
+                <div class="attempt-top">
 
-                <div class="stat">
-                    <strong>
+                    <div>
+
+                        <div class="attempt-title">
+                            JAMB Practice Session #{{ attempt.id }}
+                        </div>
+
+                        <div class="attempt-date">
+
+                            {% if attempt.completed_at %}
+
+                                Completed:
+                                {{ attempt.completed_at.strftime("%d %B %Y, %I:%M %p") }}
+
+                            {% else %}
+
+                                Date unavailable
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="score">
+
                         {{ attempt.score }}%
-                    </strong>
-                    Score
+
+                    </div>
+
+                </div>
+
+
+                <div class="details">
+
+                    <div class="detail-box">
+
+                        <span>
+                            Questions
+                        </span>
+
+                        <strong>
+                            {{ attempt.total_questions }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-box">
+
+                        <span>
+                            Correct Answers
+                        </span>
+
+                        <strong>
+                            {{ attempt.correct_answers }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-box">
+
+                        <span>
+                            Score
+                        </span>
+
+                        <strong>
+                            {{ attempt.score }}%
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="subjects">
+
+                    <strong>Subjects:</strong>
+
+                    {% set selected_subjects = attempt.subjects | from_json %}
+
+                    {% if selected_subjects %}
+
+                        {{ selected_subjects | join(", ") }}
+
+                    {% else %}
+
+                        Not recorded
+
+                    {% endif %}
+
                 </div>
 
             </div>
 
+        {% endfor %}
+
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <div class="icon">
+                📭
+            </div>
+
+            <h3>
+                No practice history yet
+            </h3>
+
+            <p>
+                You have not completed a JAMB practice
+                session yet. Start your first simulator
+                session to see your results here.
+            </p>
+
+            <a
+                href="{{ url_for('exam_preparation') }}"
+                class="start-button"
+            >
+                🚀 Start JAMB Practice
+            </a>
+
         </div>
 
-    {% endfor %}
+    {% endif %}
 
-{% else %}
 
-    <div class="empty">
+    <a
+        href="{{ url_for('exam_preparation') }}"
+        class="back-button"
+    >
+        ← Back to Exam Preparation
+    </a>
 
-        <h2>No exam attempts yet.</h2>
-
-        <p>
-            Complete your first JAMB practice exam
-            and your result will appear here.
-        </p>
-
-        <a href="{{ url_for('exam_preparation') }}"
-           class="btn btn-primary">
-            Start JAMB Practice
-        </a>
-
-    </div>
-
-{% endif %}
+</div>
 ```
 
 </div>
