@@ -3,7 +3,6 @@
 {% block content %}
 
 <style>
-
     body {
         background: #020617;
     }
@@ -15,15 +14,8 @@
         color: white;
     }
 
-    /* HERO */
-
     .exam-hero {
-        background: linear-gradient(
-            135deg,
-            #0f172a,
-            #1d4ed8,
-            #2563eb
-        );
+        background: linear-gradient(135deg, #0f172a, #1d4ed8, #2563eb);
         border-radius: 24px;
         padding: 42px;
         margin-bottom: 30px;
@@ -43,8 +35,6 @@
         font-size: 16px;
     }
 
-    /* SIMULATOR */
-
     .simulator-card {
         background: #0f172a;
         border: 1px solid #1e3a8a;
@@ -63,8 +53,6 @@
         line-height: 1.7;
         margin-bottom: 25px;
     }
-
-    /* INFO */
 
     .info-grid {
         display: grid;
@@ -97,19 +85,19 @@
         font-size: 14px;
     }
 
-    /* QUESTION COUNT */
-
     .question-count-section {
         margin-top: 25px;
         margin-bottom: 30px;
     }
 
-    .question-count-section h3 {
+    .question-count-section h3,
+    .subject-section h3 {
         margin-bottom: 10px;
         font-size: 21px;
     }
 
-    .question-count-section p {
+    .question-count-section p,
+    .subject-section p {
         color: #94a3b8;
         margin-bottom: 18px;
     }
@@ -134,22 +122,6 @@
     .question-count-select option {
         background: #0f172a;
         color: white;
-    }
-
-    /* SUBJECTS */
-
-    .subject-section {
-        margin-top: 25px;
-    }
-
-    .subject-section h3 {
-        margin-bottom: 15px;
-        font-size: 21px;
-    }
-
-    .subject-section p {
-        color: #94a3b8;
-        margin-bottom: 18px;
     }
 
     .subjects {
@@ -185,8 +157,6 @@
         cursor: pointer;
     }
 
-    /* NOTICE */
-
     .notice {
         margin-top: 25px;
         padding: 17px;
@@ -196,8 +166,6 @@
         color: #bfdbfe;
         line-height: 1.6;
     }
-
-    /* BUTTON AREA */
 
     .button-area {
         display: flex;
@@ -219,8 +187,6 @@
         transition: 0.2s ease;
     }
 
-    /* START */
-
     .start-button {
         border: none;
         background: #2563eb;
@@ -233,8 +199,6 @@
         transform: translateY(-2px);
     }
 
-    /* RESULTS */
-
     .results-button {
         background: #166534;
         border: 1px solid #22c55e;
@@ -245,8 +209,6 @@
         background: #15803d;
         transform: translateY(-2px);
     }
-
-    /* HISTORY */
 
     .history-button {
         background: #1e293b;
@@ -259,8 +221,6 @@
         border-color: #60a5fa;
         transform: translateY(-2px);
     }
-
-    /* MORE FEATURES */
 
     .coming-soon {
         margin-top: 30px;
@@ -280,10 +240,7 @@
         margin-bottom: 0;
     }
 
-    /* MOBILE */
-
     @media (max-width: 750px) {
-
         .exam-page {
             padding: 30px 15px 50px;
         }
@@ -325,16 +282,12 @@
             text-align: center;
         }
     }
-
 </style>
 
 <div class="exam-page">
 
 ```
-<!-- HERO -->
-
 <div class="exam-hero">
-
     <h1>📝 Exam Preparation</h1>
 
     <p>
@@ -343,11 +296,7 @@
         get comfortable with computer-based testing before
         the real examination.
     </p>
-
 </div>
-
-
-<!-- JAMB SIMULATOR -->
 
 <div class="simulator-card">
 
@@ -360,78 +309,33 @@
         question bank.
     </p>
 
-
-    <!-- INFO -->
-
     <div class="info-grid">
 
         <div class="info-box">
-
-            <div class="info-icon">
-                💻
-            </div>
-
-            <strong>
-                CBT
-            </strong>
-
-            <span>
-                Computer-Based Practice
-            </span>
-
+            <div class="info-icon">💻</div>
+            <strong>CBT</strong>
+            <span>Computer-Based Practice</span>
         </div>
 
-
         <div class="info-box">
-
-            <div class="info-icon">
-                ⏱️
-            </div>
-
-            <strong>
-                Timed
-            </strong>
-
-            <span>
-                JAMB-style Practice Time
-            </span>
-
+            <div class="info-icon">⏱️</div>
+            <strong>Timed</strong>
+            <span>JAMB-style Practice Time</span>
         </div>
 
-
         <div class="info-box">
-
-            <div class="info-icon">
-                📊
-            </div>
-
-            <strong>
-                Results
-            </strong>
-
-            <span>
-                View Your Performance
-            </span>
-
+            <div class="info-icon">📊</div>
+            <strong>Results</strong>
+            <span>Automatic Performance Tracking</span>
         </div>
 
     </div>
 
-
-    <!-- EXAM FORM -->
-
-    <form
-        method="POST"
-        action="{{ url_for('start_jamb_exam') }}"
-    >
-
-        <!-- QUESTION COUNT -->
+    <form method="POST" action="{{ url_for('start_jamb_exam') }}">
 
         <div class="question-count-section">
 
-            <h3>
-                🔢 Number of Questions
-            </h3>
+            <h3>🔢 Number of Questions</h3>
 
             <p>
                 Choose how many questions you want in
@@ -443,44 +347,36 @@
                 class="question-count-select"
                 required
             >
-
                 <option value="">
                     -- Select Number of Questions --
                 </option>
 
                 <option value="20">
-                    20 Questions
+                    20 Questions — 30 Minutes
                 </option>
 
                 <option value="40">
-                    40 Questions
+                    40 Questions — 60 Minutes
                 </option>
 
                 <option value="60">
-                    60 Questions
+                    60 Questions — 90 Minutes
                 </option>
 
                 <option value="100">
-                    100 Questions
+                    100 Questions — 120 Minutes
                 </option>
-
             </select>
 
         </div>
 
-
-        <!-- SUBJECTS -->
-
         <div class="subject-section">
 
-            <h3>
-                📚 Select Your Subjects
-            </h3>
+            <h3>📚 Select Your Subjects</h3>
 
             <p>
-                Choose the subjects you want to practise.
+                Select at least one subject for your practice session.
             </p>
-
 
             <div class="subjects">
 
@@ -494,7 +390,7 @@
                         value="{{ subject }}"
                     >
 
-                    {{ subject }}
+                    <span>{{ subject }}</span>
 
                 </label>
 
@@ -504,22 +400,12 @@
 
         </div>
 
-
-        <!-- NOTICE -->
-
         <div class="notice">
-
             💡 <strong>Practice Tip:</strong>
-
-            Choose your subjects and the number of
-            questions. Your questions will be randomly
-            selected from Career Bridge's JAMB question
-            bank.
-
+            Choose your subjects and the number of questions.
+            Your questions will be randomly selected from
+            Career Bridge's JAMB question bank.
         </div>
-
-
-        <!-- BUTTONS -->
 
         <div class="button-area">
 
@@ -530,14 +416,12 @@
                 🚀 Start JAMB Simulator →
             </button>
 
-
             <a
-                href="{{ url_for('results') }}"
+                href="{{ url_for('jamb_history') }}"
                 class="results-button"
             >
                 📊 View Results
             </a>
-
 
             <a
                 href="{{ url_for('jamb_history') }}"
@@ -552,14 +436,9 @@
 
 </div>
 
-
-<!-- MORE FEATURES -->
-
 <div class="coming-soon">
 
-    <h3>
-        🚀 More Exam Preparation Features
-    </h3>
+    <h3>🚀 More Exam Preparation Features</h3>
 
     <p>
         Career Bridge includes timed CBT sessions,
@@ -573,5 +452,49 @@
 ```
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const form = document.querySelector(
+            'form[action="{{ url_for("start_jamb_exam") }}"]'
+        );
+
+        if (!form) return;
+
+        form.addEventListener("submit", function (event) {
+
+            const selectedSubjects = document.querySelectorAll(
+                'input[name="subjects"]:checked'
+            );
+
+            const questionCount = document.querySelector(
+                'select[name="question_count"]'
+            );
+
+            if (selectedSubjects.length === 0) {
+                event.preventDefault();
+
+                alert(
+                    "Please select at least one subject before starting the JAMB simulator."
+                );
+
+                return;
+            }
+
+            if (!questionCount.value) {
+                event.preventDefault();
+
+                alert(
+                    "Please select the number of questions."
+                );
+
+                return;
+            }
+
+        });
+
+    });
+</script>
 
 {% endblock %}
