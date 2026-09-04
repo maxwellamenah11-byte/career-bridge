@@ -16,6 +16,10 @@ import random
 app = Flask(__name__)
 
 
+# =========================================================
+# JSON TEMPLATE FILTER
+# =========================================================
+
 @app.template_filter("from_json")
 def from_json_filter(value):
 
@@ -23,9 +27,12 @@ def from_json_filter(value):
         return json.loads(value)
 
     except (TypeError, ValueError):
-
         return []
 
+
+# =========================================================
+# SECRET KEY
+# =========================================================
 
 app.config["SECRET_KEY"] = os.environ.get(
     "SECRET_KEY",
@@ -33,8 +40,11 @@ app.config["SECRET_KEY"] = os.environ.get(
 )
 
 
-database_url = os.environ.get("DATABASE_URL")
+# =========================================================
+# DATABASE
+# =========================================================
 
+database_url = os.environ.get("DATABASE_URL")
 
 if not database_url:
 
@@ -546,9 +556,7 @@ def register():
             )
         )
 
-        db.session.add(
-            student
-        )
+        db.session.add(student)
 
         db.session.commit()
 
@@ -2050,7 +2058,7 @@ def jamb_exam():
 
 
     # -----------------------------------------------------
-    # RANDOMIZE
+    # RANDOMIZE QUESTION ORDER
     # -----------------------------------------------------
 
     random.shuffle(
@@ -2112,7 +2120,15 @@ def jamb_exam():
 
 
 # =========================================================
-# JAMB RESULTS - SUBMIT EXAM
+# JAMB SUBMIT EXAM
+#
+# IMPORTANT:
+# THERE IS NO RESULTS PAGE ANYMORE.
+#
+# STUDENT CAN SUBMIT AT ANY TIME.
+# UNANSWERED QUESTIONS ARE COUNTED AS INCORRECT.
+# AFTER SUBMISSION, THE ATTEMPT IS SAVED AND THE
+# STUDENT IS SENT DIRECTLY TO HISTORY.
 # =========================================================
 
 @app.route(
@@ -2134,6 +2150,10 @@ def jamb_results():
         )
 
 
+    # -----------------------------------------------------
+    # GET QUESTIONS
+    # -----------------------------------------------------
+
     questions = JAMBQuestion.query.filter(
         JAMBQuestion.id.in_(question_ids)
     ).all()
@@ -2152,52 +2172,45 @@ def jamb_results():
     ]
 
 
-    correct_answers = 0
-
-    answer_details = []
-
-
     # -----------------------------------------------------
     # MARK ANSWERS
     # -----------------------------------------------------
 
+    correct_answers = 0
+
     for question in ordered_questions:
 
         submitted_answer = request.form.get(
-            f"question_{question.id}"
-        )
+            f"question_{question.id}",
+            ""
+        ).strip().upper()
 
-        is_correct = False
-
-        if submitted_answer:
-
-            if (
-                submitted_answer.upper().strip()
-                ==
-                question.correct_answer.upper().strip()
-            ):
-
-                correct_answers += 1
-
-                is_correct = True
+        correct_answer = (
+            question.correct_answer or ""
+        ).strip().upper()
 
 
-        answer_details.append({
-            "question_id": question.id,
-            "submitted_answer": submitted_answer,
-            "correct_answer": question.correct_answer,
-            "is_correct": is_correct
-        })
+        if (
+            submitted_answer
+            and
+            submitted_answer == correct_answer
+        ):
+
+            correct_answers += 1
 
 
     # -----------------------------------------------------
-    # CALCULATE SCORE
+    # TOTAL QUESTIONS
     # -----------------------------------------------------
 
     total_questions = len(
         ordered_questions
     )
 
+
+    # -----------------------------------------------------
+    # CALCULATE SCORE
+    # -----------------------------------------------------
 
     if total_questions > 0:
 
@@ -2234,7 +2247,10 @@ def jamb_results():
                 stored_started_at
             )
 
-        except (ValueError, TypeError):
+        except (
+            ValueError,
+            TypeError
+        ):
 
             started_at = datetime.utcnow()
 
@@ -2296,21 +2312,27 @@ def jamb_results():
         None
     )
 
+    session.pop(
+        "jamb_subjects",
+        None
+    )
 
-    # -----------------------------------------------------
-    # SHOW RESULT
-    # -----------------------------------------------------
-
-    return render_template(
-        "jamb/results.html",
-        attempt=attempt,
-        percentage=percentage,
-        questions=ordered_questions,
-        answer_details=answer_details
+    session.pop(
+        "jamb_question_count",
+        None
     )
 
 
+    # -----------------------------------------------------
+    # IMPORTANT:
+    # DO NOT RENDER RESULTS.HTML
+    #
+    # GO DIRECTLY TO HISTORY
+    # -----------------------------------------------------
 
+    return redirect(
+        url_for("jamb_history")
+    )
 
 
 # =========================================================
