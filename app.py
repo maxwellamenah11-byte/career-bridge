@@ -2310,33 +2310,7 @@ def jamb_results():
     )
 
 
-# =========================================================
-# STUDENT RESULTS PAGE
-# =========================================================
-#
-# This page displays all completed JAMB practice attempts
-# belonging ONLY to the currently logged-in student.
-#
-# =========================================================
 
-@app.route(
-    "/exam-preparation/jamb/results"
-)
-@login_required
-def jamb_results():
-
-    student_id = session["student_id"]
-
-    attempts = JAMBExamAttempt.query.filter_by(
-        student_id=student_id
-    ).order_by(
-        JAMBExamAttempt.id.desc()
-    ).all()
-
-    return render_template(
-        "jamb/results.html",
-        attempts=attempts
-    )
 
 
 # =========================================================
