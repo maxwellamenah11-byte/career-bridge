@@ -3,30 +3,43 @@
 {% block content %}
 
 <style>
+    body {
+        background: #020617;
+    }
+
     .results-container {
-        max-width: 1000px;
-        margin: 40px auto;
-        padding: 20px;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 45px 20px 70px;
+        color: white;
     }
 
     .result-card {
-        background: #ffffff;
-        border-radius: 18px;
-        padding: 30px;
+        background: #0f172a;
+        border: 1px solid #1e3a8a;
+        border-radius: 22px;
+        padding: 35px;
         text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         margin-bottom: 30px;
     }
 
+    .result-card h1 {
+        margin-top: 0;
+        font-size: 32px;
+    }
+
     .score {
-        font-size: 55px;
+        font-size: 60px;
         font-weight: 800;
-        margin: 10px 0;
+        margin: 15px 0;
+        color: #60a5fa;
     }
 
     .score-text {
-        font-size: 20px;
-        margin-bottom: 20px;
+        font-size: 18px;
+        color: #cbd5e1;
+        margin-bottom: 25px;
     }
 
     .stats {
@@ -37,47 +50,20 @@
     }
 
     .stat {
-        background: #f1f5f9;
+        background: #172554;
+        border: 1px solid #1e40af;
         padding: 20px;
-        border-radius: 12px;
+        border-radius: 14px;
     }
 
     .stat strong {
         display: block;
-        font-size: 25px;
+        font-size: 27px;
+        margin-bottom: 5px;
     }
 
-    .question-card {
-        background: #ffffff;
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-    }
-
-    .question-number {
-        font-weight: bold;
-        margin-bottom: 12px;
-    }
-
-    .answer {
-        padding: 10px;
-        border-radius: 8px;
-        margin: 8px 0;
-    }
-
-    .correct {
-        background: #dcfce7;
-        border: 1px solid #22c55e;
-    }
-
-    .wrong {
-        background: #fee2e2;
-        border: 1px solid #ef4444;
-    }
-
-    .unanswered {
-        background: #f1f5f9;
+    .stat span {
+        color: #bfdbfe;
     }
 
     .button-row {
@@ -85,12 +71,12 @@
         gap: 12px;
         justify-content: center;
         flex-wrap: wrap;
-        margin-top: 25px;
+        margin-top: 30px;
     }
 
     .btn {
         display: inline-block;
-        padding: 12px 20px;
+        padding: 13px 22px;
         border-radius: 10px;
         text-decoration: none;
         font-weight: 600;
@@ -106,9 +92,122 @@
         color: white;
     }
 
+    .btn-history {
+        background: #16a34a;
+        color: white;
+    }
+
+    .review-title {
+        margin: 35px 0 20px;
+        font-size: 28px;
+    }
+
+    .question-card {
+        background: #0f172a;
+        border: 1px solid #1e293b;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    }
+
+    .question-number {
+        font-weight: bold;
+        color: #60a5fa;
+        margin-bottom: 12px;
+    }
+
+    .question-text {
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .answer {
+        padding: 12px;
+        border-radius: 8px;
+        margin: 8px 0;
+        background: #1e293b;
+        border: 1px solid #334155;
+    }
+
+    .selected-correct {
+        background: #14532d;
+        border-color: #22c55e;
+    }
+
+    .selected-wrong {
+        background: #7f1d1d;
+        border-color: #ef4444;
+    }
+
+    .correct-answer {
+        background: #14532d;
+        border-color: #22c55e;
+    }
+
+    .unanswered {
+        background: #1e293b;
+        border-color: #475569;
+    }
+
+    .answer-status {
+        margin-top: 18px;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .status-correct {
+        background: #14532d;
+        color: #bbf7d0;
+    }
+
+    .status-wrong {
+        background: #7f1d1d;
+        color: #fecaca;
+    }
+
+    .status-unanswered {
+        background: #334155;
+        color: #cbd5e1;
+    }
+
+    .explanation {
+        margin-top: 18px;
+        padding: 15px;
+        background: #172554;
+        border-left: 4px solid #2563eb;
+        border-radius: 8px;
+        line-height: 1.7;
+        color: #dbeafe;
+    }
+
+    .result-info {
+        margin-top: 20px;
+        color: #94a3b8;
+        font-size: 14px;
+    }
+
     @media (max-width: 700px) {
+
+        .results-container {
+            padding: 30px 15px 50px;
+        }
+
+        .result-card {
+            padding: 25px 18px;
+        }
+
+        .score {
+            font-size: 48px;
+        }
+
         .stats {
             grid-template-columns: 1fr;
+        }
+
+        .question-card {
+            padding: 20px;
         }
     }
 </style>
@@ -116,51 +215,124 @@
 <div class="results-container">
 
 ```
+<!-- RESULT SUMMARY -->
+
 <div class="result-card">
 
-    <h1>JAMB Practice Result</h1>
+    <h1>🎯 JAMB Practice Result</h1>
 
     <div class="score">
-        {{ percentage }}%
+        {{ attempt.score }}%
     </div>
 
     <div class="score-text">
-        You got {{ attempt.correct_answers }}
-        out of {{ attempt.total_questions }}
+
+        You got
+
+        <strong>
+            {{ attempt.correct_answers }}
+        </strong>
+
+        out of
+
+        <strong>
+            {{ attempt.total_questions }}
+        </strong>
+
         questions correct.
+
     </div>
+
+
+    <!-- STATISTICS -->
 
     <div class="stats">
 
         <div class="stat">
-            <strong>{{ attempt.total_questions }}</strong>
-            Questions
+
+            <strong>
+                {{ attempt.total_questions }}
+            </strong>
+
+            <span>
+                Total Questions
+            </span>
+
         </div>
 
-        <div class="stat">
-            <strong>{{ attempt.correct_answers }}</strong>
-            Correct
-        </div>
 
         <div class="stat">
+
+            <strong>
+                {{ attempt.correct_answers }}
+            </strong>
+
+            <span>
+                Correct
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
             <strong>
                 {{ attempt.total_questions - attempt.correct_answers }}
             </strong>
-            Incorrect
+
+            <span>
+                Incorrect / Unanswered
+            </span>
+
         </div>
 
     </div>
 
+
+    <div class="result-info">
+
+        📚 Subjects:
+
+        {% set result_subjects = attempt.subjects|from_json %}
+
+        {% if result_subjects %}
+
+            {{ result_subjects|join(", ") }}
+
+        {% else %}
+
+            Not specified
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- BUTTONS -->
+
     <div class="button-row">
 
-        <a href="{{ url_for('exam_preparation') }}"
-           class="btn btn-primary">
-            Take Another Exam
+        <a
+            href="{{ url_for('exam_preparation') }}"
+            class="btn btn-primary"
+        >
+            🚀 Take Another Exam
         </a>
 
-        <a href="{{ url_for('jamb_history') }}"
-           class="btn btn-secondary">
-            View History
+
+        <a
+            href="{{ url_for('jamb_history') }}"
+            class="btn btn-secondary"
+        >
+            📚 Exam History
+        </a>
+
+
+        <a
+            href="{{ url_for('results') }}"
+            class="btn btn-history"
+        >
+            📊 Results
         </a>
 
     </div>
@@ -168,102 +340,200 @@
 </div>
 
 
-<h2>Question Review</h2>
+<!-- QUESTION REVIEW -->
 
-{% for question in questions %}
+{% if questions %}
 
-    {% set detail = answer_details[loop.index0] %}
+    <h2 class="review-title">
+        📝 Question Review
+    </h2>
 
-    <div class="question-card">
 
-        <div class="question-number">
-            Question {{ loop.index }}
-        </div>
+    {% for question in questions %}
 
-        <p>
-            <strong>{{ question.question }}</strong>
-        </p>
+        {% set detail = answer_details[loop.index0] %}
 
-        <div class="
-            answer
-            {% if detail.submitted_answer == 'A' %}
-                {% if detail.is_correct %}
-                    correct
-                {% else %}
-                    wrong
+
+        <div class="question-card">
+
+            <div class="question-number">
+
+                Question {{ loop.index }}
+
+            </div>
+
+
+            <div class="question-text">
+
+                <strong>
+                    {{ question.question }}
+                </strong>
+
+            </div>
+
+
+            <!-- OPTION A -->
+
+            <div class="
+                answer
+                {% if detail.submitted_answer == 'A' and detail.is_correct %}
+                    selected-correct
+                {% elif detail.submitted_answer == 'A' and not detail.is_correct %}
+                    selected-wrong
+                {% elif question.correct_answer.upper() == 'A' %}
+                    correct-answer
                 {% endif %}
-            {% endif %}
-        ">
-            <strong>A.</strong>
-            {{ question.option_a }}
-        </div>
+            ">
 
-        <div class="
-            answer
-            {% if detail.submitted_answer == 'B' %}
-                {% if detail.is_correct %}
-                    correct
-                {% else %}
-                    wrong
+                <strong>A.</strong>
+
+                {{ question.option_a }}
+
+            </div>
+
+
+            <!-- OPTION B -->
+
+            <div class="
+                answer
+                {% if detail.submitted_answer == 'B' and detail.is_correct %}
+                    selected-correct
+                {% elif detail.submitted_answer == 'B' and not detail.is_correct %}
+                    selected-wrong
+                {% elif question.correct_answer.upper() == 'B' %}
+                    correct-answer
                 {% endif %}
-            {% endif %}
-        ">
-            <strong>B.</strong>
-            {{ question.option_b }}
-        </div>
+            ">
 
-        <div class="
-            answer
-            {% if detail.submitted_answer == 'C' %}
-                {% if detail.is_correct %}
-                    correct
-                {% else %}
-                    wrong
+                <strong>B.</strong>
+
+                {{ question.option_b }}
+
+            </div>
+
+
+            <!-- OPTION C -->
+
+            <div class="
+                answer
+                {% if detail.submitted_answer == 'C' and detail.is_correct %}
+                    selected-correct
+                {% elif detail.submitted_answer == 'C' and not detail.is_correct %}
+                    selected-wrong
+                {% elif question.correct_answer.upper() == 'C' %}
+                    correct-answer
                 {% endif %}
-            {% endif %}
-        ">
-            <strong>C.</strong>
-            {{ question.option_c }}
-        </div>
+            ">
 
-        <div class="
-            answer
-            {% if detail.submitted_answer == 'D' %}
-                {% if detail.is_correct %}
-                    correct
-                {% else %}
-                    wrong
+                <strong>C.</strong>
+
+                {{ question.option_c }}
+
+            </div>
+
+
+            <!-- OPTION D -->
+
+            <div class="
+                answer
+                {% if detail.submitted_answer == 'D' and detail.is_correct %}
+                    selected-correct
+                {% elif detail.submitted_answer == 'D' and not detail.is_correct %}
+                    selected-wrong
+                {% elif question.correct_answer.upper() == 'D' %}
+                    correct-answer
                 {% endif %}
-            {% endif %}
-        ">
-            <strong>D.</strong>
-            {{ question.option_d }}
-        </div>
+            ">
 
-        <p>
-            <strong>Your answer:</strong>
-            {% if detail.submitted_answer %}
-                {{ detail.submitted_answer }}
+                <strong>D.</strong>
+
+                {{ question.option_d }}
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            {% if not detail.submitted_answer %}
+
+                <div class="answer-status status-unanswered">
+
+                    ⚪ Not answered
+
+                </div>
+
+            {% elif detail.is_correct %}
+
+                <div class="answer-status status-correct">
+
+                    ✅ Correct
+
+                </div>
+
             {% else %}
-                Not answered
+
+                <div class="answer-status status-wrong">
+
+                    ❌ Incorrect
+
+                </div>
+
             {% endif %}
-        </p>
 
-        <p>
-            <strong>Correct answer:</strong>
-            {{ question.correct_answer }}
-        </p>
 
-        {% if question.explanation %}
+            <!-- ANSWER INFORMATION -->
+
             <p>
-                <strong>Explanation:</strong>
-                {{ question.explanation }}
+
+                <strong>
+                    Your answer:
+                </strong>
+
+                {% if detail.submitted_answer %}
+
+                    {{ detail.submitted_answer }}
+
+                {% else %}
+
+                    Not answered
+
+                {% endif %}
+
             </p>
-        {% endif %}
 
-    </div>
 
-{% endfor %}
+            <p>
+
+                <strong>
+                    Correct answer:
+                </strong>
+
+                {{ question.correct_answer }}
+
+            </p>
+
+
+            {% if question.explanation %}
+
+                <div class="explanation">
+
+                    <strong>
+                        💡 Explanation:
+                    </strong>
+
+                    <br>
+
+                    {{ question.explanation }}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
 ```
 
 </div>
