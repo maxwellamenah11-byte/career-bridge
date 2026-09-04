@@ -3,6 +3,7 @@
 {% block content %}
 
 <style>
+
     body {
         background: #020617;
     }
@@ -14,8 +15,15 @@
         color: white;
     }
 
+    /* HERO */
+
     .exam-hero {
-        background: linear-gradient(135deg, #0f172a, #1d4ed8, #2563eb);
+        background: linear-gradient(
+            135deg,
+            #0f172a,
+            #1d4ed8,
+            #2563eb
+        );
         border-radius: 24px;
         padding: 42px;
         margin-bottom: 30px;
@@ -35,6 +43,8 @@
         font-size: 16px;
     }
 
+    /* SIMULATOR */
+
     .simulator-card {
         background: #0f172a;
         border: 1px solid #1e3a8a;
@@ -53,6 +63,8 @@
         line-height: 1.7;
         margin-bottom: 25px;
     }
+
+    /* INFO */
 
     .info-grid {
         display: grid;
@@ -83,35 +95,6 @@
     .info-box span {
         color: #bfdbfe;
         font-size: 14px;
-    }
-
-    /* CLICKABLE RESULTS BUTTON */
-
-    .results-button-container {
-        margin-bottom: 30px;
-    }
-
-    .results-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 15px 24px;
-        border-radius: 12px;
-        background: #172554;
-        border: 2px solid #2563eb;
-        color: white;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: bold;
-        transition: 0.2s ease;
-        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.2);
-    }
-
-    .results-button:hover {
-        background: #2563eb;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.35);
     }
 
     /* QUESTION COUNT */
@@ -153,7 +136,7 @@
         color: white;
     }
 
-    /* SUBJECT SECTION */
+    /* SUBJECTS */
 
     .subject-section {
         margin-top: 25px;
@@ -202,6 +185,8 @@
         cursor: pointer;
     }
 
+    /* NOTICE */
+
     .notice {
         margin-top: 25px;
         padding: 17px;
@@ -212,17 +197,34 @@
         line-height: 1.6;
     }
 
-    .start-button {
+    /* BUTTON AREA */
+
+    .button-area {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
         margin-top: 28px;
+    }
+
+    .start-button,
+    .results-button,
+    .history-button {
+        display: inline-block;
         padding: 15px 27px;
-        border: none;
         border-radius: 12px;
-        background: #2563eb;
-        color: white;
         font-size: 16px;
         font-weight: bold;
+        text-decoration: none;
         cursor: pointer;
         transition: 0.2s ease;
+    }
+
+    /* START */
+
+    .start-button {
+        border: none;
+        background: #2563eb;
+        color: white;
         box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3);
     }
 
@@ -230,6 +232,35 @@
         background: #3b82f6;
         transform: translateY(-2px);
     }
+
+    /* RESULTS */
+
+    .results-button {
+        background: #166534;
+        border: 1px solid #22c55e;
+        color: white;
+    }
+
+    .results-button:hover {
+        background: #15803d;
+        transform: translateY(-2px);
+    }
+
+    /* HISTORY */
+
+    .history-button {
+        background: #1e293b;
+        border: 1px solid #3b82f6;
+        color: white;
+    }
+
+    .history-button:hover {
+        background: #172554;
+        border-color: #60a5fa;
+        transform: translateY(-2px);
+    }
+
+    /* MORE FEATURES */
 
     .coming-soon {
         margin-top: 30px;
@@ -248,6 +279,8 @@
         line-height: 1.6;
         margin-bottom: 0;
     }
+
+    /* MOBILE */
 
     @media (max-width: 750px) {
 
@@ -280,10 +313,19 @@
             max-width: 100%;
         }
 
-        .results-button {
+        .button-area {
+            flex-direction: column;
+        }
+
+        .start-button,
+        .results-button,
+        .history-button {
             width: 100%;
+            box-sizing: border-box;
+            text-align: center;
         }
     }
+
 </style>
 
 <div class="exam-page">
@@ -296,10 +338,10 @@
     <h1>📝 Exam Preparation</h1>
 
     <p>
-        Prepare smarter with Career Bridge. Practise thousands
-        of original JAMB-style questions based on the JAMB
-        syllabus, improve your knowledge and get comfortable
-        with computer-based testing before the real examination.
+        Prepare smarter with Career Bridge. Practise
+        JAMB-style questions, improve your knowledge and
+        get comfortable with computer-based testing before
+        the real examination.
     </p>
 
 </div>
@@ -312,9 +354,10 @@
     <h2>🎯 JAMB CBT Simulator</h2>
 
     <p class="description">
-        Choose your subjects and the number of questions you
-        want to practise. Career Bridge will randomly create
-        a practice session from our question bank.
+        Choose your subjects and the number of questions
+        you want to practise. Career Bridge will randomly
+        create a practice session from the available
+        question bank.
     </p>
 
 
@@ -324,9 +367,13 @@
 
         <div class="info-box">
 
-            <div class="info-icon">💻</div>
+            <div class="info-icon">
+                💻
+            </div>
 
-            <strong>CBT</strong>
+            <strong>
+                CBT
+            </strong>
 
             <span>
                 Computer-Based Practice
@@ -337,9 +384,13 @@
 
         <div class="info-box">
 
-            <div class="info-icon">⏱️</div>
+            <div class="info-icon">
+                ⏱️
+            </div>
 
-            <strong>Timed</strong>
+            <strong>
+                Timed
+            </strong>
 
             <span>
                 JAMB-style Practice Time
@@ -350,9 +401,13 @@
 
         <div class="info-box">
 
-            <div class="info-icon">📊</div>
+            <div class="info-icon">
+                📊
+            </div>
 
-            <strong>Results</strong>
+            <strong>
+                Results
+            </strong>
 
             <span>
                 View Your Performance
@@ -363,39 +418,24 @@
     </div>
 
 
-    <!-- RESULTS BUTTON -->
-
-    <div class="results-button-container">
-
-        <a
-            href="{{ url_for('jamb_history') }}"
-            class="results-button"
-        >
-
-            📊 View My JAMB Results
-
-        </a>
-
-    </div>
-
-
-    <!-- FORM -->
+    <!-- EXAM FORM -->
 
     <form
         method="POST"
         action="{{ url_for('start_jamb_exam') }}"
     >
 
-
         <!-- QUESTION COUNT -->
 
         <div class="question-count-section">
 
-            <h3>🔢 Number of Questions</h3>
+            <h3>
+                🔢 Number of Questions
+            </h3>
 
             <p>
-                Choose how many questions you want in your
-                practice session.
+                Choose how many questions you want in
+                your practice session.
             </p>
 
             <select
@@ -433,7 +473,9 @@
 
         <div class="subject-section">
 
-            <h3>📚 Select Your Subjects</h3>
+            <h3>
+                📚 Select Your Subjects
+            </h3>
 
             <p>
                 Choose the subjects you want to practise.
@@ -469,39 +511,62 @@
 
             💡 <strong>Practice Tip:</strong>
 
-            Choose your subjects and the number of questions.
-            Your questions will be randomly selected from
-            Career Bridge's original JAMB-style question bank.
+            Choose your subjects and the number of
+            questions. Your questions will be randomly
+            selected from Career Bridge's JAMB question
+            bank.
 
         </div>
 
 
-        <!-- BUTTON -->
+        <!-- BUTTONS -->
 
-        <button
-            type="submit"
-            class="start-button"
-        >
+        <div class="button-area">
 
-            🚀 Start JAMB Simulator →
+            <button
+                type="submit"
+                class="start-button"
+            >
+                🚀 Start JAMB Simulator →
+            </button>
 
-        </button>
+
+            <a
+                href="{{ url_for('results') }}"
+                class="results-button"
+            >
+                📊 View Results
+            </a>
+
+
+            <a
+                href="{{ url_for('jamb_history') }}"
+                class="history-button"
+            >
+                📚 Practice History
+            </a>
+
+        </div>
 
     </form>
 
 </div>
 
 
-<!-- FUTURE FEATURES -->
+<!-- MORE FEATURES -->
 
 <div class="coming-soon">
 
-    <h3>🚀 More Exam Preparation Features</h3>
+    <h3>
+        🚀 More Exam Preparation Features
+    </h3>
 
     <p>
-        Career Bridge will include thousands of syllabus-based
-        questions, timed CBT sessions, automatic marking,
-        corrections, performance tracking and practice history.
+        Career Bridge includes timed CBT sessions,
+        automatic marking, corrections, performance
+        tracking and practice history. More exam
+        preparation features can be added as the
+        question bank grows.
     </p>
 
 </div>
