@@ -348,13 +348,12 @@
 
     <form method="POST" action="{{ url_for('start_jamb_exam') }}">
 
+        <!-- English is compulsory and is added by the server. -->
+        <input type="hidden" name="jamb_english" value="Use of English">
+
         <div class="subject-section">
-
             <h3>📚 Choose Your 4 JAMB Subjects</h3>
-
-            <p>
-                <strong>Use of English is compulsory.</strong> Select exactly three additional subjects.
-            </p>
+            <p><strong>Use of English is compulsory.</strong> Choose exactly 3 additional subjects.</p>
 
             <div class="selection-status">
                 <strong>Subjects selected: <span id="selected-count">1</span>/4</strong>
@@ -362,63 +361,29 @@
             </div>
 
             <div class="subjects">
-
-                {% for subject in subjects %}
-
-                <label class="subject{% if subject == 'Use of English' %} compulsory{% endif %}">
-
-                    <input
-                        type="checkbox"
-                        name="subjects"
-                        value="{{ subject }}"
-                        {% if subject == 'Use of English' %}checked disabled{% endif %}
-                    >
-
-                    {% if subject == 'Use of English' %}
-                    <input type="hidden" name="subjects" value="Use of English">
-                    {% endif %}
-
-                    <span>{{ subject }}</span>
-
-                    {% if subject == 'Use of English' %}
+                <label class="subject compulsory">
+                    <input type="checkbox" checked disabled>
+                    <span>Use of English</span>
                     <span class="subject-badge">COMPULSORY</span>
-                    {% endif %}
-
                 </label>
 
+                {% for subject in subjects if subject != 'Use of English' %}
+                <label class="subject">
+                    <input type="checkbox" name="subjects" value="{{ subject }}">
+                    <span>{{ subject }}</span>
+                </label>
                 {% endfor %}
-
             </div>
-
         </div>
 
         <div class="notice">
-            💡 <strong>JAMB-style format:</strong> 180 questions total — 60 Use of English and 40 questions from each of your other three subjects. The full exam time is 120 minutes.
+            💡 <strong>JAMB-style format:</strong> 180 questions total — 60 Use of English and 40 questions from each of your other three subjects. Time limit: 120 minutes.
         </div>
 
         <div class="button-area">
-
-            <button
-                type="submit"
-                class="start-button"
-            >
-                🚀 Start 180-Question JAMB CBT →
-            </button>
-
-            <a
-                href="{{ url_for('jamb_history') }}"
-                class="results-button"
-            >
-                📊 View Results
-            </a>
-
-            <a
-                href="{{ url_for('jamb_history') }}"
-                class="history-button"
-            >
-                📚 Practice History
-            </a>
-
+            <button type="submit" class="start-button">🚀 Start 180-Question JAMB CBT →</button>
+            <a href="{{ url_for('jamb_history') }}" class="results-button">📊 View Results</a>
+            <a href="{{ url_for('jamb_history') }}" class="history-button">📚 Practice History</a>
         </div>
 
     </form>
@@ -447,50 +412,38 @@
         const form = document.querySelector('form[action="{{ url_for("start_jamb_exam") }}"]');
         if (!form) return;
 
-        const selectable = Array.from(document.querySelectorAll('input[name="subjects"]')).filter(
-            input => !input.disabled
-        );
+        const boxes = Array.from(document.querySelectorAll('input[name="subjects"]'));
         const countEl = document.getElementById("selected-count");
         const messageEl = document.getElementById("selection-message");
 
         function updateSelection() {
-            const selected = document.querySelectorAll('input[name="subjects"]:checked:not(:disabled)').length + 1;
-            countEl.textContent = selected;
+            const selected = boxes.filter(box => box.checked);
+            const total = selected.length + 1;
+            countEl.textContent = total;
 
-            if (selected < 4) {
-                messageEl.textContent = `Choose ${4 - selected} more subject${4 - selected === 1 ? "" : "s"}`;
+            if (total < 4) {
+                const remaining = 4 - total;
+                messageEl.textContent = `Choose ${remaining} more subject${remaining === 1 ? "" : "s"}`;
             } else {
                 messageEl.textContent = "Ready to start";
             }
 
-            selectable.forEach(input => {
-                if (!input.checked) {
-                    input.disabled = selected >= 4;
-                } else {
-                    input.disabled = false;
-                }
+            boxes.forEach(box => {
+                box.disabled = !box.checked && selected.length >= 3;
             });
         }
 
-        selectable.forEach(input => {
-            input.addEventListener("change", updateSelection);
-        });
+        boxes.forEach(box => box.addEventListener("change", updateSelection));
 
         form.addEventListener("submit", function (event) {
-            const selectedOtherSubjects = document.querySelectorAll('input[name="subjects"]:checked:not(:disabled)').length;
-            const totalSubjects = selectedOtherSubjects + 1;
-
-            if (totalSubjects !== 4) {
+            const selectedCount = boxes.filter(box => box.checked).length;
+            if (selectedCount !== 3) {
                 event.preventDefault();
-                alert("Please select exactly 4 subjects: Use of English and 3 other subjects.");
+                alert("Use of English is compulsory. Please select exactly 3 additional subjects.");
                 return;
             }
 
-            const confirmed = confirm(
-                "Start the 180-question JAMB-style CBT?\n\n60 Use of English + 40 questions from each of your other 3 subjects.\nTime limit: 120 minutes."
-            );
-
-            if (!confirmed) {
+            if (!confirm("Start the 180-question JAMB-style CBT?\n\n60 Use of English + 40 questions from each of your 3 other subjects.\nTime limit: 120 minutes.")) {
                 event.preventDefault();
             }
         });
