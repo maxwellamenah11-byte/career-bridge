@@ -85,12 +85,11 @@
         font-size: 14px;
     }
 
-    .question-count-section {
+    .subject-section {
         margin-top: 25px;
         margin-bottom: 30px;
     }
 
-    .question-count-section h3,
     .subject-section h3 {
         margin-bottom: 10px;
         font-size: 21px;
@@ -102,27 +101,6 @@
         margin-bottom: 18px;
     }
 
-    .question-count-select {
-        width: 100%;
-        max-width: 400px;
-        padding: 15px 16px;
-        border-radius: 12px;
-        border: 2px solid #334155;
-        background: #1e293b;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        outline: none;
-    }
-
-    .question-count-select:focus {
-        border-color: #2563eb;
-    }
-
-    .question-count-select option {
-        background: #0f172a;
-        color: white;
-    }
 
     .subjects {
         display: grid;
@@ -155,6 +133,48 @@
         margin-right: 10px;
         accent-color: #2563eb;
         cursor: pointer;
+    }
+
+
+    .selection-status {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin: 20px 0;
+        padding: 16px 18px;
+        background: #111827;
+        border: 1px solid #334155;
+        border-radius: 14px;
+    }
+
+    .selection-status strong {
+        font-size: 18px;
+    }
+
+    .selection-status span {
+        color: #93c5fd;
+    }
+
+    .subject.compulsory {
+        border-color: #22c55e;
+        background: #052e16;
+        cursor: default;
+    }
+
+    .subject.compulsory:hover {
+        transform: none;
+        border-color: #22c55e;
+        background: #052e16;
+    }
+
+    .subject-badge {
+        margin-left: auto;
+        font-size: 11px;
+        color: #86efac;
+        border: 1px solid #166534;
+        padding: 4px 8px;
+        border-radius: 999px;
     }
 
     .notice {
@@ -266,10 +286,6 @@
             font-size: 25px;
         }
 
-        .question-count-select {
-            max-width: 100%;
-        }
-
         .button-area {
             flex-direction: column;
         }
@@ -303,10 +319,9 @@
     <h2>🎯 JAMB CBT Simulator</h2>
 
     <p class="description">
-        Choose your subjects and the number of questions
-        you want to practise. Career Bridge will randomly
-        create a practice session from the available
-        question bank.
+        Rehearse a full JAMB-style CBT paper with the correct
+        subject structure, question distribution and exam time.
+        Every session is generated from Career Bridge's question bank.
     </p>
 
     <div class="info-grid">
@@ -333,64 +348,41 @@
 
     <form method="POST" action="{{ url_for('start_jamb_exam') }}">
 
-        <div class="question-count-section">
-
-            <h3>🔢 Number of Questions</h3>
-
-            <p>
-                Choose how many questions you want in
-                your practice session.
-            </p>
-
-            <select
-                name="question_count"
-                class="question-count-select"
-                required
-            >
-                <option value="">
-                    -- Select Number of Questions --
-                </option>
-
-                <option value="20">
-                    20 Questions — 30 Minutes
-                </option>
-
-                <option value="40">
-                    40 Questions — 60 Minutes
-                </option>
-
-                <option value="60">
-                    60 Questions — 90 Minutes
-                </option>
-
-                <option value="100">
-                    100 Questions — 120 Minutes
-                </option>
-            </select>
-
-        </div>
-
         <div class="subject-section">
 
-            <h3>📚 Select Your Subjects</h3>
+            <h3>📚 Choose Your 4 JAMB Subjects</h3>
 
             <p>
-                Select at least one subject for your practice session.
+                <strong>Use of English is compulsory.</strong> Select exactly three additional subjects.
             </p>
+
+            <div class="selection-status">
+                <strong>Subjects selected: <span id="selected-count">1</span>/4</strong>
+                <span id="selection-message">Choose 3 more subjects</span>
+            </div>
 
             <div class="subjects">
 
                 {% for subject in subjects %}
 
-                <label class="subject">
+                <label class="subject{% if subject == 'Use of English' %} compulsory{% endif %}">
 
                     <input
                         type="checkbox"
                         name="subjects"
                         value="{{ subject }}"
+                        {% if subject == 'Use of English' %}checked disabled{% endif %}
                     >
 
+                    {% if subject == 'Use of English' %}
+                    <input type="hidden" name="subjects" value="Use of English">
+                    {% endif %}
+
                     <span>{{ subject }}</span>
+
+                    {% if subject == 'Use of English' %}
+                    <span class="subject-badge">COMPULSORY</span>
+                    {% endif %}
 
                 </label>
 
@@ -401,10 +393,7 @@
         </div>
 
         <div class="notice">
-            💡 <strong>Practice Tip:</strong>
-            Choose your subjects and the number of questions.
-            Your questions will be randomly selected from
-            Career Bridge's JAMB question bank.
+            💡 <strong>JAMB-style format:</strong> 180 questions total — 60 Use of English and 40 questions from each of your other three subjects. The full exam time is 120 minutes.
         </div>
 
         <div class="button-area">
@@ -413,7 +402,7 @@
                 type="submit"
                 class="start-button"
             >
-                🚀 Start JAMB Simulator →
+                🚀 Start 180-Question JAMB CBT →
             </button>
 
             <a
@@ -455,45 +444,58 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-
-        const form = document.querySelector(
-            'form[action="{{ url_for("start_jamb_exam") }}"]'
-        );
-
+        const form = document.querySelector('form[action="{{ url_for("start_jamb_exam") }}"]');
         if (!form) return;
 
-        form.addEventListener("submit", function (event) {
+        const selectable = Array.from(document.querySelectorAll('input[name="subjects"]')).filter(
+            input => !input.disabled
+        );
+        const countEl = document.getElementById("selected-count");
+        const messageEl = document.getElementById("selection-message");
 
-            const selectedSubjects = document.querySelectorAll(
-                'input[name="subjects"]:checked'
-            );
+        function updateSelection() {
+            const selected = document.querySelectorAll('input[name="subjects"]:checked:not(:disabled)').length + 1;
+            countEl.textContent = selected;
 
-            const questionCount = document.querySelector(
-                'select[name="question_count"]'
-            );
-
-            if (selectedSubjects.length === 0) {
-                event.preventDefault();
-
-                alert(
-                    "Please select at least one subject before starting the JAMB simulator."
-                );
-
-                return;
+            if (selected < 4) {
+                messageEl.textContent = `Choose ${4 - selected} more subject${4 - selected === 1 ? "" : "s"}`;
+            } else {
+                messageEl.textContent = "Ready to start";
             }
 
-            if (!questionCount.value) {
-                event.preventDefault();
+            selectable.forEach(input => {
+                if (!input.checked) {
+                    input.disabled = selected >= 4;
+                } else {
+                    input.disabled = false;
+                }
+            });
+        }
 
-                alert(
-                    "Please select the number of questions."
-                );
-
-                return;
-            }
-
+        selectable.forEach(input => {
+            input.addEventListener("change", updateSelection);
         });
 
+        form.addEventListener("submit", function (event) {
+            const selectedOtherSubjects = document.querySelectorAll('input[name="subjects"]:checked:not(:disabled)').length;
+            const totalSubjects = selectedOtherSubjects + 1;
+
+            if (totalSubjects !== 4) {
+                event.preventDefault();
+                alert("Please select exactly 4 subjects: Use of English and 3 other subjects.");
+                return;
+            }
+
+            const confirmed = confirm(
+                "Start the 180-question JAMB-style CBT?\n\n60 Use of English + 40 questions from each of your other 3 subjects.\nTime limit: 120 minutes."
+            );
+
+            if (!confirmed) {
+                event.preventDefault();
+            }
+        });
+
+        updateSelection();
     });
 </script>
 
