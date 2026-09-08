@@ -1671,7 +1671,8 @@ def exam_preparation():
 def start_jamb_exam():
 
     # JAMB-style structure: exactly 4 subjects, with Use of English compulsory.
-    selected_subjects = request.form.getlist("subjects")
+    # English is compulsory; the form sends the 3 chosen optional subjects.
+    selected_subjects = ["Use of English"] + request.form.getlist("subjects")
 
     cleaned_subjects = []
     for subject in selected_subjects:
@@ -1704,11 +1705,13 @@ def start_jamb_exam():
     if invalid_subjects:
         return ("One or more selected subjects are invalid.", 400)
 
-    if "Use of English" not in cleaned_subjects:
-        return ("Use of English is compulsory for the JAMB simulation.", 400)
+    # The server always inserts Use of English, then requires exactly 3 optional subjects.
+    optional_subjects = [s for s in cleaned_subjects if s != "Use of English"]
 
-    if len(cleaned_subjects) != 4:
-        return ("Please select exactly 4 subjects: Use of English and 3 other subjects.", 400)
+    if len(optional_subjects) != 3:
+        return ("Please select exactly 3 additional subjects. Use of English is compulsory.", 400)
+
+    cleaned_subjects = ["Use of English"] + optional_subjects
 
     # Fixed JAMB-style practice paper: 180 questions in 120 minutes.
     selected_question_count = 180
