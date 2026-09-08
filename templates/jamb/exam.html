@@ -1,178 +1,125 @@
-{% extends "base.html" %}
-{% block content %}
-<style>
-    body { background: #f2f4f7; }
-    .cbt-shell { max-width: 1200px; margin: 0 auto; padding: 18px; color: #111827; }
-    .topbar { display:flex; justify-content:space-between; gap:16px; align-items:center; background:#fff; border:1px solid #d1d5db; padding:14px 18px; border-radius:10px; position:sticky; top:10px; z-index:20; }
-    .brand-title { font-weight:800; }
-    .timer { font-weight:900; font-size:24px; letter-spacing:1px; }
-    .timer.warning { color:#b91c1c; }
-    .layout { display:grid; grid-template-columns: 1fr 300px; gap:18px; margin-top:18px; }
-    .panel { background:#fff; border:1px solid #d1d5db; border-radius:10px; }
-    .question-panel { padding:22px; min-height:600px; }
-    .q-meta { display:flex; justify-content:space-between; gap:12px; color:#4b5563; font-size:14px; margin-bottom:18px; }
-    .subject-label { font-weight:800; }
-    .q-text { font-size:20px; line-height:1.65; white-space:pre-wrap; margin-bottom:24px; }
-    .option { display:flex; gap:12px; align-items:flex-start; border:1px solid #d1d5db; padding:14px; border-radius:8px; margin:10px 0; cursor:pointer; }
-    .option:hover { background:#f9fafb; }
-    .option input { margin-top:4px; }
-    .nav { display:flex; justify-content:space-between; gap:10px; margin-top:28px; }
-    .btn { border:none; border-radius:7px; padding:12px 18px; font-weight:800; cursor:pointer; }
-    .btn-secondary { background:#e5e7eb; color:#111827; }
-    .btn-primary { background:#1d4ed8; color:#fff; }
-    .btn-danger { background:#b91c1c; color:#fff; }
-    .side { padding:16px; }
-    .side h3 { margin-top:0; }
-    .legend { display:flex; gap:12px; font-size:12px; margin-bottom:12px; flex-wrap:wrap; }
-    .dot { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:4px; border:1px solid #9ca3af; }
-    .dot.current { background:#1d4ed8; border-color:#1d4ed8; }
-    .dot.answered { background:#16a34a; border-color:#16a34a; }
-    .q-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:7px; max-height:520px; overflow:auto; }
-    .q-num { border:1px solid #9ca3af; background:#fff; min-height:36px; border-radius:5px; cursor:pointer; font-weight:700; }
-    .q-num.current { background:#1d4ed8; color:#fff; border-color:#1d4ed8; }
-    .q-num.answered { background:#16a34a; color:#fff; border-color:#16a34a; }
-    .submit-wrap { margin-top:18px; }
-    .small { color:#6b7280; font-size:13px; }
-    .hidden-q { display:none; }
-    @media (max-width: 900px) { .layout { grid-template-columns:1fr; } .topbar { position:static; } .q-grid { max-height:240px; } }
-</style>
-
-<div class="cbt-shell">
-    <div class="topbar">
-        <div>
-            <div class="brand-title">JAMB CBT Simulator</div>
-            <div class="small">{{ question_count }} questions · 120 minutes</div>
-        </div>
-        <div id="timer" class="timer">02:00:00</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Bridge JAMB CBT</title>
+    <style>
+        *{box-sizing:border-box}
+        body{margin:0;font-family:Arial,sans-serif;background:#eef1f5;color:#172033}
+        .top{background:#123b7a;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+        .top h1{font-size:20px;margin:0 0 3px}.top p{margin:0;font-size:12px;color:#dce7f8}
+        .timer{background:#fff;color:#b42318;padding:9px 14px;border-radius:7px;font-size:22px;font-weight:800;min-width:120px;text-align:center}
+        .wrap{max-width:1200px;margin:18px auto;padding:0 14px 30px}
+        .layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px}
+        .card{background:#fff;border:1px solid #d2d8e2;border-radius:8px}
+        .main{padding:24px;min-height:650px}.side{padding:16px}
+        .meta{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e3e7ee;padding-bottom:14px;margin-bottom:18px;font-size:14px;color:#566176}
+        .subject{font-weight:800;color:#123b7a}.qtext{font-size:20px;line-height:1.7;margin-bottom:22px;white-space:pre-wrap}
+        .option{display:flex;gap:12px;padding:14px;border:1px solid #cfd6e0;border-radius:7px;margin:10px 0;cursor:pointer;background:#fff}
+        .option:hover{background:#f7f9fc;border-color:#123b7a}.option input{margin-top:3px}
+        .nav{display:flex;justify-content:space-between;gap:10px;margin-top:28px}.btn{border:0;border-radius:7px;padding:12px 17px;font-weight:800;cursor:pointer}.prev{background:#e4e8ef;color:#172033}.next{background:#123b7a;color:#fff}.submit{background:#b42318;color:#fff;width:100%;margin-top:16px}
+        .side h2{font-size:17px;margin:0 0 12px}.legend{font-size:12px;color:#596579;margin-bottom:12px;line-height:1.8}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-height:480px;overflow:auto}
+        .num{height:36px;border:1px solid #aeb8c7;background:#fff;border-radius:5px;font-weight:700;cursor:pointer}.num.current{background:#123b7a;color:#fff;border-color:#123b7a}.num.answered{background:#159447;color:#fff;border-color:#159447}
+        .status{font-size:12px;color:#5f6c82;margin-top:10px}.empty{padding:50px;text-align:center}.empty h2{color:#b42318}
+        @media(max-width:900px){.layout{grid-template-columns:1fr}.side{order:-1}.grid{max-height:180px}.main{min-height:0}.top{position:static}.qtext{font-size:18px}}
+    </style>
+</head>
+<body>
+<div class="top">
+    <div>
+        <h1>Career Bridge JAMB CBT</h1>
+        <p>180 Questions · 120 Minutes · Use of English + 3 other subjects</p>
     </div>
+    <div id="timer" class="timer">02:00:00</div>
+</div>
 
-    <form id="examForm" method="POST" action="{{ url_for('jamb_results') }}">
-        <div class="layout">
-            <div class="panel question-panel">
+<div class="wrap">
+{% if not questions %}
+    <div class="card empty">
+        <h2>No questions were loaded.</h2>
+        <p>The exam could not load its question set. Please return to JAMB Preparation and try again.</p>
+        <a href="{{ url_for('exam_preparation') }}" class="btn next">Back to JAMB Preparation</a>
+    </div>
+{% else %}
+<form id="examForm" method="POST" action="{{ url_for('jamb_results') }}">
+    <div class="layout">
+        <main class="card main">
+            {% for question in questions %}
+            <section class="question-card" data-index="{{ loop.index0 }}" {% if not loop.first %}style="display:none"{% endif %}>
+                <div class="meta">
+                    <span class="subject">{{ question.subject }}</span>
+                    <span>Question {{ loop.index }} of {{ question_count }}</span>
+                </div>
+                <div class="qtext">{{ question.question }}</div>
+
+                <label class="option"><input type="radio" name="question_{{ question.id }}" value="A"><span><strong>A.</strong> {{ question.option_a }}</span></label>
+                <label class="option"><input type="radio" name="question_{{ question.id }}" value="B"><span><strong>B.</strong> {{ question.option_b }}</span></label>
+                <label class="option"><input type="radio" name="question_{{ question.id }}" value="C"><span><strong>C.</strong> {{ question.option_c }}</span></label>
+                <label class="option"><input type="radio" name="question_{{ question.id }}" value="D"><span><strong>D.</strong> {{ question.option_d }}</span></label>
+
+                <div class="nav">
+                    <button type="button" class="btn prev" onclick="move(-1)">← Previous</button>
+                    <button type="button" class="btn next" onclick="move(1)">Next →</button>
+                </div>
+            </section>
+            {% endfor %}
+        </main>
+
+        <aside class="card side">
+            <h2>Question Navigator</h2>
+            <div class="legend">Blue = current &nbsp; Green = answered &nbsp; White = unanswered</div>
+            <div class="grid">
                 {% for question in questions %}
-                <section class="question-card {% if not loop.first %}hidden-q{% endif %}" data-index="{{ loop.index0 }}" id="q-{{ loop.index0 }}">
-                    <div class="q-meta">
-                        <span class="subject-label">{{ question.subject }}</span>
-                        <span>Question {{ loop.index }} of {{ question_count }}</span>
-                    </div>
-                    <div class="q-text">{{ question.question }}</div>
-
-                    <label class="option">
-                        <input type="radio" name="question_{{ question.id }}" value="A">
-                        <span><strong>A.</strong> {{ question.option_a }}</span>
-                    </label>
-                    <label class="option">
-                        <input type="radio" name="question_{{ question.id }}" value="B">
-                        <span><strong>B.</strong> {{ question.option_b }}</span>
-                    </label>
-                    <label class="option">
-                        <input type="radio" name="question_{{ question.id }}" value="C">
-                        <span><strong>C.</strong> {{ question.option_c }}</span>
-                    </label>
-                    <label class="option">
-                        <input type="radio" name="question_{{ question.id }}" value="D">
-                        <span><strong>D.</strong> {{ question.option_d }}</span>
-                    </label>
-
-                    <div class="nav">
-                        <button type="button" class="btn btn-secondary" onclick="moveQuestion(-1)">← Previous</button>
-                        <button type="button" class="btn btn-primary" onclick="moveQuestion(1)">Next →</button>
-                    </div>
-                </section>
+                <button type="button" class="num {% if loop.first %}current{% endif %}" onclick="show({{ loop.index0 }})">{{ loop.index }}</button>
                 {% endfor %}
             </div>
-
-            <aside class="panel side">
-                <h3>Questions</h3>
-                <div class="legend">
-                    <span><span class="dot current"></span> Current</span>
-                    <span><span class="dot answered"></span> Answered</span>
-                    <span><span class="dot"></span> Unanswered</span>
-                </div>
-                <div class="q-grid">
-                    {% for question in questions %}
-                    <button type="button" class="q-num {% if loop.first %}current{% endif %}" data-qnum="{{ loop.index0 }}" onclick="showQuestion({{ loop.index0 }})">{{ loop.index }}</button>
-                    {% endfor %}
-                </div>
-                <div class="submit-wrap">
-                    <button type="submit" class="btn btn-danger" style="width:100%" onclick="return confirmSubmit()">Submit Examination</button>
-                </div>
-            </aside>
-        </div>
-    </form>
+            <div class="status" id="status">0 of {{ question_count }} answered</div>
+            <button type="submit" class="btn submit" onclick="return submitExam()">Submit Examination</button>
+        </aside>
+    </div>
+</form>
+{% endif %}
 </div>
 
 <script>
-(function () {
-    const form = document.getElementById('examForm');
-    const cards = Array.from(document.querySelectorAll('.question-card'));
-    const nums = Array.from(document.querySelectorAll('.q-num'));
-    const timerEl = document.getElementById('timer');
-    let current = 0;
-    let secondsLeft = 120 * 60;
-    let submitted = false;
+(function(){
+    const cards=[...document.querySelectorAll('.question-card')];
+    const nums=[...document.querySelectorAll('.num')];
+    const form=document.getElementById('examForm');
+    const timer=document.getElementById('timer');
+    const status=document.getElementById('status');
+    let current=0, seconds=120*60, submitting=false;
 
-    function updateIndicators() {
-        nums.forEach((btn, i) => {
-            btn.classList.toggle('current', i === current);
-            const card = cards[i];
-            const checked = card.querySelector('input[type="radio"]:checked');
-            btn.classList.toggle('answered', !!checked && i !== current);
+    function answeredCount(){ return cards.filter(c=>c.querySelector('input:checked')).length; }
+    function indicators(){
+        nums.forEach((n,i)=>{
+            n.classList.toggle('current',i===current);
+            n.classList.toggle('answered',!!cards[i].querySelector('input:checked'));
         });
+        if(status) status.textContent=answeredCount()+' of '+cards.length+' answered';
     }
-
-    window.showQuestion = function (index) {
-        if (index < 0 || index >= cards.length) return;
-        cards[current].classList.add('hidden-q');
-        current = index;
-        cards[current].classList.remove('hidden-q');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        updateIndicators();
+    window.show=function(i){
+        if(i<0||i>=cards.length)return;
+        cards[current].style.display='none'; current=i; cards[current].style.display='block';
+        window.scrollTo({top:0,behavior:'smooth'}); indicators();
     };
-
-    window.moveQuestion = function (delta) {
-        showQuestion(Math.min(cards.length - 1, Math.max(0, current + delta)));
-    };
-
-    function renderTimer() {
-        const h = Math.floor(secondsLeft / 3600);
-        const m = Math.floor((secondsLeft % 3600) / 60);
-        const s = secondsLeft % 60;
-        timerEl.textContent = [h, m, s].map(v => String(v).padStart(2, '0')).join(':');
-        timerEl.classList.toggle('warning', secondsLeft <= 10 * 60);
+    window.move=function(d){ show(Math.max(0,Math.min(cards.length-1,current+d))); };
+    document.querySelectorAll('input[type=radio]').forEach(x=>x.addEventListener('change',indicators));
+    function tick(){
+        const h=Math.floor(seconds/3600),m=Math.floor((seconds%3600)/60),s=seconds%60;
+        if(timer) timer.textContent=[h,m,s].map(v=>String(v).padStart(2,'0')).join(':');
+        if(seconds<=600 && timer) timer.style.color='#b42318';
+        if(seconds<=0){ clearInterval(clock); if(form&&!submitting){submitting=true;form.submit();} return; }
+        seconds--;
     }
-
-    const interval = setInterval(() => {
-        if (secondsLeft <= 0) {
-            clearInterval(interval);
-            if (!submitted) {
-                submitted = true;
-                form.submit();
-            }
-            return;
-        }
-        secondsLeft -= 1;
-        renderTimer();
-    }, 1000);
-
-    document.querySelectorAll('input[type="radio"]').forEach(input => {
-        input.addEventListener('change', updateIndicators);
-    });
-
-    window.confirmSubmit = function () {
-        const unanswered = cards.filter(card => !card.querySelector('input[type="radio"]:checked')).length;
-        const message = unanswered > 0
-            ? `You have ${unanswered} unanswered question(s). Submit anyway?`
-            : 'Submit your examination now?';
-        if (confirm(message)) {
-            submitted = true;
-            return true;
-        }
-        return false;
+    window.submitExam=function(){
+        const u=cards.length-answeredCount();
+        const ok=confirm(u>0?'You have '+u+' unanswered question(s). Submit anyway?':'Submit your examination now?');
+        if(ok) submitting=true; return ok;
     };
-
-    renderTimer();
-    updateIndicators();
+    const clock=setInterval(tick,1000); tick(); indicators();
 })();
 </script>
-{% endblock %}
+</body>
+</html>
