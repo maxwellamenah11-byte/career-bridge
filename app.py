@@ -1670,74 +1670,14 @@ def exam_preparation():
 @login_required
 def start_jamb_exam():
 
-    selected_subjects = request.form.getlist(
-        "subjects"
-    )
-
-    selected_question_count = request.form.get(
-        "question_count",
-        ""
-    ).strip()
-
-    if not selected_question_count:
-
-        return (
-            "Please select the number of questions.",
-            400
-        )
-
-    try:
-
-        selected_question_count = int(
-            selected_question_count
-        )
-
-    except (ValueError, TypeError):
-
-        return (
-            "Invalid question count.",
-            400
-        )
-
-    allowed_question_counts = [
-        20,
-        40,
-        60,
-        100
-    ]
-
-    if selected_question_count not in allowed_question_counts:
-
-        return (
-            "Invalid question count.",
-            400
-        )
-
-    if not selected_subjects:
-
-        return (
-            "Please select at least one subject.",
-            400
-        )
+    # JAMB-style structure: exactly 4 subjects, with Use of English compulsory.
+    selected_subjects = request.form.getlist("subjects")
 
     cleaned_subjects = []
-
     for subject in selected_subjects:
-
         subject = subject.strip()
-
         if subject and subject not in cleaned_subjects:
-
-            cleaned_subjects.append(
-                subject
-            )
-
-    if not cleaned_subjects:
-
-        return (
-            "Please select at least one subject.",
-            400
-        )
+            cleaned_subjects.append(subject)
 
     allowed_subjects = [
         "Use of English",
@@ -1762,36 +1702,24 @@ def start_jamb_exam():
     ]
 
     if invalid_subjects:
+        return ("One or more selected subjects are invalid.", 400)
 
-        return (
-            "One or more selected subjects are invalid.",
-            400
-        )
+    if "Use of English" not in cleaned_subjects:
+        return ("Use of English is compulsory for the JAMB simulation.", 400)
 
-    session.pop(
-        "jamb_year",
-        None
-    )
+    if len(cleaned_subjects) != 4:
+        return ("Please select exactly 4 subjects: Use of English and 3 other subjects.", 400)
 
+    # Fixed JAMB-style practice paper: 180 questions in 120 minutes.
+    selected_question_count = 180
+
+    session.pop("jamb_year", None)
     session["jamb_subjects"] = cleaned_subjects
+    session["jamb_question_count"] = selected_question_count
+    session.pop("jamb_question_ids", None)
+    session.pop("jamb_started_at", None)
 
-    session["jamb_question_count"] = (
-        selected_question_count
-    )
-
-    session.pop(
-        "jamb_question_ids",
-        None
-    )
-
-    session.pop(
-        "jamb_started_at",
-        None
-    )
-
-    return redirect(
-        url_for("jamb_exam")
-    )
+    return redirect(url_for("jamb_exam"))
 
 
 # =========================================================
@@ -1833,6 +1761,12 @@ def jamb_exam():
         return redirect(
             url_for("exam_preparation")
         )
+
+    if len(selected_subjects) != 4 or "Use of English" not in selected_subjects:
+        return redirect(url_for("exam_preparation"))
+
+    selected_question_count = 180
+    session["jamb_question_count"] = selected_question_count
 
     all_available_questions = []
 
@@ -1906,81 +1840,27 @@ def jamb_exam():
             400
         )
 
-    subject_count = len(
-        selected_subjects
-    )
-
-    base_questions_per_subject = (
-        selected_question_count
-        //
-        subject_count
-    )
-
-    remainder = (
-        selected_question_count
-        %
-        subject_count
-    )
+    # Realistic JAMB-style allocation: 60 Use of English + 40 each
+    # for the other three selected subjects = 180 questions total.
+    allocation = {"Use of English": 60}
+    other_subjects = [s for s in selected_subjects if s != "Use of English"]
+    for subject in other_subjects:
+        allocation[subject] = 40
 
     final_questions = []
 
-    remaining_question_pool = {}
+    for subject in selected_subjects:
+        available_questions = questions_by_subject.get(subject, [])
+        target_count = allocation.get(subject, 0)
 
-    for index, subject in enumerate(
-        selected_subjects
-    ):
-
-        available_questions = questions_by_subject.get(
-            subject,
-            []
-        )
-
-        target_count = (
-            base_questions_per_subject
-        )
-
-        if index < remainder:
-
-            target_count += 1
-
-        selected_for_subject = (
-            available_questions[:target_count]
-        )
-
-        final_questions.extend(
-            selected_for_subject
-        )
-
-        remaining_question_pool[subject] = (
-            available_questions[target_count:]
-        )
-
-    if len(final_questions) < selected_question_count:
-
-        remaining_needed = (
-            selected_question_count
-            -
-            len(final_questions)
-        )
-
-        extra_pool = []
-
-        for subject in selected_subjects:
-
-            extra_pool.extend(
-                remaining_question_pool.get(
-                    subject,
-                    []
-                )
+        if len(available_questions) < target_count:
+            return (
+                f"Not enough {subject} questions are available. "
+                f"The exam needs {target_count}, but only {len(available_questions)} are currently available.",
+                400
             )
 
-        random.shuffle(
-            extra_pool
-        )
-
-        final_questions.extend(
-            extra_pool[:remaining_needed]
-        )
+        final_questions.extend(available_questions[:target_count])
 
     if len(final_questions) < selected_question_count:
 
@@ -2007,17 +1887,7 @@ def jamb_exam():
         datetime.utcnow().isoformat()
     )
 
-    time_map = {
-        20: 30,
-        40: 60,
-        60: 90,
-        100: 120
-    }
-
-    exam_minutes = time_map.get(
-        selected_question_count,
-        60
-    )
+    exam_minutes = 120
 
     return render_template(
         "jamb/exam.html",
@@ -2648,7 +2518,56 @@ with app.app_context():
         )
 
 
+# =========================================================
+# AUTOMATIC JAMB QUESTION SEEDING
+# =========================================================
+#
+# IMPORTANT:
+# seed_jamb.py contains:
+#
+#     def run():
+#
+# It does NOT contain seed_questions().
+#
+# Therefore we import run and give it the local name
+# seed_jamb_questions.
+#
+# =========================================================
 
+with app.app_context():
+
+    try:
+
+        from seed_jamb import run as seed_jamb_questions
+
+        print(
+            "Checking Career Bridge JAMB question bank..."
+        )
+
+        seed_jamb_questions()
+
+        total_jamb_questions = JAMBQuestion.query.count()
+
+        print(
+            f"JAMB question bank ready: "
+            f"{total_jamb_questions} questions."
+        )
+
+    except ModuleNotFoundError:
+
+        print(
+            "seed_jamb.py was not found. "
+            "JAMB questions were not automatically seeded."
+        )
+
+    except Exception as seed_error:
+
+        db.session.rollback()
+
+        print(
+            "Automatic JAMB question seeding failed:",
+            seed_error
+        )
 
 
 # =========================================================
@@ -2700,4 +2619,3 @@ if __name__ == "__main__":
     app.run(
         debug=True
     )
-
