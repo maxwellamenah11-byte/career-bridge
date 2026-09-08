@@ -1873,14 +1873,6 @@ def jamb_exam():
             400
         )
 
-    random.shuffle(
-        final_questions
-    )
-
-    final_questions = final_questions[
-        :selected_question_count
-    ]
-
     session["jamb_question_ids"] = [
         question.id
         for question in final_questions
