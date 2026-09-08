@@ -1,125 +1,920 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Bridge JAMB CBT</title>
+
     <style>
-        *{box-sizing:border-box}
-        body{margin:0;font-family:Arial,sans-serif;background:#eef1f5;color:#172033}
-        .top{background:#123b7a;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-        .top h1{font-size:20px;margin:0 0 3px}.top p{margin:0;font-size:12px;color:#dce7f8}
-        .timer{background:#fff;color:#b42318;padding:9px 14px;border-radius:7px;font-size:22px;font-weight:800;min-width:120px;text-align:center}
-        .wrap{max-width:1200px;margin:18px auto;padding:0 14px 30px}
-        .layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px}
-        .card{background:#fff;border:1px solid #d2d8e2;border-radius:8px}
-        .main{padding:24px;min-height:650px}.side{padding:16px}
-        .meta{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e3e7ee;padding-bottom:14px;margin-bottom:18px;font-size:14px;color:#566176}
-        .subject{font-weight:800;color:#123b7a}.qtext{font-size:20px;line-height:1.7;margin-bottom:22px;white-space:pre-wrap}
-        .option{display:flex;gap:12px;padding:14px;border:1px solid #cfd6e0;border-radius:7px;margin:10px 0;cursor:pointer;background:#fff}
-        .option:hover{background:#f7f9fc;border-color:#123b7a}.option input{margin-top:3px}
-        .nav{display:flex;justify-content:space-between;gap:10px;margin-top:28px}.btn{border:0;border-radius:7px;padding:12px 17px;font-weight:800;cursor:pointer}.prev{background:#e4e8ef;color:#172033}.next{background:#123b7a;color:#fff}.submit{background:#b42318;color:#fff;width:100%;margin-top:16px}
-        .side h2{font-size:17px;margin:0 0 12px}.legend{font-size:12px;color:#596579;margin-bottom:12px;line-height:1.8}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-height:480px;overflow:auto}
-        .num{height:36px;border:1px solid #aeb8c7;background:#fff;border-radius:5px;font-weight:700;cursor:pointer}.num.current{background:#123b7a;color:#fff;border-color:#123b7a}.num.answered{background:#159447;color:#fff;border-color:#159447}
-        .status{font-size:12px;color:#5f6c82;margin-top:10px}.empty{padding:50px;text-align:center}.empty h2{color:#b42318}
-        @media(max-width:900px){.layout{grid-template-columns:1fr}.side{order:-1}.grid{max-height:180px}.main{min-height:0}.top{position:static}.qtext{font-size:18px}}
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef1f5;
+            color: #172033;
+        }
+
+        .top {
+            background: #123b7a;
+            color: #fff;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            box-shadow: 0 2px 8px rgba(0,0,0,.15);
+        }
+
+        .top h1 {
+            font-size: 20px;
+            margin: 0 0 3px;
+        }
+
+        .top p {
+            margin: 0;
+            font-size: 12px;
+            color: #dce7f8;
+        }
+
+        .timer {
+            background: #fff;
+            color: #b42318;
+            padding: 9px 14px;
+            border-radius: 7px;
+            font-size: 22px;
+            font-weight: 800;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .wrap {
+            max-width: 1200px;
+            margin: 18px auto;
+            padding: 0 14px 30px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0,1fr) 310px;
+            gap: 18px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #d2d8e2;
+            border-radius: 8px;
+        }
+
+        .main {
+            padding: 24px;
+            min-height: 650px;
+        }
+
+        .side {
+            padding: 16px;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid #e3e7ee;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            color: #566176;
+        }
+
+        .subject {
+            font-weight: 800;
+            color: #123b7a;
+        }
+
+        .qtext {
+            font-size: 20px;
+            line-height: 1.7;
+            margin-bottom: 22px;
+            white-space: pre-wrap;
+        }
+
+        .option {
+            display: flex;
+            gap: 12px;
+            padding: 14px;
+            border: 1px solid #cfd6e0;
+            border-radius: 7px;
+            margin: 10px 0;
+            cursor: pointer;
+            background: #fff;
+        }
+
+        .option:hover {
+            background: #f7f9fc;
+            border-color: #123b7a;
+        }
+
+        .option input {
+            margin-top: 3px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 28px;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 7px;
+            padding: 12px 17px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .prev {
+            background: #e4e8ef;
+            color: #172033;
+        }
+
+        .next {
+            background: #123b7a;
+            color: #fff;
+        }
+
+        .submit {
+            background: #b42318;
+            color: #fff;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        /* SUBJECT SELECTOR */
+
+        .side h2 {
+            font-size: 17px;
+            margin: 0 0 12px;
+        }
+
+        .subject-title {
+            font-size: 12px;
+            color: #596579;
+            margin-bottom: 9px;
+        }
+
+        .subject-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 18px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e3e7ee;
+        }
+
+        .subject-btn {
+            border: 1px solid #cfd6e0;
+            background: #fff;
+            color: #172033;
+            padding: 9px 11px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .subject-btn:hover {
+            border-color: #123b7a;
+            background: #f3f6fb;
+        }
+
+        .subject-btn.active {
+            background: #123b7a;
+            color: #fff;
+            border-color: #123b7a;
+        }
+
+        .legend {
+            font-size: 12px;
+            color: #596579;
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5,1fr);
+            gap: 6px;
+            max-height: 420px;
+            overflow: auto;
+        }
+
+        .num {
+            height: 36px;
+            border: 1px solid #aeb8c7;
+            background: #fff;
+            border-radius: 5px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .num.current {
+            background: #123b7a;
+            color: #fff;
+            border-color: #123b7a;
+        }
+
+        .num.answered {
+            background: #159447;
+            color: #fff;
+            border-color: #159447;
+        }
+
+        .status {
+            font-size: 12px;
+            color: #5f6c82;
+            margin-top: 10px;
+        }
+
+        .empty {
+            padding: 50px;
+            text-align: center;
+        }
+
+        .empty h2 {
+            color: #b42318;
+        }
+
+        /* CURRENT SUBJECT DISPLAY */
+
+        .current-subject-box {
+            background: #f3f6fb;
+            border: 1px solid #d7deea;
+            border-radius: 7px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .current-subject-box small {
+            display: block;
+            color: #667085;
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .current-subject-box strong {
+            color: #123b7a;
+            font-size: 14px;
+        }
+
+        @media(max-width:900px) {
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .side {
+                order: -1;
+            }
+
+            .grid {
+                max-height: 220px;
+            }
+
+            .main {
+                min-height: 0;
+            }
+
+            .top {
+                position: static;
+            }
+
+            .qtext {
+                font-size: 18px;
+            }
+
+            .subject-selector {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
+
 <body>
+
 <div class="top">
+
     <div>
         <h1>Career Bridge JAMB CBT</h1>
-        <p>180 Questions · 120 Minutes · Use of English + 3 other subjects</p>
+
+        <p>
+            180 Questions · 120 Minutes ·
+            Use of English + 3 other subjects
+        </p>
     </div>
-    <div id="timer" class="timer">02:00:00</div>
+
+    <div id="timer" class="timer">
+        02:00:00
+    </div>
+
 </div>
+
 
 <div class="wrap">
-{% if not questions %}
-    <div class="card empty">
-        <h2>No questions were loaded.</h2>
-        <p>The exam could not load its question set. Please return to JAMB Preparation and try again.</p>
-        <a href="{{ url_for('exam_preparation') }}" class="btn next">Back to JAMB Preparation</a>
-    </div>
-{% else %}
-<form id="examForm" method="POST" action="{{ url_for('jamb_results') }}">
-    <div class="layout">
-        <main class="card main">
-            {% for question in questions %}
-            <section class="question-card" data-index="{{ loop.index0 }}" {% if not loop.first %}style="display:none"{% endif %}>
-                <div class="meta">
-                    <span class="subject">{{ question.subject }}</span>
-                    <span>Question {{ loop.index }} of {{ question_count }}</span>
-                </div>
-                <div class="qtext">{{ question.question }}</div>
 
-                <label class="option"><input type="radio" name="question_{{ question.id }}" value="A"><span><strong>A.</strong> {{ question.option_a }}</span></label>
-                <label class="option"><input type="radio" name="question_{{ question.id }}" value="B"><span><strong>B.</strong> {{ question.option_b }}</span></label>
-                <label class="option"><input type="radio" name="question_{{ question.id }}" value="C"><span><strong>C.</strong> {{ question.option_c }}</span></label>
-                <label class="option"><input type="radio" name="question_{{ question.id }}" value="D"><span><strong>D.</strong> {{ question.option_d }}</span></label>
+{% if not questions %}
+
+    <div class="card empty">
+
+        <h2>No questions were loaded.</h2>
+
+        <p>
+            The exam could not load its question set.
+            Please return to JAMB Preparation and try again.
+        </p>
+
+        <a
+            href="{{ url_for('exam_preparation') }}"
+            class="btn next">
+            Back to JAMB Preparation
+        </a>
+
+    </div>
+
+{% else %}
+
+<form
+    id="examForm"
+    method="POST"
+    action="{{ url_for('jamb_results') }}"
+>
+
+    <div class="layout">
+
+        <!-- QUESTIONS -->
+
+        <main class="card main">
+
+            {% for question in questions %}
+
+            <section
+                class="question-card"
+                data-index="{{ loop.index0 }}"
+                data-subject="{{ question.subject }}"
+                {% if not loop.first %}
+                style="display:none"
+                {% endif %}
+            >
+
+                <div class="meta">
+
+                    <span class="subject">
+                        {{ question.subject }}
+                    </span>
+
+                    <span>
+                        Question {{ loop.index }}
+                        of {{ question_count }}
+                    </span>
+
+                </div>
+
+
+                <div class="qtext">
+                    {{ question.question }}
+                </div>
+
+
+                <label class="option">
+
+                    <input
+                        type="radio"
+                        name="question_{{ question.id }}"
+                        value="A"
+                    >
+
+                    <span>
+                        <strong>A.</strong>
+                        {{ question.option_a }}
+                    </span>
+
+                </label>
+
+
+                <label class="option">
+
+                    <input
+                        type="radio"
+                        name="question_{{ question.id }}"
+                        value="B"
+                    >
+
+                    <span>
+                        <strong>B.</strong>
+                        {{ question.option_b }}
+                    </span>
+
+                </label>
+
+
+                <label class="option">
+
+                    <input
+                        type="radio"
+                        name="question_{{ question.id }}"
+                        value="C"
+                    >
+
+                    <span>
+                        <strong>C.</strong>
+                        {{ question.option_c }}
+                    </span>
+
+                </label>
+
+
+                <label class="option">
+
+                    <input
+                        type="radio"
+                        name="question_{{ question.id }}"
+                        value="D"
+                    >
+
+                    <span>
+                        <strong>D.</strong>
+                        {{ question.option_d }}
+                    </span>
+
+                </label>
+
 
                 <div class="nav">
-                    <button type="button" class="btn prev" onclick="move(-1)">← Previous</button>
-                    <button type="button" class="btn next" onclick="move(1)">Next →</button>
+
+                    <button
+                        type="button"
+                        class="btn prev"
+                        onclick="move(-1)"
+                    >
+                        ← Previous
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn next"
+                        onclick="move(1)"
+                    >
+                        Next →
+                    </button>
+
                 </div>
+
             </section>
+
             {% endfor %}
+
         </main>
 
+
+        <!-- SIDEBAR -->
+
         <aside class="card side">
-            <h2>Question Navigator</h2>
-            <div class="legend">Blue = current &nbsp; Green = answered &nbsp; White = unanswered</div>
-            <div class="grid">
-                {% for question in questions %}
-                <button type="button" class="num {% if loop.first %}current{% endif %}" onclick="show({{ loop.index0 }})">{{ loop.index }}</button>
-                {% endfor %}
+
+            <h2>Subjects</h2>
+
+            <div class="subject-title">
+                Choose a subject to answer
             </div>
-            <div class="status" id="status">0 of {{ question_count }} answered</div>
-            <button type="submit" class="btn submit" onclick="return submitExam()">Submit Examination</button>
+
+
+            <div class="subject-selector">
+
+                {% for subject in subjects %}
+
+                <button
+                    type="button"
+                    class="subject-btn {% if loop.first %}active{% endif %}"
+                    data-subject="{{ subject }}"
+                    onclick="goToSubject('{{ subject|e }}')"
+                >
+                    {{ subject }}
+                </button>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="current-subject-box">
+
+                <small>Currently answering</small>
+
+                <strong id="currentSubject">
+                    {{ questions[0].subject }}
+                </strong>
+
+            </div>
+
+
+            <h2>
+                Question Navigator
+            </h2>
+
+
+            <div class="legend">
+
+                Blue = current
+                &nbsp; Green = answered
+                &nbsp; White = unanswered
+
+            </div>
+
+
+            <div class="grid">
+
+                {% for question in questions %}
+
+                <button
+                    type="button"
+                    class="num {% if loop.first %}current{% endif %}"
+                    onclick="show({{ loop.index0 }})"
+                >
+                    {{ loop.index }}
+                </button>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div
+                class="status"
+                id="status"
+            >
+                0 of {{ question_count }} answered
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn submit"
+                onclick="return submitExam()"
+            >
+                Submit Examination
+            </button>
+
         </aside>
+
     </div>
+
 </form>
+
 {% endif %}
+
 </div>
 
-<script>
-(function(){
-    const cards=[...document.querySelectorAll('.question-card')];
-    const nums=[...document.querySelectorAll('.num')];
-    const form=document.getElementById('examForm');
-    const timer=document.getElementById('timer');
-    const status=document.getElementById('status');
-    let current=0, seconds=120*60, submitting=false;
 
-    function answeredCount(){ return cards.filter(c=>c.querySelector('input:checked')).length; }
+<script>
+
+(function(){
+
+    const cards = [
+        ...document.querySelectorAll('.question-card')
+    ];
+
+    const nums = [
+        ...document.querySelectorAll('.num')
+    ];
+
+    const subjectButtons = [
+        ...document.querySelectorAll('.subject-btn')
+    ];
+
+    const form =
+        document.getElementById('examForm');
+
+    const timer =
+        document.getElementById('timer');
+
+    const status =
+        document.getElementById('status');
+
+    const currentSubject =
+        document.getElementById('currentSubject');
+
+
+    let current = 0;
+
+    let seconds = 120 * 60;
+
+    let submitting = false;
+
+
+    /* COUNT ANSWERED QUESTIONS */
+
+    function answeredCount(){
+
+        return cards.filter(
+            card =>
+            card.querySelector('input:checked')
+        ).length;
+
+    }
+
+
+    /* UPDATE QUESTION NUMBERS */
+
     function indicators(){
-        nums.forEach((n,i)=>{
-            n.classList.toggle('current',i===current);
-            n.classList.toggle('answered',!!cards[i].querySelector('input:checked'));
+
+        nums.forEach((num, i) => {
+
+            num.classList.toggle(
+                'current',
+                i === current
+            );
+
+            num.classList.toggle(
+                'answered',
+                !!cards[i].querySelector(
+                    'input:checked'
+                )
+            );
+
         });
-        if(status) status.textContent=answeredCount()+' of '+cards.length+' answered';
+
+
+        if(status){
+
+            status.textContent =
+                answeredCount() +
+                ' of ' +
+                cards.length +
+                ' answered';
+
+        }
+
     }
-    window.show=function(i){
-        if(i<0||i>=cards.length)return;
-        cards[current].style.display='none'; current=i; cards[current].style.display='block';
-        window.scrollTo({top:0,behavior:'smooth'}); indicators();
+
+
+    /* UPDATE SUBJECT BUTTON */
+
+    function updateSubjectButton(){
+
+        if(!cards[current]){
+            return;
+        }
+
+
+        const subject =
+            cards[current].dataset.subject;
+
+
+        subjectButtons.forEach(button => {
+
+            button.classList.toggle(
+                'active',
+                button.dataset.subject === subject
+            );
+
+        });
+
+
+        if(currentSubject){
+
+            currentSubject.textContent =
+                subject;
+
+        }
+
+    }
+
+
+    /* SHOW QUESTION */
+
+    window.show = function(i){
+
+        if(
+            i < 0 ||
+            i >= cards.length
+        ){
+            return;
+        }
+
+
+        if(cards[current]){
+
+            cards[current].style.display =
+                'none';
+
+        }
+
+
+        current = i;
+
+
+        cards[current].style.display =
+            'block';
+
+
+        updateSubjectButton();
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
+
+        indicators();
+
     };
-    window.move=function(d){ show(Math.max(0,Math.min(cards.length-1,current+d))); };
-    document.querySelectorAll('input[type=radio]').forEach(x=>x.addEventListener('change',indicators));
+
+
+    /* NEXT / PREVIOUS */
+
+    window.move = function(d){
+
+        const nextIndex =
+            Math.max(
+                0,
+                Math.min(
+                    cards.length - 1,
+                    current + d
+                )
+            );
+
+
+        show(nextIndex);
+
+    };
+
+
+    /* GO TO SUBJECT */
+
+    window.goToSubject = function(subject){
+
+        const index =
+            cards.findIndex(
+                card =>
+                card.dataset.subject === subject
+            );
+
+
+        if(index !== -1){
+
+            show(index);
+
+        }
+
+    };
+
+
+    /* UPDATE ANSWER STATUS */
+
+    document
+        .querySelectorAll(
+            'input[type=radio]'
+        )
+        .forEach(input => {
+
+            input.addEventListener(
+                'change',
+                indicators
+            );
+
+        });
+
+
+    /* TIMER */
+
     function tick(){
-        const h=Math.floor(seconds/3600),m=Math.floor((seconds%3600)/60),s=seconds%60;
-        if(timer) timer.textContent=[h,m,s].map(v=>String(v).padStart(2,'0')).join(':');
-        if(seconds<=600 && timer) timer.style.color='#b42318';
-        if(seconds<=0){ clearInterval(clock); if(form&&!submitting){submitting=true;form.submit();} return; }
+
+        const h =
+            Math.floor(
+                seconds / 3600
+            );
+
+        const m =
+            Math.floor(
+                (seconds % 3600) / 60
+            );
+
+        const s =
+            seconds % 60;
+
+
+        if(timer){
+
+            timer.textContent =
+                [h,m,s]
+                .map(
+                    v =>
+                    String(v)
+                    .padStart(2,'0')
+                )
+                .join(':');
+
+        }
+
+
+        if(
+            seconds <= 600 &&
+            timer
+        ){
+
+            timer.style.color =
+                '#b42318';
+
+        }
+
+
+        if(seconds <= 0){
+
+            clearInterval(clock);
+
+
+            if(
+                form &&
+                !submitting
+            ){
+
+                submitting = true;
+
+                form.submit();
+
+            }
+
+            return;
+
+        }
+
+
         seconds--;
+
     }
-    window.submitExam=function(){
-        const u=cards.length-answeredCount();
-        const ok=confirm(u>0?'You have '+u+' unanswered question(s). Submit anyway?':'Submit your examination now?');
-        if(ok) submitting=true; return ok;
+
+
+    /* SUBMIT */
+
+    window.submitExam = function(){
+
+        const unanswered =
+            cards.length -
+            answeredCount();
+
+
+        const message =
+            unanswered > 0
+
+            ? 'You have ' +
+              unanswered +
+              ' unanswered question(s). Submit anyway?'
+
+            : 'Submit your examination now?';
+
+
+        const ok =
+            confirm(message);
+
+
+        if(ok){
+
+            submitting = true;
+
+        }
+
+
+        return ok;
+
     };
-    const clock=setInterval(tick,1000); tick(); indicators();
+
+
+    /* START */
+
+    const clock =
+        setInterval(
+            tick,
+            1000
+        );
+
+
+    tick();
+
+    indicators();
+
+    updateSubjectButton();
+
 })();
+
 </script>
+
 </body>
 </html>
+```
