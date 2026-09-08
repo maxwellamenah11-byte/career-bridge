@@ -2648,56 +2648,7 @@ with app.app_context():
         )
 
 
-# =========================================================
-# AUTOMATIC JAMB QUESTION SEEDING
-# =========================================================
-#
-# IMPORTANT:
-# seed_jamb.py contains:
-#
-#     def run():
-#
-# It does NOT contain seed_questions().
-#
-# Therefore we import run and give it the local name
-# seed_jamb_questions.
-#
-# =========================================================
 
-with app.app_context():
-
-    try:
-
-        from seed_jamb import run as seed_jamb_questions
-
-        print(
-            "Checking Career Bridge JAMB question bank..."
-        )
-
-        seed_jamb_questions()
-
-        total_jamb_questions = JAMBQuestion.query.count()
-
-        print(
-            f"JAMB question bank ready: "
-            f"{total_jamb_questions} questions."
-        )
-
-    except ModuleNotFoundError:
-
-        print(
-            "seed_jamb.py was not found. "
-            "JAMB questions were not automatically seeded."
-        )
-
-    except Exception as seed_error:
-
-        db.session.rollback()
-
-        print(
-            "Automatic JAMB question seeding failed:",
-            seed_error
-        )
 
 
 # =========================================================
