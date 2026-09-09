@@ -2140,47 +2140,61 @@ def jamb_results():
         completed_at=datetime.utcnow()
     )
 
-    db.session.add(attempt)
-    db.session.flush()
+    try:
+        db.session.add(attempt)
+        db.session.flush()
 
-    # Save every submitted answer so the student can review
-    # exactly which questions were correct or incorrect later.
-    for question_number, question in enumerate(
-        ordered_questions,
-        start=1
-    ):
+        # Save EVERY question, including unanswered questions.
+        # This is what makes the Review Answers page reliable.
+        for question_number, question in enumerate(
+            ordered_questions,
+            start=1
+        ):
 
-        submitted_answer = request.form.get(
-            f"question_{question.id}"
-        )
-
-        if submitted_answer:
-            submitted_answer = (
-                submitted_answer.upper().strip()
+            submitted_answer = request.form.get(
+                f"question_{question.id}"
             )
-        else:
-            submitted_answer = None
 
-        correct_answer = (
-            question.correct_answer.upper().strip()
-        )
+            if submitted_answer:
+                submitted_answer = (
+                    submitted_answer.upper().strip()
+                )
+            else:
+                submitted_answer = None
 
-        is_correct = (
-            submitted_answer is not None
-            and submitted_answer == correct_answer
-        )
-
-        db.session.add(
-            JAMBExamAnswer(
-                attempt_id=attempt.id,
-                question_id=question.id,
-                question_number=question_number,
-                selected_answer=submitted_answer,
-                is_correct=is_correct
+            correct_answer = (
+                question.correct_answer.upper().strip()
             )
-        )
 
-    db.session.commit()
+            is_correct = (
+                submitted_answer is not None
+                and submitted_answer == correct_answer
+            )
+
+            db.session.add(
+                JAMBExamAnswer(
+                    attempt_id=attempt.id,
+                    question_id=question.id,
+                    question_number=question_number,
+                    selected_answer=submitted_answer,
+                    is_correct=is_correct
+                )
+            )
+
+        # One transaction: the attempt and all its answers are saved
+        # together. If anything fails, neither half is left behind.
+        db.session.commit()
+
+    except Exception as submit_error:
+        db.session.rollback()
+        app.logger.exception(
+            "Failed to save JAMB exam attempt and answers: %s",
+            submit_error
+        )
+        return (
+            "We could not save your exam result. Please try submitting again.",
+            500
+        )
 
     session["jamb_last_attempt_id"] = attempt.id
 
@@ -2224,11 +2238,17 @@ def jamb_history():
 @login_required
 def jamb_review(attempt_id):
 
+    # IMPORTANT: Always restrict the attempt to the currently
+    # logged-in student. This prevents one student from viewing
+    # another student's answers by changing the URL.
     attempt = JAMBExamAttempt.query.filter_by(
         id=attempt_id,
         student_id=session["student_id"]
     ).first_or_404()
 
+    # Answers are stored permanently when the exam is submitted,
+    # so review does not depend on the Flask session still containing
+    # the old exam questions.
     answers = JAMBExamAnswer.query.filter_by(
         attempt_id=attempt.id
     ).order_by(
@@ -2556,6 +2576,31 @@ def python_playground():
 with app.app_context():
 
     db.create_all()
+
+
+# =========================================================
+# JAMB ANSWER TABLE SAFETY CHECK
+# =========================================================
+# db.create_all() creates the answer table automatically for new
+# databases. This extra check is intentionally harmless and helps
+# existing deployments where the answer model was added later.
+with app.app_context():
+    try:
+        inspector = inspect(db.engine)
+        table_names = inspector.get_table_names()
+
+        if "jamb_exam_answer" not in table_names:
+            JAMBExamAnswer.__table__.create(
+                bind=db.engine,
+                checkfirst=True
+            )
+            print("JAMB answer tracking table is ready.")
+    except Exception as answer_table_error:
+        db.session.rollback()
+        print(
+            "JAMB answer tracking table check failed:",
+            answer_table_error
+        )
 
 
 # =========================================================
