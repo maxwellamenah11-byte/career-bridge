@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Review JAMB Answers</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .header {
+            background: #0f172a;
+            color: white;
+            padding: 25px 20px;
+        }
+
+        .header-content {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .header h1 {
+            margin: 0 0 7px;
+            font-size: 28px;
+        }
+
+        .header p {
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: white;
+            color: #2563eb;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            border: 1px solid #dbe3ef;
+        }
+
+        .summary {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+        }
+
+        .summary h2 {
+            margin-top: 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .summary-item {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 10px;
+        }
+
+        .summary-number {
+            display: block;
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .summary-label {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .filters {
+            background: white;
+            padding: 18px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+        }
+
+        .filters-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            border: none;
+            padding: 9px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #e5e7eb;
+            color: #374151;
+            font-weight: bold;
+        }
+
+        .filter-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+            border-left: 5px solid #d1d5db;
+        }
+
+        .question-card.correct {
+            border-left-color: #16a34a;
+        }
+
+        .question-card.wrong {
+            border-left-color: #dc2626;
+        }
+
+        .question-card.unanswered {
+            border-left-color: #f59e0b;
+        }
+
+        .question-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .subject {
+            display: inline-block;
+            background: #eef2ff;
+            color: #3730a3;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status.correct {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status.wrong {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status.unanswered {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .question-text {
+            font-size: 17px;
+            line-height: 1.6;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            padding: 13px 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 9px;
+            background: #fafafa;
+        }
+
+        .option.selected {
+            border: 2px solid #2563eb;
+            background: #eff6ff;
+        }
+
+        .option.correct-answer {
+            border: 2px solid #16a34a;
+            background: #f0fdf4;
+        }
+
+        .option.selected-wrong {
+            border: 2px solid #dc2626;
+            background: #fef2f2;
+        }
+
+        .option-label {
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        .answer-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .answer-box {
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        .answer-box strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .explanation {
+            margin-top: 18px;
+            padding: 18px;
+            background: #f8fafc;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+
+        .explanation strong {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .no-review {
+            background: white;
+            padding: 40px 20px;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        @media (max-width: 800px) {
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .answer-info {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .question-card {
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="header">
+
+        <div class="header-content">
+
+            <h1>📖 Review Your Answers</h1>
+
+            <p>
+                See which questions you got right,
+                which ones you missed, and the correct answers.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="top-actions">
+
+            <a
+                href="{{ url_for('jamb_history') }}"
+                class="back-btn"
+            >
+                ← Exam History
+            </a>
+
+            <a
+                href="{{ url_for('exam_preparation') }}"
+                class="back-btn"
+            >
+                Start Another Exam
+            </a>
+
+        </div>
+
+
+        {% if answers %}
+
+            {% set correct_count = namespace(value=0) %}
+            {% set wrong_count = namespace(value=0) %}
+            {% set unanswered_count = namespace(value=0) %}
+
+            {% for answer in answers %}
+
+                {% if answer.is_correct %}
+
+                    {% set correct_count.value = correct_count.value + 1 %}
+
+                {% elif answer.selected_answer %}
+
+                    {% set wrong_count.value = wrong_count.value + 1 %}
+
+                {% else %}
+
+                    {% set unanswered_count.value = unanswered_count.value + 1 %}
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            <div class="summary">
+
+                <h2>Exam Summary</h2>
+
+                <div class="summary-grid">
+
+                    <div class="summary-item">
+
+                        <span class="summary-number">
+                            {{ attempt.score }}/400
+                        </span>
+
+                        <span class="summary-label">
+                            JAMB Score
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-item">
+
+                        <span class="summary-number">
+                            {{ correct_count.value }}
+                        </span>
+
+                        <span class="summary-label">
+                            Correct
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-item">
+
+                        <span class="summary-number">
+                            {{ wrong_count.value }}
+                        </span>
+
+                        <span class="summary-label">
+                            Wrong
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-item">
+
+                        <span class="summary-number">
+                            {{ unanswered_count.value }}
+                        </span>
+
+                        <span class="summary-label">
+                            Not Answered
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="filters">
+
+                <div class="filters-title">
+                    Filter Questions
+                </div>
+
+                <div class="filter-buttons">
+
+                    <button
+                        class="filter-btn active"
+                        onclick="filterQuestions('all', this)"
+                    >
+                        All
+                    </button>
+
+                    <button
+                        class="filter-btn"
+                        onclick="filterQuestions('wrong', this)"
+                    >
+                        ❌ Wrong
+                    </button>
+
+                    <button
+                        class="filter-btn"
+                        onclick="filterQuestions('correct', this)"
+                    >
+                        ✅ Correct
+                    </button>
+
+                    <button
+                        class="filter-btn"
+                        onclick="filterQuestions('unanswered', this)"
+                    >
+                        ⚠️ Not Answered
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div id="questions-container">
+
+                {% for answer in answers %}
+
+                    {% if answer.is_correct %}
+
+                        {% set card_class = "correct" %}
+                        {% set status_class = "correct" %}
+                        {% set status_text = "✓ Correct" %}
+
+                    {% elif answer.selected_answer %}
+
+                        {% set card_class = "wrong" %}
+                        {% set status_class = "wrong" %}
+                        {% set status_text = "✗ Wrong" %}
+
+                    {% else %}
+
+                        {% set card_class = "unanswered" %}
+                        {% set status_class = "unanswered" %}
+                        {% set status_text = "⚠ Not Answered" %}
+
+                    {% endif %}
+
+
+                    <div
+                        class="question-card {{ card_class }}"
+                        data-status="{{ card_class }}"
+                    >
+
+                        <div class="question-top">
+
+                            <div>
+
+                                <span class="question-number">
+
+                                    Question
+                                    {{ answer.question_number }}
+
+                                </span>
+
+                                <span class="subject">
+
+                                    {{ answer.question.subject }}
+
+                                </span>
+
+                            </div>
+
+
+                            <span
+                                class="status {{ status_class }}"
+                            >
+
+                                {{ status_text }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="question-text">
+
+                            {{ answer.question.question }}
+
+                        </div>
+
+
+                        <div class="options">
+
+                            <div
+                                class="
+                                    option
+                                    {% if answer.selected_answer == 'A' %}
+                                        selected
+                                        {% if answer.question.correct_answer.upper() != 'A' %}
+                                            selected-wrong
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if answer.question.correct_answer.upper() == 'A' %}
+                                        correct-answer
+                                    {% endif %}
+                                "
+                            >
+
+                                <span class="option-label">
+                                    A.
+                                </span>
+
+                                {{ answer.question.option_a }}
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    option
+                                    {% if answer.selected_answer == 'B' %}
+                                        selected
+                                        {% if answer.question.correct_answer.upper() != 'B' %}
+                                            selected-wrong
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if answer.question.correct_answer.upper() == 'B' %}
+                                        correct-answer
+                                    {% endif %}
+                                "
+                            >
+
+                                <span class="option-label">
+                                    B.
+                                </span>
+
+                                {{ answer.question.option_b }}
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    option
+                                    {% if answer.selected_answer == 'C' %}
+                                        selected
+                                        {% if answer.question.correct_answer.upper() != 'C' %}
+                                            selected-wrong
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if answer.question.correct_answer.upper() == 'C' %}
+                                        correct-answer
+                                    {% endif %}
+                                "
+                            >
+
+                                <span class="option-label">
+                                    C.
+                                </span>
+
+                                {{ answer.question.option_c }}
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    option
+                                    {% if answer.selected_answer == 'D' %}
+                                        selected
+                                        {% if answer.question.correct_answer.upper() != 'D' %}
+                                            selected-wrong
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if answer.question.correct_answer.upper() == 'D' %}
+                                        correct-answer
+                                    {% endif %}
+                                "
+                            >
+
+                                <span class="option-label">
+                                    D.
+                                </span>
+
+                                {{ answer.question.option_d }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="answer-info">
+
+                            <div class="answer-box">
+
+                                <strong>
+                                    Your Answer
+                                </strong>
+
+                                {% if answer.selected_answer %}
+
+                                    {{ answer.selected_answer }}
+
+                                {% else %}
+
+                                    Not answered
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="answer-box">
+
+                                <strong>
+                                    Correct Answer
+                                </strong>
+
+                                {{ answer.question.correct_answer.upper() }}
+
+                            </div>
+
+                        </div>
+
+
+                        {% if answer.question.explanation %}
+
+                            <div class="explanation">
+
+                                <strong>
+                                    💡 Explanation
+                                </strong>
+
+                                {{ answer.question.explanation }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="no-review">
+
+                <h2>Review Not Available</h2>
+
+                <p>
+                    This exam was completed before answer
+                    tracking was added, so the individual
+                    answers were not saved.
+                </p>
+
+                <a
+                    href="{{ url_for('exam_preparation') }}"
+                    class="back-btn"
+                >
+                    Take a New Exam
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <script>
+
+        function filterQuestions(
+            filter,
+            button
+        ) {
+
+            const cards =
+                document.querySelectorAll(
+                    ".question-card"
+                );
+
+            const buttons =
+                document.querySelectorAll(
+                    ".filter-btn"
+                );
+
+            buttons.forEach(
+                function(btn) {
+
+                    btn.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+            button.classList.add(
+                "active"
+            );
+
+
+            cards.forEach(
+                function(card) {
+
+                    if (
+                        filter === "all"
+                    ) {
+
+                        card.style.display =
+                            "block";
+
+                    } else if (
+                        card.dataset.status === filter
+                    ) {
+
+                        card.style.display =
+                            "block";
+
+                    } else {
+
+                        card.style.display =
+                            "none";
+
+                    }
+
+                }
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>
