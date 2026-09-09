@@ -445,6 +445,60 @@ class JAMBExamAttempt(db.Model):
 
 
 # =========================================================
+# JAMB EXAM ANSWER MODEL
+# =========================================================
+
+class JAMBExamAnswer(db.Model):
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    attempt_id = db.Column(
+        db.Integer,
+        db.ForeignKey("jamb_exam_attempt.id"),
+        nullable=False
+    )
+
+    question_id = db.Column(
+        db.Integer,
+        db.ForeignKey("jamb_question.id"),
+        nullable=False
+    )
+
+    question_number = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    selected_answer = db.Column(
+        db.String(1),
+        nullable=True
+    )
+
+    is_correct = db.Column(
+        db.Boolean,
+        default=False,
+        nullable=False
+    )
+
+    attempt = db.relationship(
+        "JAMBExamAttempt",
+        backref=db.backref(
+            "answers",
+            lazy=True,
+            cascade="all, delete-orphan"
+        )
+    )
+
+    question = db.relationship(
+        "JAMBQuestion",
+        backref="exam_answers"
+    )
+
+
+# =========================================================
 # STUDENT LOGIN REQUIRED
 # =========================================================
 
@@ -1983,14 +2037,9 @@ def jamb_results():
     )
 
     if not question_ids:
-
         return redirect(
             url_for("exam_preparation")
         )
-
-    # -----------------------------------------------------
-    # GET QUESTIONS
-    # -----------------------------------------------------
 
     questions = JAMBQuestion.query.filter(
         JAMBQuestion.id.in_(question_ids)
@@ -2001,20 +2050,13 @@ def jamb_results():
         for question in questions
     }
 
-    # Rebuild questions in the EXACT order used
-    # during the examination.
     ordered_questions = [
         question_map[question_id]
         for question_id in question_ids
         if question_id in question_map
     ]
 
-    # -----------------------------------------------------
-    # MARK EACH SUBJECT
-    # -----------------------------------------------------
-
     subject_correct = {}
-
     subject_total = {}
 
     for question in ordered_questions:
@@ -2022,7 +2064,6 @@ def jamb_results():
         subject = question.subject
 
         if subject not in subject_correct:
-
             subject_correct[subject] = 0
             subject_total[subject] = 0
 
@@ -2033,101 +2074,44 @@ def jamb_results():
         )
 
         if submitted_answer:
-
             submitted_answer = (
-                submitted_answer
-                .upper()
-                .strip()
+                submitted_answer.upper().strip()
             )
 
             correct_answer = (
-                question.correct_answer
-                .upper()
-                .strip()
+                question.correct_answer.upper().strip()
             )
 
-            if (
-                submitted_answer
-                ==
-                correct_answer
-            ):
-
+            if submitted_answer == correct_answer:
                 subject_correct[subject] += 1
-
-    # -----------------------------------------------------
-    # CALCULATE SCORE OUT OF 400
-    # -----------------------------------------------------
-    #
-    # Every subject is worth 100 marks.
-    #
-    # English:
-    #     60 questions = 100 marks
-    #
-    # Other subjects:
-    #     40 questions = 100 marks each
-    #
-    # Maximum:
-    #     100 + 100 + 100 + 100 = 400
-    # -----------------------------------------------------
 
     total_score = 0
 
     for subject in subject_total:
 
-        total_for_subject = (
-            subject_total[subject]
-        )
-
-        correct_for_subject = (
-            subject_correct.get(
-                subject,
-                0
-            )
+        total_for_subject = subject_total[subject]
+        correct_for_subject = subject_correct.get(
+            subject,
+            0
         )
 
         if total_for_subject > 0:
-
             subject_score = (
-                correct_for_subject
-                /
-                total_for_subject
+                correct_for_subject / total_for_subject
             ) * 100
-
         else:
-
             subject_score = 0
 
         total_score += subject_score
 
-    # Final score is a whole number from 0 to 400.
-    score = round(
-        total_score
-    )
-
-    # Safety: never allow the score outside 0-400.
-    score = max(
-        0,
-        min(
-            400,
-            score
-        )
-    )
-
-    # -----------------------------------------------------
-    # TOTAL CORRECT ANSWERS
-    # -----------------------------------------------------
+    score = round(total_score)
+    score = max(0, min(400, score))
 
     correct_answers = sum(
         subject_correct.values()
     )
 
-    total_questions = len(
-        ordered_questions
-    )
-
-    # -----------------------------------------------------
-    # START TIME
-    # -----------------------------------------------------
+    total_questions = len(ordered_questions)
 
     started_at = datetime.utcnow()
 
@@ -2136,69 +2120,72 @@ def jamb_results():
     )
 
     if stored_started_at:
-
         try:
-
             started_at = datetime.fromisoformat(
                 stored_started_at
             )
-
-        except (
-            ValueError,
-            TypeError
-        ):
-
+        except (ValueError, TypeError):
             started_at = datetime.utcnow()
 
-    # -----------------------------------------------------
-    # SAVE ATTEMPT
-    # -----------------------------------------------------
-
     attempt = JAMBExamAttempt(
-
         student_id=session["student_id"],
-
         subjects=json.dumps(
-            session.get(
-                "jamb_subjects",
-                []
-            )
+            session.get("jamb_subjects", [])
         ),
-
         year=None,
-
         total_questions=total_questions,
-
         correct_answers=correct_answers,
-
-        # IMPORTANT:
-        # This is now the score out of 400.
         score=score,
-
         started_at=started_at,
-
         completed_at=datetime.utcnow()
     )
 
-    db.session.add(
-        attempt
-    )
+    db.session.add(attempt)
+    db.session.flush()
+
+    # Save every submitted answer so the student can review
+    # exactly which questions were correct or incorrect later.
+    for question_number, question in enumerate(
+        ordered_questions,
+        start=1
+    ):
+
+        submitted_answer = request.form.get(
+            f"question_{question.id}"
+        )
+
+        if submitted_answer:
+            submitted_answer = (
+                submitted_answer.upper().strip()
+            )
+        else:
+            submitted_answer = None
+
+        correct_answer = (
+            question.correct_answer.upper().strip()
+        )
+
+        is_correct = (
+            submitted_answer is not None
+            and submitted_answer == correct_answer
+        )
+
+        db.session.add(
+            JAMBExamAnswer(
+                attempt_id=attempt.id,
+                question_id=question.id,
+                question_number=question_number,
+                selected_answer=submitted_answer,
+                is_correct=is_correct
+            )
+        )
 
     db.session.commit()
 
-    session["jamb_last_attempt_id"] = (
-        attempt.id
-    )
+    session["jamb_last_attempt_id"] = attempt.id
 
-    session.pop(
-        "jamb_question_ids",
-        None
-    )
-
-    session.pop(
-        "jamb_started_at",
-        None
-    )
+    session.pop("jamb_question_ids", None)
+    session.pop("jamb_started_at", None)
 
     return redirect(
         url_for("jamb_history")
@@ -2224,6 +2211,34 @@ def jamb_history():
     return render_template(
         "jamb/history.html",
         attempts=attempts
+    )
+
+
+# =========================================================
+# JAMB ANSWER REVIEW
+# =========================================================
+
+@app.route(
+    "/exam-preparation/jamb/review/<int:attempt_id>"
+)
+@login_required
+def jamb_review(attempt_id):
+
+    attempt = JAMBExamAttempt.query.filter_by(
+        id=attempt_id,
+        student_id=session["student_id"]
+    ).first_or_404()
+
+    answers = JAMBExamAnswer.query.filter_by(
+        attempt_id=attempt.id
+    ).order_by(
+        JAMBExamAnswer.question_number.asc()
+    ).all()
+
+    return render_template(
+        "jamb/review.html",
+        attempt=attempt,
+        answers=answers
     )
 
 
