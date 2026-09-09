@@ -192,177 +192,187 @@
 
 </style>
 
+
 <div class="history-page">
 
-```
-<!-- HERO -->
+    <!-- HERO -->
 
-<div class="history-hero">
+    <div class="history-hero">
 
-    <h1>📚 JAMB Practice History</h1>
+        <h1>📚 JAMB Practice History</h1>
 
-    <p>
-        Review your previous Career Bridge JAMB practice
-        sessions, scores and subjects. Your history is
-        private and only shows your own completed attempts.
-    </p>
+        <p>
+            Review your previous Career Bridge JAMB practice
+            sessions, scores and subjects. Your history is
+            private and only shows your own completed attempts.
+        </p>
 
-</div>
-
-
-<!-- HISTORY -->
-
-<div class="history-card">
-
-    <h2>📊 Your Previous Attempts</h2>
+    </div>
 
 
-    {% if attempts %}
+    <!-- HISTORY -->
 
-        {% for attempt in attempts %}
+    <div class="history-card">
 
-            <div class="attempt">
+        <h2>📊 Your Previous Attempts</h2>
 
-                <div class="attempt-top">
 
-                    <div>
+        {% if attempts %}
 
-                        <div class="attempt-title">
-                            JAMB Practice Session #{{ attempt.id }}
+            {% for attempt in attempts %}
+
+                <div class="attempt">
+
+                    <div class="attempt-top">
+
+                        <div>
+
+                            <div class="attempt-title">
+                                JAMB Practice Session #{{ attempt.id }}
+                            </div>
+
+                            <div class="attempt-date">
+
+                                {% if attempt.completed_at %}
+
+                                    Completed:
+                                    {{ attempt.completed_at.strftime("%d %B %Y, %I:%M %p") }}
+
+                                {% else %}
+
+                                    Date unavailable
+
+                                {% endif %}
+
+                            </div>
+
                         </div>
 
-                        <div class="attempt-date">
 
-                            {% if attempt.completed_at %}
+                        <!-- SCORE OUT OF 400 -->
 
-                                Completed:
-                                {{ attempt.completed_at.strftime("%d %B %Y, %I:%M %p") }}
+                        <div class="score">
 
-                            {% else %}
-
-                                Date unavailable
-
-                            {% endif %}
+                            {{ attempt.score }} / 400
 
                         </div>
 
                     </div>
 
 
-                    <div class="score">
+                    <div class="details">
 
-                        {{ attempt.score }}%
+                        <!-- TOTAL QUESTIONS -->
+
+                        <div class="detail-box">
+
+                            <span>
+                                Questions
+                            </span>
+
+                            <strong>
+                                {{ attempt.total_questions }}
+                            </strong>
+
+                        </div>
+
+
+                        <!-- CORRECT ANSWERS -->
+
+                        <div class="detail-box">
+
+                            <span>
+                                Correct Answers
+                            </span>
+
+                            <strong>
+                                {{ attempt.correct_answers }}
+                                / {{ attempt.total_questions }}
+                            </strong>
+
+                        </div>
+
+
+                        <!-- SCORE OUT OF 400 -->
+
+                        <div class="detail-box">
+
+                            <span>
+                                JAMB Score
+                            </span>
+
+                            <strong>
+                                {{ attempt.score }} / 400
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SUBJECTS -->
+
+                    <div class="subjects">
+
+                        <strong>Subjects:</strong>
+
+                        {% set selected_subjects = attempt.subjects | from_json %}
+
+                        {% if selected_subjects %}
+
+                            {{ selected_subjects | join(", ") }}
+
+                        {% else %}
+
+                            Not recorded
+
+                        {% endif %}
 
                     </div>
 
                 </div>
 
-
-                <div class="details">
-
-                    <div class="detail-box">
-
-                        <span>
-                            Questions
-                        </span>
-
-                        <strong>
-                            {{ attempt.total_questions }}
-                        </strong>
-
-                    </div>
+            {% endfor %}
 
 
-                    <div class="detail-box">
+        {% else %}
 
-                        <span>
-                            Correct Answers
-                        </span>
+            <div class="empty-state">
 
-                        <strong>
-                            {{ attempt.correct_answers }}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="detail-box">
-
-                        <span>
-                            Score
-                        </span>
-
-                        <strong>
-                            {{ attempt.score }}%
-                        </strong>
-
-                    </div>
-
+                <div class="icon">
+                    📭
                 </div>
 
+                <h3>
+                    No practice history yet
+                </h3>
 
-                <div class="subjects">
+                <p>
+                    You have not completed a JAMB practice
+                    session yet. Start your first simulator
+                    session to see your results here.
+                </p>
 
-                    <strong>Subjects:</strong>
-
-                    {% set selected_subjects = attempt.subjects | from_json %}
-
-                    {% if selected_subjects %}
-
-                        {{ selected_subjects | join(", ") }}
-
-                    {% else %}
-
-                        Not recorded
-
-                    {% endif %}
-
-                </div>
+                <a
+                    href="{{ url_for('exam_preparation') }}"
+                    class="start-button"
+                >
+                    🚀 Start JAMB Practice
+                </a>
 
             </div>
 
-        {% endfor %}
+        {% endif %}
 
 
-    {% else %}
+        <a
+            href="{{ url_for('exam_preparation') }}"
+            class="back-button"
+        >
+            ← Back to Exam Preparation
+        </a>
 
-        <div class="empty-state">
-
-            <div class="icon">
-                📭
-            </div>
-
-            <h3>
-                No practice history yet
-            </h3>
-
-            <p>
-                You have not completed a JAMB practice
-                session yet. Start your first simulator
-                session to see your results here.
-            </p>
-
-            <a
-                href="{{ url_for('exam_preparation') }}"
-                class="start-button"
-            >
-                🚀 Start JAMB Practice
-            </a>
-
-        </div>
-
-    {% endif %}
-
-
-    <a
-        href="{{ url_for('exam_preparation') }}"
-        class="back-button"
-    >
-        ← Back to Exam Preparation
-    </a>
-
-</div>
-```
+    </div>
 
 </div>
 
