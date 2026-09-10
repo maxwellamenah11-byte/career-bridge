@@ -4,150 +4,704 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>University Past Questions Manager</title>
+
     <style>
         *{box-sizing:border-box}
-        body{margin:0;background:#020617;color:#e5e7eb;font-family:Arial,sans-serif}
-        .wrap{max-width:1250px;margin:auto;padding:28px 18px 60px}
-        h1,h2{margin-top:0}.muted{color:#94a3b8}
-        .top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:22px}
-        .btn{display:inline-block;background:#2563eb;color:white;text-decoration:none;border:0;border-radius:9px;padding:10px 15px;cursor:pointer;font-weight:700}
-        .btn.danger{background:#dc2626}.btn.secondary{background:#334155}.btn.small{padding:7px 10px;font-size:13px}
-        .card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:20px;margin-bottom:22px;box-shadow:0 8px 25px rgba(0,0,0,.18)}
-        .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-        .full{grid-column:1/-1}
-        label{display:block;font-size:13px;color:#cbd5e1;margin-bottom:6px;font-weight:700}
-        input,select,textarea{width:100%;background:#020617;color:#f8fafc;border:1px solid #334155;border-radius:9px;padding:11px;font:inherit}
-        textarea{min-height:130px;resize:vertical}
-        .notice{padding:12px 14px;border-radius:10px;background:#3f1d1d;border:1px solid #7f1d1d;color:#fecaca;margin-bottom:15px}
-        .hint{font-size:12px;color:#94a3b8;margin-top:5px}
-        .table-wrap{overflow:auto}
-        table{width:100%;border-collapse:collapse;min-width:900px}
-        th,td{text-align:left;padding:12px;border-bottom:1px solid #1e293b;vertical-align:top}
-        th{color:#93c5fd;font-size:13px}
-        td{font-size:14px}
-        .question-text{max-width:450px;white-space:pre-wrap;line-height:1.5}
-        .actions{display:flex;gap:7px;flex-wrap:wrap}
-        .filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:end}
-        .empty{padding:30px;text-align:center;color:#94a3b8}
-        @media(max-width:800px){.grid,.filters{grid-template-columns:1fr}.full{grid-column:auto}}
+
+        body{
+            margin:0;
+            background:#020617;
+            color:#e5e7eb;
+            font-family:Arial,sans-serif
+        }
+
+        .wrap{
+            max-width:1250px;
+            margin:auto;
+            padding:28px 18px 60px
+        }
+
+        h1,h2{margin-top:0}
+
+        .muted{
+            color:#94a3b8
+        }
+
+        .top{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:15px;
+            flex-wrap:wrap;
+            margin-bottom:22px
+        }
+
+        .btn{
+            display:inline-block;
+            background:#2563eb;
+            color:white;
+            text-decoration:none;
+            border:0;
+            border-radius:9px;
+            padding:10px 15px;
+            cursor:pointer;
+            font-weight:700
+        }
+
+        .btn.danger{
+            background:#dc2626
+        }
+
+        .btn.secondary{
+            background:#334155
+        }
+
+        .btn.small{
+            padding:7px 10px;
+            font-size:13px
+        }
+
+        .card{
+            background:#0f172a;
+            border:1px solid #1e293b;
+            border-radius:16px;
+            padding:20px;
+            margin-bottom:22px;
+            box-shadow:0 8px 25px rgba(0,0,0,.18)
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:14px
+        }
+
+        .full{
+            grid-column:1/-1
+        }
+
+        label{
+            display:block;
+            font-size:13px;
+            color:#cbd5e1;
+            margin-bottom:6px;
+            font-weight:700
+        }
+
+        input,select,textarea{
+            width:100%;
+            background:#020617;
+            color:#f8fafc;
+            border:1px solid #334155;
+            border-radius:9px;
+            padding:11px;
+            font:inherit
+        }
+
+        input[type="file"]{
+            padding:9px;
+            cursor:pointer
+        }
+
+        textarea{
+            min-height:130px;
+            resize:vertical
+        }
+
+        .notice{
+            padding:12px 14px;
+            border-radius:10px;
+            background:#3f1d1d;
+            border:1px solid #7f1d1d;
+            color:#fecaca;
+            margin-bottom:15px
+        }
+
+        .success{
+            padding:12px 14px;
+            border-radius:10px;
+            background:#052e16;
+            border:1px solid #166534;
+            color:#bbf7d0;
+            margin-bottom:15px
+        }
+
+        .hint{
+            font-size:12px;
+            color:#94a3b8;
+            margin-top:5px
+        }
+
+        .pdf-box{
+            margin-top:10px;
+            padding:14px;
+            border:1px dashed #475569;
+            border-radius:10px;
+            background:#020617
+        }
+
+        .table-wrap{
+            overflow:auto
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            min-width:900px
+        }
+
+        th,td{
+            text-align:left;
+            padding:12px;
+            border-bottom:1px solid #1e293b;
+            vertical-align:top
+        }
+
+        th{
+            color:#93c5fd;
+            font-size:13px
+        }
+
+        td{
+            font-size:14px
+        }
+
+        .question-text{
+            max-width:450px;
+            white-space:pre-wrap;
+            line-height:1.5
+        }
+
+        .actions{
+            display:flex;
+            gap:7px;
+            flex-wrap:wrap
+        }
+
+        .filters{
+            display:grid;
+            grid-template-columns:repeat(4,minmax(0,1fr));
+            gap:10px;
+            align-items:end
+        }
+
+        .empty{
+            padding:30px;
+            text-align:center;
+            color:#94a3b8
+        }
+
+        .pdf-badge{
+            display:inline-block;
+            background:#7f1d1d;
+            color:#fecaca;
+            padding:5px 8px;
+            border-radius:6px;
+            font-size:12px;
+            font-weight:bold;
+            margin-bottom:7px
+        }
+
+        @media(max-width:800px){
+            .grid,.filters{
+                grid-template-columns:1fr
+            }
+
+            .full{
+                grid-column:auto
+            }
+        }
     </style>
 </head>
+
 <body>
+
 <div class="wrap">
+
     <div class="top">
         <div>
             <h1>📚 University Past Questions Manager</h1>
-            <div class="muted">Add and manage the question bank used by Career Bridge students.</div>
+            <div class="muted">
+                Add and manage the question bank used by Career Bridge students.
+            </div>
         </div>
-        <a class="btn secondary" href="{{ url_for('admin_dashboard') }}">← Admin Dashboard</a>
+
+        <a class="btn secondary"
+           href="{{ url_for('admin_dashboard') }}">
+            ← Admin Dashboard
+        </a>
     </div>
 
+
     {% if error %}
-        <div class="notice">{{ error }}</div>
+        <div class="notice">
+            {{ error }}
+        </div>
     {% endif %}
 
+
+    {% if success %}
+        <div class="success">
+            {{ success }}
+        </div>
+    {% endif %}
+
+
+    <!-- ADD PAST QUESTION -->
+
     <section class="card">
+
         <h2>➕ Add Past Question</h2>
-        <form method="POST">
+
+        <form method="POST"
+              enctype="multipart/form-data">
+
             <div class="grid">
+
                 <div>
                     <label>University *</label>
-                    <input name="university" required value="{{ form.get('university','') }}" placeholder="e.g. FUPRE">
+
+                    <input
+                        name="university"
+                        required
+                        value="{{ form.get('university','') }}"
+                        placeholder="e.g. FUPRE">
                 </div>
+
+
                 <div>
                     <label>Faculty</label>
-                    <input name="faculty" value="{{ form.get('faculty','') }}" placeholder="e.g. Engineering">
+
+                    <input
+                        name="faculty"
+                        value="{{ form.get('faculty','') }}"
+                        placeholder="e.g. Engineering">
                 </div>
+
+
                 <div>
                     <label>Department</label>
-                    <input name="department" value="{{ form.get('department','') }}" placeholder="e.g. Natural Gas Engineering">
+
+                    <input
+                        name="department"
+                        value="{{ form.get('department','') }}"
+                        placeholder="e.g. Natural Gas Engineering">
                 </div>
+
+
                 <div>
                     <label>Course Code *</label>
-                    <input name="course_code" required value="{{ form.get('course_code','') }}" placeholder="e.g. MTH101">
+
+                    <input
+                        name="course_code"
+                        required
+                        value="{{ form.get('course_code','') }}"
+                        placeholder="e.g. MTH101">
                 </div>
+
+
                 <div>
                     <label>Course Title</label>
-                    <input name="course_title" value="{{ form.get('course_title','') }}" placeholder="e.g. General Mathematics I">
+
+                    <input
+                        name="course_title"
+                        value="{{ form.get('course_title','') }}"
+                        placeholder="e.g. General Mathematics I">
                 </div>
+
+
                 <div>
                     <label>Level</label>
+
                     <select name="level">
-                        <option value="">Select level</option>
-                        {% for level in ['100 Level','200 Level','300 Level','400 Level','500 Level','600 Level'] %}
-                            <option {% if form.get('level') == level %}selected{% endif %}>{{ level }}</option>
+
+                        <option value="">
+                            Select level
+                        </option>
+
+                        {% for level in [
+                            '100 Level',
+                            '200 Level',
+                            '300 Level',
+                            '400 Level',
+                            '500 Level',
+                            '600 Level'
+                        ] %}
+
+                            <option value="{{ level }}"
+                                {% if form.get('level') == level %}
+                                    selected
+                                {% endif %}>
+                                {{ level }}
+                            </option>
+
                         {% endfor %}
+
                     </select>
                 </div>
+
+
                 <div>
                     <label>Semester</label>
+
                     <select name="semester">
-                        <option value="">Select semester</option>
-                        {% for semester in ['First Semester','Second Semester'] %}
-                            <option {% if form.get('semester') == semester %}selected{% endif %}>{{ semester }}</option>
+
+                        <option value="">
+                            Select semester
+                        </option>
+
+                        {% for semester in [
+                            'First Semester',
+                            'Second Semester'
+                        ] %}
+
+                            <option value="{{ semester }}"
+                                {% if form.get('semester') == semester %}
+                                    selected
+                                {% endif %}>
+                                {{ semester }}
+                            </option>
+
                         {% endfor %}
+
                     </select>
                 </div>
+
+
                 <div>
                     <label>Session</label>
-                    <input name="session" value="{{ form.get('session','') }}" placeholder="e.g. 2024/2025">
+
+                    <input
+                        name="session"
+                        value="{{ form.get('session','') }}"
+                        placeholder="e.g. 2024/2025">
                 </div>
+
+
+                <!-- QUESTION TEXT -->
+
                 <div class="full">
-                    <label>Question Text</label>
-                    <textarea name="question_text" placeholder="Paste the question or questions here...">{{ form.get('question_text','') }}</textarea>
-                    <div class="hint">For a downloadable paper, you can leave this blank and provide a document URL below.</div>
+
+                    <label>
+                        Question Text
+                    </label>
+
+                    <textarea
+                        name="question_text"
+                        placeholder="Optional: paste the question or questions here...">{{ form.get('question_text','') }}</textarea>
+
+                    <div class="hint">
+                        You can leave this empty if you are uploading a PDF.
+                    </div>
+
                 </div>
+
+
+                <!-- PDF UPLOAD -->
+
                 <div class="full">
-                    <label>Document / PDF URL</label>
-                    <input name="file_url" type="url" value="{{ form.get('file_url','') }}" placeholder="https://...">
-                    <div class="hint">Use a publicly accessible PDF/document link. Actual file hosting can be added later with cloud storage.</div>
+
+                    <label>
+                        📄 Upload Past Question PDF
+                    </label>
+
+                    <div class="pdf-box">
+
+                        <input
+                            type="file"
+                            name="past_question_pdf"
+                            accept=".pdf,application/pdf">
+
+                        <div class="hint">
+                            Select a PDF directly from your computer.
+                            Maximum file size: 10 MB.
+                        </div>
+
+                    </div>
+
                 </div>
+
             </div>
-            <div style="margin-top:16px"><button class="btn" type="submit">Save Past Question</button></div>
+
+
+            <div style="margin-top:16px">
+
+                <button
+                    class="btn"
+                    type="submit">
+
+                    📤 Upload Past Question
+
+                </button>
+
+            </div>
+
         </form>
+
     </section>
 
+
+    <!-- SEARCH -->
+
     <section class="card">
+
         <h2>🔎 Search Question Bank</h2>
-        <form method="GET" action="{{ url_for('admin_search_university_past_questions') }}">
+
+        <form
+            method="GET"
+            action="{{ url_for('admin_search_university_past_questions') }}">
+
             <div class="filters">
-                <div><label>University</label><input name="university" value="{{ form.get('university','') }}" placeholder="University"></div>
-                <div><label>Department</label><input name="department" value="{{ form.get('department','') }}" placeholder="Department"></div>
-                <div><label>Course Code</label><input name="course_code" value="{{ form.get('course_code','') }}" placeholder="MTH101"></div>
-                <div><label>Level</label><select name="level"><option value="">Any level</option>{% for level in ['100 Level','200 Level','300 Level','400 Level','500 Level','600 Level'] %}<option {% if form.get('level') == level %}selected{% endif %}>{{ level }}</option>{% endfor %}</select></div>
+
+                <div>
+                    <label>University</label>
+
+                    <input
+                        name="university"
+                        value="{{ form.get('university','') }}"
+                        placeholder="University">
+                </div>
+
+
+                <div>
+                    <label>Department</label>
+
+                    <input
+                        name="department"
+                        value="{{ form.get('department','') }}"
+                        placeholder="Department">
+                </div>
+
+
+                <div>
+                    <label>Course Code</label>
+
+                    <input
+                        name="course_code"
+                        value="{{ form.get('course_code','') }}"
+                        placeholder="MTH101">
+                </div>
+
+
+                <div>
+
+                    <label>Level</label>
+
+                    <select name="level">
+
+                        <option value="">
+                            Any level
+                        </option>
+
+                        {% for level in [
+                            '100 Level',
+                            '200 Level',
+                            '300 Level',
+                            '400 Level',
+                            '500 Level',
+                            '600 Level'
+                        ] %}
+
+                            <option value="{{ level }}"
+                                {% if form.get('level') == level %}
+                                    selected
+                                {% endif %}>
+                                {{ level }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
             </div>
-            <div style="margin-top:12px"><button class="btn" type="submit">Search</button> <a class="btn secondary" href="{{ url_for('admin_university_past_questions') }}">Clear</a></div>
+
+
+            <div style="margin-top:12px">
+
+                <button
+                    class="btn"
+                    type="submit">
+                    Search
+                </button>
+
+                <a
+                    class="btn secondary"
+                    href="{{ url_for('admin_university_past_questions') }}">
+                    Clear
+                </a>
+
+            </div>
+
         </form>
+
     </section>
 
+
+    <!-- QUESTION BANK -->
+
     <section class="card">
-        <h2>🗂️ Question Bank ({{ questions|length }})</h2>
+
+        <h2>
+            🗂️ Question Bank ({{ questions|length }})
+        </h2>
+
         {% if questions %}
+
         <div class="table-wrap">
+
             <table>
-                <thead><tr><th>Course</th><th>University / Department</th><th>Level / Semester</th><th>Session</th><th>Content</th><th>Action</th></tr></thead>
-                <tbody>
-                {% for q in questions %}
+
+                <thead>
+
                     <tr>
-                        <td><strong>{{ q.course_code }}</strong><br><span class="muted">{{ q.course_title or '' }}</span></td>
-                        <td>{{ q.university }}<br><span class="muted">{{ q.department or 'No department' }}</span></td>
-                        <td>{{ q.level or '—' }}<br>{{ q.semester or '—' }}</td>
-                        <td>{{ q.session or '—' }}</td>
-                        <td class="question-text">{{ q.question_text or 'PDF/document only' }}{% if q.file_url %}<br><br><a class="btn small" href="{{ q.file_url }}" target="_blank" rel="noopener">Open Document</a>{% endif %}</td>
-                        <td>
-                            <form method="POST" action="{{ url_for('admin_delete_university_past_question', question_id=q.id) }}" onsubmit="return confirm('Delete this past question?');">
-                                <button class="btn danger small" type="submit">Delete</button>
-                            </form>
-                        </td>
+                        <th>Course</th>
+                        <th>University / Department</th>
+                        <th>Level / Semester</th>
+                        <th>Session</th>
+                        <th>Content</th>
+                        <th>Action</th>
                     </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for q in questions %}
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                {{ q.course_code }}
+                            </strong>
+
+                            <br>
+
+                            <span class="muted">
+                                {{ q.course_title or '' }}
+                            </span>
+                        </td>
+
+
+                        <td>
+
+                            {{ q.university }}
+
+                            <br>
+
+                            <span class="muted">
+                                {{ q.department or 'No department' }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ q.level or '—' }}
+
+                            <br>
+
+                            {{ q.semester or '—' }}
+
+                        </td>
+
+
+                        <td>
+                            {{ q.session or '—' }}
+                        </td>
+
+
+                        <td class="question-text">
+
+                            {% if q.question_text %}
+
+                                {{ q.question_text }}
+
+                            {% endif %}
+
+
+                            {% if q.file_url %}
+
+                                {% if q.question_text %}
+                                    <br><br>
+                                {% endif %}
+
+                                <span class="pdf-badge">
+                                    PDF AVAILABLE
+                                </span>
+
+                                <br>
+
+                                <a
+                                    class="btn small"
+                                    href="{{ q.file_url }}"
+                                    target="_blank"
+                                    rel="noopener">
+
+                                    📄 Open PDF
+
+                                </a>
+
+                            {% elif not q.question_text %}
+
+                                <span class="muted">
+                                    No document uploaded
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <form
+                                method="POST"
+                                action="{{ url_for(
+                                    'admin_delete_university_past_question',
+                                    question_id=q.id
+                                ) }}"
+                                onsubmit="return confirm(
+                                    'Delete this past question?'
+                                );">
+
+                                <button
+                                    class="btn danger small"
+                                    type="submit">
+
+                                    Delete
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
                 {% endfor %}
+
                 </tbody>
+
             </table>
+
         </div>
+
         {% else %}
-            <div class="empty">No past questions found.</div>
+
+            <div class="empty">
+                No past questions found.
+            </div>
+
         {% endif %}
+
     </section>
+
 </div>
+
 </body>
 </html>
