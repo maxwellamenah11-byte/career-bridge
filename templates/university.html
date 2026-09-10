@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>University Hub | Career Bridge</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #020617;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a, #172554);
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            max-width: 700px;
+            margin: auto;
+            color: #cbd5e1;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title h2 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #94a3b8;
+        }
+
+        .tools {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 22px;
+        }
+
+        .tool-card {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 16px;
+            padding: 28px;
+            transition: 0.3s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+        }
+
+        .icon {
+            font-size: 40px;
+            margin-bottom: 18px;
+        }
+
+        .tool-card h3 {
+            font-size: 21px;
+            margin-bottom: 10px;
+        }
+
+        .tool-card p {
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 18px;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .coming {
+            background: #334155;
+        }
+
+        .coming:hover {
+            background: #475569;
+        }
+
+        .cgpa-section {
+            margin-top: 55px;
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 18px;
+            padding: 30px;
+        }
+
+        .cgpa-section h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .cgpa-description {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        .course-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #020617;
+            color: white;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #3b82f6;
+        }
+
+        .remove-btn {
+            background: #dc2626;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background: #b91c1c;
+        }
+
+        .calculator-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            background: #020617;
+            border: 1px solid #1e293b;
+            text-align: center;
+        }
+
+        .result h3 {
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .gpa {
+            font-size: 45px;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+
+        .result-details {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .result-details div {
+            color: #cbd5e1;
+        }
+
+        .result-details strong {
+            display: block;
+            color: white;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 35px 20px;
+            margin-top: 50px;
+            background: #0f172a;
+            color: #64748b;
+        }
+
+        @media (max-width: 700px) {
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .course-row {
+                grid-template-columns: 1fr;
+            }
+
+            .remove-btn {
+                width: 100%;
+            }
+
+            .cgpa-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>🎓 University Hub</h1>
+
+        <p>
+            Everything you need to stay organized, improve your academic
+            performance, and succeed throughout university.
+        </p>
+
+    </div>
+
+
+    <div class="container">
+
+        <!-- UNIVERSITY TOOLS -->
+
+        <div class="section-title">
+
+            <h2>University Tools</h2>
+
+            <p>
+                Academic tools designed to make university life easier.
+            </p>
+
+        </div>
+
+
+        <div class="tools">
+
+            <div class="tool-card">
+
+                <div class="icon">📊</div>
+
+                <h3>CGPA Calculator</h3>
+
+                <p>
+                    Calculate your GPA and keep track of your academic
+                    performance.
+                </p>
+
+                <a href="#cgpa" class="btn">
+                    Calculate GPA
+                </a>
+
+            </div>
+
+
+            <div class="tool-card">
+
+                <div class="icon">📅</div>
+
+                <h3>Study Planner</h3>
+
+                <p>
+                    Create a personalized study timetable and organize
+                    your courses and study sessions.
+                </p>
+
+                <button class="btn coming">
+                    Coming Soon
+                </button>
+
+            </div>
+
+
+            <div class="tool-card">
+
+                <div class="icon">📚</div>
+
+                <h3>Past Questions</h3>
+
+                <p>
+                    Access university past questions and practice before
+                    your examinations.
+                </p>
+
+                <button class="btn coming">
+                    Coming Soon
+                </button>
+
+            </div>
+
+
+            <div class="tool-card">
+
+                <div class="icon">📖</div>
+
+                <h3>My Courses</h3>
+
+                <p>
+                    Keep a record of your current semester courses,
+                    credit units and grades.
+                </p>
+
+                <button class="btn coming">
+                    Coming Soon
+                </button>
+
+            </div>
+
+
+            <div class="tool-card">
+
+                <div class="icon">⏰</div>
+
+                <h3>Exam Countdown</h3>
+
+                <p>
+                    Keep track of upcoming examinations and never miss
+                    an important academic date.
+                </p>
+
+                <button class="btn coming">
+                    Coming Soon
+                </button>
+
+            </div>
+
+
+            <div class="tool-card">
+
+                <div class="icon">📈</div>
+
+                <h3>Academic Progress</h3>
+
+                <p>
+                    Monitor your GPA, CGPA, completed courses and overall
+                    academic progress.
+                </p>
+
+                <button class="btn coming">
+                    Coming Soon
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- CGPA CALCULATOR -->
+
+        <div class="cgpa-section" id="cgpa">
+
+            <h2>📊 CGPA / GPA Calculator</h2>
+
+            <p class="cgpa-description">
+                Enter your courses, credit units and grades to calculate
+                your semester GPA.
+            </p>
+
+
+            <div id="course-container">
+
+                <div class="course-row">
+
+                    <input
+                        type="text"
+                        placeholder="Course code (e.g. MTH 201)"
+                        class="course"
+                    >
+
+                    <input
+                        type="number"
+                        placeholder="Credit Unit"
+                        class="credit"
+                        min="1"
+                        max="20"
+                    >
+
+                    <select class="grade">
+
+                        <option value="">Grade</option>
+                        <option value="5">A</option>
+                        <option value="4">B</option>
+                        <option value="3">C</option>
+                        <option value="2">D</option>
+                        <option value="1">E</option>
+                        <option value="0">F</option>
+
+                    </select>
+
+                    <button
+                        class="remove-btn"
+                        onclick="removeCourse(this)"
+                    >
+                        Remove
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="calculator-buttons">
+
+                <button
+                    class="btn"
+                    onclick="addCourse()"
+                >
+                    + Add Course
+                </button>
+
+                <button
+                    class="btn"
+                    onclick="calculateGPA()"
+                >
+                    Calculate GPA
+                </button>
+
+            </div>
+
+
+            <div class="result">
+
+                <h3>Your GPA</h3>
+
+                <div class="gpa" id="gpa">
+                    0.00
+                </div>
+
+
+                <div class="result-details">
+
+                    <div>
+
+                        <strong id="total-units">
+                            0
+                        </strong>
+
+                        Total Credit Units
+
+                    </div>
+
+
+                    <div>
+
+                        <strong id="total-points">
+                            0.00
+                        </strong>
+
+                        Total Grade Points
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+
+        Career Bridge © 2026 — University Hub
+
+    </div>
+
+
+    <script>
+
+        function addCourse() {
+
+            const container =
+                document.getElementById("course-container");
+
+            const row =
+                document.createElement("div");
+
+            row.className = "course-row";
+
+            row.innerHTML = `
+
+                <input
+                    type="text"
+                    placeholder="Course code (e.g. MTH 201)"
+                    class="course"
+                >
+
+                <input
+                    type="number"
+                    placeholder="Credit Unit"
+                    class="credit"
+                    min="1"
+                    max="20"
+                >
+
+                <select class="grade">
+
+                    <option value="">Grade</option>
+
+                    <option value="5">A</option>
+
+                    <option value="4">B</option>
+
+                    <option value="3">C</option>
+
+                    <option value="2">D</option>
+
+                    <option value="1">E</option>
+
+                    <option value="0">F</option>
+
+                </select>
+
+                <button
+                    class="remove-btn"
+                    onclick="removeCourse(this)"
+                >
+                    Remove
+                </button>
+
+            `;
+
+            container.appendChild(row);
+
+        }
+
+
+        function removeCourse(button) {
+
+            const rows =
+                document.querySelectorAll(".course-row");
+
+            if (rows.length <= 1) {
+
+                alert("You need at least one course.");
+
+                return;
+
+            }
+
+            button.parentElement.remove();
+
+        }
+
+
+        function calculateGPA() {
+
+            const credits =
+                document.querySelectorAll(".credit");
+
+            const grades =
+                document.querySelectorAll(".grade");
+
+            let totalUnits = 0;
+
+            let totalPoints = 0;
+
+
+            for (let i = 0; i < credits.length; i++) {
+
+                const credit =
+                    parseFloat(credits[i].value);
+
+                const grade =
+                    parseFloat(grades[i].value);
+
+
+                if (
+                    isNaN(credit) ||
+                    isNaN(grade)
+                ) {
+
+                    continue;
+
+                }
+
+
+                totalUnits += credit;
+
+                totalPoints += credit * grade;
+
+            }
+
+
+            if (totalUnits === 0) {
+
+                alert(
+                    "Please enter your credit units and grades."
+                );
+
+                return;
+
+            }
+
+
+            const gpa =
+                totalPoints / totalUnits;
+
+
+            document.getElementById("gpa").textContent =
+                gpa.toFixed(2);
+
+            document.getElementById("total-units").textContent =
+                totalUnits;
+
+            document.getElementById("total-points").textContent =
+                totalPoints.toFixed(2);
+
+        }
+
+    </script>
+
+</body>
+</html>
