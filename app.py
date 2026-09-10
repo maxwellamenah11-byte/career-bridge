@@ -2433,6 +2433,12 @@ def save_ai_memory():
     })
 
 
+@app.route("/university")
+@login_required
+def university():
+    return render_template("university.html")
+
+
 # =========================================================
 # LIBRARY
 # =========================================================
