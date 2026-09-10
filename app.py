@@ -1,6 +1,21 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session,
+    jsonify,
+    send_from_directory
+)
+
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash,
+    secure_filename
+)
+
 from functools import wraps
 from datetime import datetime
 from sqlalchemy import inspect, text
@@ -17,14 +32,43 @@ app = Flask(__name__)
 
 
 # =========================================================
+# PAST QUESTION PDF UPLOAD SETTINGS
+# =========================================================
+
+# Maximum upload size: 200 MB
+app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024
+
+UPLOAD_FOLDER = os.path.join(
+    app.root_path,
+    "static",
+    "uploads",
+    "past_questions"
+)
+
+os.makedirs(
+    UPLOAD_FOLDER,
+    exist_ok=True
+)
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+
+# =========================================================
 # JSON TEMPLATE FILTER
 # =========================================================
 
 @app.template_filter("from_json")
 def from_json_filter(value):
+
     try:
         return json.loads(value)
-    except (TypeError, ValueError, json.JSONDecodeError):
+
+    except (
+        TypeError,
+        ValueError,
+        json.JSONDecodeError
+    ):
+
         return []
 
 
@@ -45,16 +89,21 @@ app.config["SECRET_KEY"] = os.environ.get(
 database_url = os.environ.get("DATABASE_URL")
 
 if not database_url:
+
     database_url = "sqlite:///career_bridge.db"
 
+
 if database_url.startswith("postgres://"):
+
     database_url = database_url.replace(
         "postgres://",
         "postgresql://",
         1
     )
 
+
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -418,7 +467,6 @@ class JAMBExamAttempt(db.Model):
         nullable=False
     )
 
-    # This stores the final JAMB score out of 400.
     score = db.Column(
         db.Integer,
         default=0,
@@ -498,15 +546,16 @@ class JAMBExamAnswer(db.Model):
     )
 
 
-
-
 # =========================================================
 # UNIVERSITY HUB MODELS
 # =========================================================
 
 class UniversityProfile(db.Model):
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
     student_id = db.Column(
         db.Integer,
@@ -515,22 +564,52 @@ class UniversityProfile(db.Model):
         nullable=False
     )
 
-    university = db.Column(db.String(200), nullable=True)
-    faculty = db.Column(db.String(200), nullable=True)
-    department = db.Column(db.String(200), nullable=True)
-    level = db.Column(db.String(50), nullable=True)
-    semester = db.Column(db.String(50), nullable=True)
-    grading_scale = db.Column(db.Integer, default=5, nullable=False)
+    university = db.Column(
+        db.String(200),
+        nullable=True
+    )
+
+    faculty = db.Column(
+        db.String(200),
+        nullable=True
+    )
+
+    department = db.Column(
+        db.String(200),
+        nullable=True
+    )
+
+    level = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    semester = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    grading_scale = db.Column(
+        db.Integer,
+        default=5,
+        nullable=False
+    )
 
     student = db.relationship(
         "Student",
-        backref=db.backref("university_profile", uselist=False)
+        backref=db.backref(
+            "university_profile",
+            uselist=False
+        )
     )
 
 
 class UniversityCourse(db.Model):
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
     student_id = db.Column(
         db.Integer,
@@ -538,21 +617,49 @@ class UniversityCourse(db.Model):
         nullable=False
     )
 
-    semester = db.Column(db.String(100), nullable=False, default="Current Semester")
-    course_code = db.Column(db.String(50), nullable=False)
-    course_title = db.Column(db.String(200), nullable=False)
-    credit_units = db.Column(db.Integer, nullable=False, default=1)
-    grade = db.Column(db.String(2), nullable=True)
+    semester = db.Column(
+        db.String(100),
+        nullable=False,
+        default="Current Semester"
+    )
+
+    course_code = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    course_title = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+    credit_units = db.Column(
+        db.Integer,
+        nullable=False,
+        default=1
+    )
+
+    grade = db.Column(
+        db.String(2),
+        nullable=True
+    )
 
     student = db.relationship(
         "Student",
-        backref=db.backref("university_courses", lazy=True, cascade="all, delete-orphan")
+        backref=db.backref(
+            "university_courses",
+            lazy=True,
+            cascade="all, delete-orphan"
+        )
     )
 
 
 class UniversityStudyPlan(db.Model):
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
     student_id = db.Column(
         db.Integer,
@@ -560,22 +667,54 @@ class UniversityStudyPlan(db.Model):
         nullable=False
     )
 
-    course_code = db.Column(db.String(50), nullable=False)
-    topic = db.Column(db.String(300), nullable=False)
-    study_date = db.Column(db.Date, nullable=False)
-    start_time = db.Column(db.String(20), nullable=False)
-    duration_minutes = db.Column(db.Integer, nullable=False, default=60)
-    completed = db.Column(db.Boolean, default=False, nullable=False)
+    course_code = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    topic = db.Column(
+        db.String(300),
+        nullable=False
+    )
+
+    study_date = db.Column(
+        db.Date,
+        nullable=False
+    )
+
+    start_time = db.Column(
+        db.String(20),
+        nullable=False
+    )
+
+    duration_minutes = db.Column(
+        db.Integer,
+        nullable=False,
+        default=60
+    )
+
+    completed = db.Column(
+        db.Boolean,
+        default=False,
+        nullable=False
+    )
 
     student = db.relationship(
         "Student",
-        backref=db.backref("university_study_plans", lazy=True, cascade="all, delete-orphan")
+        backref=db.backref(
+            "university_study_plans",
+            lazy=True,
+            cascade="all, delete-orphan"
+        )
     )
 
 
 class UniversityExamCountdown(db.Model):
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
     student_id = db.Column(
         db.Integer,
@@ -583,32 +722,103 @@ class UniversityExamCountdown(db.Model):
         nullable=False
     )
 
-    course_code = db.Column(db.String(50), nullable=False)
-    title = db.Column(db.String(200), nullable=False)
-    exam_date = db.Column(db.Date, nullable=False)
-    location = db.Column(db.String(200), nullable=True)
+    course_code = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    title = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+    exam_date = db.Column(
+        db.Date,
+        nullable=False
+    )
+
+    location = db.Column(
+        db.String(200),
+        nullable=True
+    )
 
     student = db.relationship(
         "Student",
-        backref=db.backref("university_exams", lazy=True, cascade="all, delete-orphan")
+        backref=db.backref(
+            "university_exams",
+            lazy=True,
+            cascade="all, delete-orphan"
+        )
     )
 
 
 class UniversityPastQuestion(db.Model):
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
-    university = db.Column(db.String(200), nullable=False, index=True)
-    faculty = db.Column(db.String(200), nullable=True, index=True)
-    department = db.Column(db.String(200), nullable=True, index=True)
-    course_code = db.Column(db.String(50), nullable=False, index=True)
-    course_title = db.Column(db.String(200), nullable=True)
-    level = db.Column(db.String(50), nullable=True, index=True)
-    semester = db.Column(db.String(50), nullable=True, index=True)
-    session = db.Column(db.String(50), nullable=True)
-    question_text = db.Column(db.Text, nullable=True)
-    file_url = db.Column(db.String(500), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    university = db.Column(
+        db.String(200),
+        nullable=False,
+        index=True
+    )
+
+    faculty = db.Column(
+        db.String(200),
+        nullable=True,
+        index=True
+    )
+
+    department = db.Column(
+        db.String(200),
+        nullable=True,
+        index=True
+    )
+
+    course_code = db.Column(
+        db.String(50),
+        nullable=False,
+        index=True
+    )
+
+    course_title = db.Column(
+        db.String(200),
+        nullable=True
+    )
+
+    level = db.Column(
+        db.String(50),
+        nullable=True,
+        index=True
+    )
+
+    semester = db.Column(
+        db.String(50),
+        nullable=True,
+        index=True
+    )
+
+    session = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    question_text = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    file_url = db.Column(
+        db.String(500),
+        nullable=True
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
 
 
 # =========================================================
@@ -621,6 +831,7 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
 
         if "student_id" not in session:
+
             return redirect(
                 url_for("login")
             )
@@ -640,6 +851,7 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
 
         if "admin_id" not in session:
+
             return redirect(
                 url_for("admin_login")
             )
@@ -2006,7 +2218,6 @@ def jamb_exam():
             ).all()
         )
 
-        # Randomize questions INSIDE the subject only.
         random.shuffle(
             subject_questions
         )
@@ -2042,22 +2253,6 @@ def jamb_exam():
             """,
             404
         )
-
-    # -----------------------------------------------------
-    # JAMB QUESTION ALLOCATION
-    # -----------------------------------------------------
-    #
-    # English = 60 questions
-    # Other subject 1 = 40
-    # Other subject 2 = 40
-    # Other subject 3 = 40
-    #
-    # Total = 180
-    #
-    # IMPORTANT:
-    # Do NOT shuffle final_questions.
-    # This preserves the subject arrangement.
-    # -----------------------------------------------------
 
     allocation = {
         "Use of English": 60
@@ -2099,7 +2294,6 @@ def jamb_exam():
                 400
             )
 
-        # Keep each subject together.
         final_questions.extend(
             available_questions[:target_count]
         )
@@ -2112,7 +2306,6 @@ def jamb_exam():
             400
         )
 
-    # Store IDs in the SAME order as the exam.
     session["jamb_question_ids"] = [
         question.id
         for question in final_questions
@@ -2150,6 +2343,7 @@ def jamb_results():
     )
 
     if not question_ids:
+
         return redirect(
             url_for("exam_preparation")
         )
@@ -2177,6 +2371,7 @@ def jamb_results():
         subject = question.subject
 
         if subject not in subject_correct:
+
             subject_correct[subject] = 0
             subject_total[subject] = 0
 
@@ -2187,6 +2382,7 @@ def jamb_results():
         )
 
         if submitted_answer:
+
             submitted_answer = (
                 submitted_answer.upper().strip()
             )
@@ -2196,6 +2392,7 @@ def jamb_results():
             )
 
             if submitted_answer == correct_answer:
+
                 subject_correct[subject] += 1
 
     total_score = 0
@@ -2203,28 +2400,39 @@ def jamb_results():
     for subject in subject_total:
 
         total_for_subject = subject_total[subject]
+
         correct_for_subject = subject_correct.get(
             subject,
             0
         )
 
         if total_for_subject > 0:
+
             subject_score = (
-                correct_for_subject / total_for_subject
+                correct_for_subject /
+                total_for_subject
             ) * 100
+
         else:
+
             subject_score = 0
 
         total_score += subject_score
 
     score = round(total_score)
-    score = max(0, min(400, score))
+
+    score = max(
+        0,
+        min(400, score)
+    )
 
     correct_answers = sum(
         subject_correct.values()
     )
 
-    total_questions = len(ordered_questions)
+    total_questions = len(
+        ordered_questions
+    )
 
     started_at = datetime.utcnow()
 
@@ -2233,17 +2441,27 @@ def jamb_results():
     )
 
     if stored_started_at:
+
         try:
+
             started_at = datetime.fromisoformat(
                 stored_started_at
             )
-        except (ValueError, TypeError):
+
+        except (
+            ValueError,
+            TypeError
+        ):
+
             started_at = datetime.utcnow()
 
     attempt = JAMBExamAttempt(
         student_id=session["student_id"],
         subjects=json.dumps(
-            session.get("jamb_subjects", [])
+            session.get(
+                "jamb_subjects",
+                []
+            )
         ),
         year=None,
         total_questions=total_questions,
@@ -2253,11 +2471,12 @@ def jamb_results():
         completed_at=datetime.utcnow()
     )
 
-    db.session.add(attempt)
+    db.session.add(
+        attempt
+    )
+
     db.session.flush()
 
-    # Save every submitted answer so the student can review
-    # exactly which questions were correct or incorrect later.
     for question_number, question in enumerate(
         ordered_questions,
         start=1
@@ -2268,10 +2487,13 @@ def jamb_results():
         )
 
         if submitted_answer:
+
             submitted_answer = (
                 submitted_answer.upper().strip()
             )
+
         else:
+
             submitted_answer = None
 
         correct_answer = (
@@ -2297,8 +2519,15 @@ def jamb_results():
 
     session["jamb_last_attempt_id"] = attempt.id
 
-    session.pop("jamb_question_ids", None)
-    session.pop("jamb_started_at", None)
+    session.pop(
+        "jamb_question_ids",
+        None
+    )
+
+    session.pop(
+        "jamb_started_at",
+        None
+    )
 
     return redirect(
         url_for("jamb_history")
@@ -2526,8 +2755,6 @@ def save_ai_memory():
     })
 
 
-
-
 # =========================================================
 # UNIVERSITY HUB
 # =========================================================
@@ -2543,12 +2770,16 @@ GRADE_POINTS = {
 
 
 def _current_student():
-    return Student.query.get(session["student_id"])
+
+    return Student.query.get(
+        session["student_id"]
+    )
 
 
 @app.route("/university")
 @login_required
 def university():
+
     student = _current_student()
 
     profile = UniversityProfile.query.filter_by(
@@ -2557,15 +2788,22 @@ def university():
 
     courses = UniversityCourse.query.filter_by(
         student_id=student.id
-    ).order_by(UniversityCourse.id.desc()).all()
+    ).order_by(
+        UniversityCourse.id.desc()
+    ).all()
 
     plans = UniversityStudyPlan.query.filter_by(
         student_id=student.id
-    ).order_by(UniversityStudyPlan.study_date.asc(), UniversityStudyPlan.start_time.asc()).all()
+    ).order_by(
+        UniversityStudyPlan.study_date.asc(),
+        UniversityStudyPlan.start_time.asc()
+    ).all()
 
     exams = UniversityExamCountdown.query.filter_by(
         student_id=student.id
-    ).order_by(UniversityExamCountdown.exam_date.asc()).all()
+    ).order_by(
+        UniversityExamCountdown.exam_date.asc()
+    ).all()
 
     past_questions = UniversityPastQuestion.query.order_by(
         UniversityPastQuestion.id.desc()
@@ -2582,50 +2820,147 @@ def university():
     )
 
 
-@app.route("/university/profile", methods=["POST"])
+# =========================================================
+# UNIVERSITY PROFILE
+# =========================================================
+
+@app.route(
+    "/university/profile",
+    methods=["POST"]
+)
 @login_required
 def university_profile_save():
+
     student_id = session["student_id"]
-    profile = UniversityProfile.query.filter_by(student_id=student_id).first()
+
+    profile = UniversityProfile.query.filter_by(
+        student_id=student_id
+    ).first()
 
     if not profile:
-        profile = UniversityProfile(student_id=student_id)
-        db.session.add(profile)
 
-    profile.university = request.form.get("university", "").strip()
-    profile.faculty = request.form.get("faculty", "").strip()
-    profile.department = request.form.get("department", "").strip()
-    profile.level = request.form.get("level", "").strip()
-    profile.semester = request.form.get("semester", "").strip()
+        profile = UniversityProfile(
+            student_id=student_id
+        )
+
+        db.session.add(
+            profile
+        )
+
+    profile.university = request.form.get(
+        "university",
+        ""
+    ).strip()
+
+    profile.faculty = request.form.get(
+        "faculty",
+        ""
+    ).strip()
+
+    profile.department = request.form.get(
+        "department",
+        ""
+    ).strip()
+
+    profile.level = request.form.get(
+        "level",
+        ""
+    ).strip()
+
+    profile.semester = request.form.get(
+        "semester",
+        ""
+    ).strip()
 
     try:
-        profile.grading_scale = int(request.form.get("grading_scale", 5))
-    except (TypeError, ValueError):
+
+        profile.grading_scale = int(
+            request.form.get(
+                "grading_scale",
+                5
+            )
+        )
+
+    except (
+        TypeError,
+        ValueError
+    ):
+
         profile.grading_scale = 5
 
     if profile.grading_scale not in (4, 5):
+
         profile.grading_scale = 5
 
     db.session.commit()
-    return redirect(url_for("university") + "#profile")
+
+    return redirect(
+        url_for("university") + "#profile"
+    )
 
 
-@app.route("/university/course/add", methods=["POST"])
+# =========================================================
+# UNIVERSITY COURSE ADD
+# =========================================================
+
+@app.route(
+    "/university/course/add",
+    methods=["POST"]
+)
 @login_required
 def university_course_add():
-    code = request.form.get("course_code", "").strip().upper()
-    title = request.form.get("course_title", "").strip()
-    semester = request.form.get("semester", "Current Semester").strip() or "Current Semester"
+
+    code = request.form.get(
+        "course_code",
+        ""
+    ).strip().upper()
+
+    title = request.form.get(
+        "course_title",
+        ""
+    ).strip()
+
+    semester = request.form.get(
+        "semester",
+        "Current Semester"
+    ).strip() or "Current Semester"
 
     try:
-        units = int(request.form.get("credit_units", 0))
-    except (TypeError, ValueError):
+
+        units = int(
+            request.form.get(
+                "credit_units",
+                0
+            )
+        )
+
+    except (
+        TypeError,
+        ValueError
+    ):
+
         units = 0
 
-    grade = request.form.get("grade", "").strip().upper() or None
+    grade = request.form.get(
+        "grade",
+        ""
+    ).strip().upper() or None
 
-    if not code or not title or units < 1 or units > 30 or (grade and grade not in GRADE_POINTS):
-        return "Invalid course details.", 400
+    if (
+        not code
+        or not title
+        or units < 1
+        or units > 30
+        or (
+            grade
+            and grade not in GRADE_POINTS
+        )
+    ):
+
+        return (
+            "Invalid course details.",
+            400
+        )
 
     course = UniversityCourse(
         student_id=session["student_id"],
@@ -2636,40 +2971,111 @@ def university_course_add():
         grade=grade
     )
 
-    db.session.add(course)
+    db.session.add(
+        course
+    )
+
     db.session.commit()
-    return redirect(url_for("university") + "#courses")
+
+    return redirect(
+        url_for("university") + "#courses"
+    )
 
 
-@app.route("/university/course/<int:course_id>/delete", methods=["POST"])
+# =========================================================
+# UNIVERSITY COURSE DELETE
+# =========================================================
+
+@app.route(
+    "/university/course/<int:course_id>/delete",
+    methods=["POST"]
+)
 @login_required
 def university_course_delete(course_id):
+
     course = UniversityCourse.query.filter_by(
         id=course_id,
         student_id=session["student_id"]
     ).first_or_404()
 
-    db.session.delete(course)
+    db.session.delete(
+        course
+    )
+
     db.session.commit()
-    return redirect(url_for("university") + "#courses")
+
+    return redirect(
+        url_for("university") + "#courses"
+    )
 
 
-@app.route("/university/study/add", methods=["POST"])
+# =========================================================
+# UNIVERSITY STUDY ADD
+# =========================================================
+
+@app.route(
+    "/university/study/add",
+    methods=["POST"]
+)
 @login_required
 def university_study_add():
-    course_code = request.form.get("course_code", "").strip().upper()
-    topic = request.form.get("topic", "").strip()
-    study_date_raw = request.form.get("study_date", "").strip()
-    start_time = request.form.get("start_time", "").strip()
+
+    course_code = request.form.get(
+        "course_code",
+        ""
+    ).strip().upper()
+
+    topic = request.form.get(
+        "topic",
+        ""
+    ).strip()
+
+    study_date_raw = request.form.get(
+        "study_date",
+        ""
+    ).strip()
+
+    start_time = request.form.get(
+        "start_time",
+        ""
+    ).strip()
 
     try:
-        study_date = datetime.strptime(study_date_raw, "%Y-%m-%d").date()
-        duration = int(request.form.get("duration_minutes", 60))
-    except (TypeError, ValueError):
-        return "Invalid study session details.", 400
 
-    if not course_code or not topic or not start_time or duration < 15 or duration > 720:
-        return "Invalid study session details.", 400
+        study_date = datetime.strptime(
+            study_date_raw,
+            "%Y-%m-%d"
+        ).date()
+
+        duration = int(
+            request.form.get(
+                "duration_minutes",
+                60
+            )
+        )
+
+    except (
+        TypeError,
+        ValueError
+    ):
+
+        return (
+            "Invalid study session details.",
+            400
+        )
+
+    if (
+        not course_code
+        or not topic
+        or not start_time
+        or duration < 15
+        or duration > 720
+    ):
+
+        return (
+            "Invalid study session details.",
+            400
+        )
 
     plan = UniversityStudyPlan(
         student_id=session["student_id"],
@@ -2680,52 +3086,123 @@ def university_study_add():
         duration_minutes=duration
     )
 
-    db.session.add(plan)
+    db.session.add(
+        plan
+    )
+
     db.session.commit()
-    return redirect(url_for("university") + "#planner")
+
+    return redirect(
+        url_for("university") + "#planner"
+    )
 
 
-@app.route("/university/study/<int:plan_id>/toggle", methods=["POST"])
+# =========================================================
+# UNIVERSITY STUDY TOGGLE
+# =========================================================
+
+@app.route(
+    "/university/study/<int:plan_id>/toggle",
+    methods=["POST"]
+)
 @login_required
 def university_study_toggle(plan_id):
+
     plan = UniversityStudyPlan.query.filter_by(
         id=plan_id,
         student_id=session["student_id"]
     ).first_or_404()
 
     plan.completed = not plan.completed
+
     db.session.commit()
-    return redirect(url_for("university") + "#planner")
+
+    return redirect(
+        url_for("university") + "#planner"
+    )
 
 
-@app.route("/university/study/<int:plan_id>/delete", methods=["POST"])
+# =========================================================
+# UNIVERSITY STUDY DELETE
+# =========================================================
+
+@app.route(
+    "/university/study/<int:plan_id>/delete",
+    methods=["POST"]
+)
 @login_required
 def university_study_delete(plan_id):
+
     plan = UniversityStudyPlan.query.filter_by(
         id=plan_id,
         student_id=session["student_id"]
     ).first_or_404()
 
-    db.session.delete(plan)
+    db.session.delete(
+        plan
+    )
+
     db.session.commit()
-    return redirect(url_for("university") + "#planner")
+
+    return redirect(
+        url_for("university") + "#planner"
+    )
 
 
-@app.route("/university/exam/add", methods=["POST"])
+# =========================================================
+# UNIVERSITY EXAM ADD
+# =========================================================
+
+@app.route(
+    "/university/exam/add",
+    methods=["POST"]
+)
 @login_required
 def university_exam_add():
-    course_code = request.form.get("course_code", "").strip().upper()
-    title = request.form.get("title", "").strip()
-    exam_date_raw = request.form.get("exam_date", "").strip()
-    location = request.form.get("location", "").strip()
+
+    course_code = request.form.get(
+        "course_code",
+        ""
+    ).strip().upper()
+
+    title = request.form.get(
+        "title",
+        ""
+    ).strip()
+
+    exam_date_raw = request.form.get(
+        "exam_date",
+        ""
+    ).strip()
+
+    location = request.form.get(
+        "location",
+        ""
+    ).strip()
 
     try:
-        exam_date = datetime.strptime(exam_date_raw, "%Y-%m-%d").date()
-    except (TypeError, ValueError):
-        return "Invalid exam date.", 400
+
+        exam_date = datetime.strptime(
+            exam_date_raw,
+            "%Y-%m-%d"
+        ).date()
+
+    except (
+        TypeError,
+        ValueError
+    ):
+
+        return (
+            "Invalid exam date.",
+            400
+        )
 
     if not course_code or not title:
-        return "Course code and exam title are required.", 400
+
+        return (
+            "Course code and exam title are required.",
+            400
+        )
 
     exam = UniversityExamCountdown(
         student_id=session["student_id"],
@@ -2735,50 +3212,133 @@ def university_exam_add():
         location=location
     )
 
-    db.session.add(exam)
+    db.session.add(
+        exam
+    )
+
     db.session.commit()
-    return redirect(url_for("university") + "#exams")
+
+    return redirect(
+        url_for("university") + "#exams"
+    )
 
 
-@app.route("/university/exam/<int:exam_id>/delete", methods=["POST"])
+# =========================================================
+# UNIVERSITY EXAM DELETE
+# =========================================================
+
+@app.route(
+    "/university/exam/<int:exam_id>/delete",
+    methods=["POST"]
+)
 @login_required
 def university_exam_delete(exam_id):
+
     exam = UniversityExamCountdown.query.filter_by(
         id=exam_id,
         student_id=session["student_id"]
     ).first_or_404()
 
-    db.session.delete(exam)
+    db.session.delete(
+        exam
+    )
+
     db.session.commit()
-    return redirect(url_for("university") + "#exams")
+
+    return redirect(
+        url_for("university") + "#exams"
+    )
 
 
-@app.route("/api/university/past-questions")
+# =========================================================
+# UNIVERSITY PAST QUESTIONS API
+# =========================================================
+
+@app.route(
+    "/api/university/past-questions"
+)
 @login_required
 def university_past_questions_api():
+
     query = UniversityPastQuestion.query
 
-    university_name = request.args.get("university", "").strip()
-    faculty = request.args.get("faculty", "").strip()
-    department = request.args.get("department", "").strip()
-    course_code = request.args.get("course_code", "").strip()
-    level = request.args.get("level", "").strip()
-    semester = request.args.get("semester", "").strip()
+    university_name = request.args.get(
+        "university",
+        ""
+    ).strip()
+
+    faculty = request.args.get(
+        "faculty",
+        ""
+    ).strip()
+
+    department = request.args.get(
+        "department",
+        ""
+    ).strip()
+
+    course_code = request.args.get(
+        "course_code",
+        ""
+    ).strip()
+
+    level = request.args.get(
+        "level",
+        ""
+    ).strip()
+
+    semester = request.args.get(
+        "semester",
+        ""
+    ).strip()
 
     if university_name:
-        query = query.filter(UniversityPastQuestion.university.ilike(f"%{university_name}%"))
-    if faculty:
-        query = query.filter(UniversityPastQuestion.faculty.ilike(f"%{faculty}%"))
-    if department:
-        query = query.filter(UniversityPastQuestion.department.ilike(f"%{department}%"))
-    if course_code:
-        query = query.filter(UniversityPastQuestion.course_code.ilike(f"%{course_code}%"))
-    if level:
-        query = query.filter_by(level=level)
-    if semester:
-        query = query.filter_by(semester=semester)
 
-    questions = query.order_by(UniversityPastQuestion.id.desc()).limit(100).all()
+        query = query.filter(
+            UniversityPastQuestion.university.ilike(
+                f"%{university_name}%"
+            )
+        )
+
+    if faculty:
+
+        query = query.filter(
+            UniversityPastQuestion.faculty.ilike(
+                f"%{faculty}%"
+            )
+        )
+
+    if department:
+
+        query = query.filter(
+            UniversityPastQuestion.department.ilike(
+                f"%{department}%"
+            )
+        )
+
+    if course_code:
+
+        query = query.filter(
+            UniversityPastQuestion.course_code.ilike(
+                f"%{course_code}%"
+            )
+        )
+
+    if level:
+
+        query = query.filter_by(
+            level=level
+        )
+
+    if semester:
+
+        query = query.filter_by(
+            semester=semester
+        )
+
+    questions = query.order_by(
+        UniversityPastQuestion.id.desc()
+    ).limit(100).all()
 
     return jsonify({
         "success": True,
@@ -2801,28 +3361,84 @@ def university_past_questions_api():
     })
 
 
-
 # =========================================================
 # ADMIN UNIVERSITY PAST QUESTIONS MANAGER
 # =========================================================
 
-@app.route("/admin/university/past-questions", methods=["GET", "POST"])
+@app.route(
+    "/admin/university/past-questions",
+    methods=["GET", "POST"]
+)
 @admin_required
 def admin_university_past_questions():
 
     if request.method == "POST":
-        university = request.form.get("university", "").strip()
-        faculty = request.form.get("faculty", "").strip()
-        department = request.form.get("department", "").strip()
-        course_code = request.form.get("course_code", "").strip().upper()
-        course_title = request.form.get("course_title", "").strip()
-        level = request.form.get("level", "").strip()
-        semester = request.form.get("semester", "").strip()
-        session_name = request.form.get("session", "").strip()
-        question_text = request.form.get("question_text", "").strip()
-        file_url = request.form.get("file_url", "").strip()
+
+        university = request.form.get(
+            "university",
+            ""
+        ).strip()
+
+        faculty = request.form.get(
+            "faculty",
+            ""
+        ).strip()
+
+        department = request.form.get(
+            "department",
+            ""
+        ).strip()
+
+        course_code = request.form.get(
+            "course_code",
+            ""
+        ).strip().upper()
+
+        course_title = request.form.get(
+            "course_title",
+            ""
+        ).strip()
+
+        level = request.form.get(
+            "level",
+            ""
+        ).strip()
+
+        semester = request.form.get(
+            "semester",
+            ""
+        ).strip()
+
+        session_name = request.form.get(
+            "session",
+            ""
+        ).strip()
+
+        question_text = request.form.get(
+            "question_text",
+            ""
+        ).strip()
+
+        # -------------------------------------------------
+        # GET UPLOADED PDF
+        # -------------------------------------------------
+
+        pdf_file = request.files.get(
+            "past_question_pdf"
+        )
+
+        # Existing external URL option remains supported
+        file_url = request.form.get(
+            "file_url",
+            ""
+        ).strip()
+
+        # -------------------------------------------------
+        # VALIDATE BASIC DETAILS
+        # -------------------------------------------------
 
         if not university or not course_code:
+
             return render_template(
                 "admin-past-questions.html",
                 questions=UniversityPastQuestion.query.order_by(
@@ -2832,33 +3448,125 @@ def admin_university_past_questions():
                 form=request.form
             ), 400
 
+        # -------------------------------------------------
+        # PDF UPLOAD
+        # -------------------------------------------------
+
+        if pdf_file and pdf_file.filename:
+
+            original_filename = secure_filename(
+                pdf_file.filename
+            )
+
+            # Check extension
+            if not original_filename.lower().endswith(
+                ".pdf"
+            ):
+
+                return render_template(
+                    "admin-past-questions.html",
+                    questions=UniversityPastQuestion.query.order_by(
+                        UniversityPastQuestion.id.desc()
+                    ).all(),
+                    error="Only PDF files are allowed.",
+                    form=request.form
+                ), 400
+
+            # Create unique filename
+            timestamp = datetime.utcnow().strftime(
+                "%Y%m%d%H%M%S%f"
+            )
+
+            uploaded_filename = (
+                f"{timestamp}_{original_filename}"
+            )
+
+            pdf_path = os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                uploaded_filename
+            )
+
+            try:
+
+                pdf_file.save(
+                    pdf_path
+                )
+
+            except Exception as upload_error:
+
+                print(
+                    "PDF upload error:",
+                    upload_error
+                )
+
+                return render_template(
+                    "admin-past-questions.html",
+                    questions=UniversityPastQuestion.query.order_by(
+                        UniversityPastQuestion.id.desc()
+                    ).all(),
+                    error="The PDF could not be uploaded.",
+                    form=request.form
+                ), 500
+
+            # Create internal PDF URL
+            file_url = url_for(
+                "uploaded_past_question_pdf",
+                filename=uploaded_filename
+            )
+
+        # -------------------------------------------------
+        # REQUIRE CONTENT
+        # -------------------------------------------------
+
         if not question_text and not file_url:
+
             return render_template(
                 "admin-past-questions.html",
                 questions=UniversityPastQuestion.query.order_by(
                     UniversityPastQuestion.id.desc()
                 ).all(),
-                error="Add either the question text or a file/document URL.",
+                error="Add question text or upload a PDF.",
                 form=request.form
             ), 400
 
+        # -------------------------------------------------
+        # SAVE TO DATABASE
+        # -------------------------------------------------
+
         past_question = UniversityPastQuestion(
+
             university=university,
+
             faculty=faculty or None,
+
             department=department or None,
+
             course_code=course_code,
+
             course_title=course_title or None,
+
             level=level or None,
+
             semester=semester or None,
+
             session=session_name or None,
+
             question_text=question_text or None,
+
             file_url=file_url or None
         )
 
-        db.session.add(past_question)
+        db.session.add(
+            past_question
+        )
+
         db.session.commit()
 
-        return redirect(url_for("admin_university_past_questions"))
+        return redirect(
+            url_for(
+                "admin_university_past_questions"
+            )
+        )
 
     questions = UniversityPastQuestion.query.order_by(
         UniversityPastQuestion.id.desc()
@@ -2872,47 +3580,170 @@ def admin_university_past_questions():
     )
 
 
+# =========================================================
+# SERVE UPLOADED PAST QUESTION PDF
+# =========================================================
+
+@app.route(
+    "/past-questions/files/<path:filename>"
+)
+def uploaded_past_question_pdf(filename):
+
+    # Only logged-in students or admins can access PDFs
+    if (
+        "student_id" not in session
+        and "admin_id" not in session
+    ):
+
+        if "admin_id" in session:
+
+            return redirect(
+                url_for("admin_login")
+            )
+
+        return redirect(
+            url_for("login")
+        )
+
+    return send_from_directory(
+        app.config["UPLOAD_FOLDER"],
+        filename,
+        as_attachment=False
+    )
+
+
+# =========================================================
+# DELETE UNIVERSITY PAST QUESTION
+# =========================================================
+
 @app.route(
     "/admin/university/past-questions/<int:question_id>/delete",
     methods=["POST"]
 )
 @admin_required
-def admin_delete_university_past_question(question_id):
+def admin_delete_university_past_question(
+    question_id
+):
 
-    question = UniversityPastQuestion.query.get_or_404(question_id)
-    db.session.delete(question)
+    question = UniversityPastQuestion.query.get_or_404(
+        question_id
+    )
+
+    # -----------------------------------------------------
+    # DELETE LOCAL PDF FILE IF IT EXISTS
+    # -----------------------------------------------------
+
+    if question.file_url:
+
+        internal_prefix = "/past-questions/files/"
+
+        if question.file_url.startswith(
+            internal_prefix
+        ):
+
+            filename = question.file_url[
+                len(internal_prefix):
+            ]
+
+            filename = os.path.basename(
+                filename
+            )
+
+            pdf_path = os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                filename
+            )
+
+            try:
+
+                if os.path.isfile(pdf_path):
+
+                    os.remove(
+                        pdf_path
+                    )
+
+            except Exception as delete_error:
+
+                print(
+                    "Could not delete PDF file:",
+                    delete_error
+                )
+
+    # -----------------------------------------------------
+    # DELETE DATABASE RECORD
+    # -----------------------------------------------------
+
+    db.session.delete(
+        question
+    )
+
     db.session.commit()
 
-    return redirect(url_for("admin_university_past_questions"))
+    return redirect(
+        url_for(
+            "admin_university_past_questions"
+        )
+    )
 
 
-@app.route("/admin/university/past-questions/search")
+# =========================================================
+# ADMIN SEARCH UNIVERSITY PAST QUESTIONS
+# =========================================================
+
+@app.route(
+    "/admin/university/past-questions/search"
+)
 @admin_required
 def admin_search_university_past_questions():
 
-    university = request.args.get("university", "").strip()
-    department = request.args.get("department", "").strip()
-    course_code = request.args.get("course_code", "").strip().upper()
-    level = request.args.get("level", "").strip()
+    university = request.args.get(
+        "university",
+        ""
+    ).strip()
+
+    department = request.args.get(
+        "department",
+        ""
+    ).strip()
+
+    course_code = request.args.get(
+        "course_code",
+        ""
+    ).strip().upper()
+
+    level = request.args.get(
+        "level",
+        ""
+    ).strip()
 
     query = UniversityPastQuestion.query
 
     if university:
+
         query = query.filter(
-            UniversityPastQuestion.university.ilike(f"%{university}%")
+            UniversityPastQuestion.university.ilike(
+                f"%{university}%"
+            )
         )
 
     if department:
+
         query = query.filter(
-            UniversityPastQuestion.department.ilike(f"%{department}%")
+            UniversityPastQuestion.department.ilike(
+                f"%{department}%"
+            )
         )
 
     if course_code:
+
         query = query.filter(
-            UniversityPastQuestion.course_code.ilike(f"%{course_code}%")
+            UniversityPastQuestion.course_code.ilike(
+                f"%{course_code}%"
+            )
         )
 
     if level:
+
         query = query.filter(
             UniversityPastQuestion.level == level
         )
