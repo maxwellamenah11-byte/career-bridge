@@ -2801,6 +2801,134 @@ def university_past_questions_api():
     })
 
 
+
+# =========================================================
+# ADMIN UNIVERSITY PAST QUESTIONS MANAGER
+# =========================================================
+
+@app.route("/admin/university/past-questions", methods=["GET", "POST"])
+@admin_required
+def admin_university_past_questions():
+
+    if request.method == "POST":
+        university = request.form.get("university", "").strip()
+        faculty = request.form.get("faculty", "").strip()
+        department = request.form.get("department", "").strip()
+        course_code = request.form.get("course_code", "").strip().upper()
+        course_title = request.form.get("course_title", "").strip()
+        level = request.form.get("level", "").strip()
+        semester = request.form.get("semester", "").strip()
+        session_name = request.form.get("session", "").strip()
+        question_text = request.form.get("question_text", "").strip()
+        file_url = request.form.get("file_url", "").strip()
+
+        if not university or not course_code:
+            return render_template(
+                "admin-past-questions.html",
+                questions=UniversityPastQuestion.query.order_by(
+                    UniversityPastQuestion.id.desc()
+                ).all(),
+                error="University and course code are required.",
+                form=request.form
+            ), 400
+
+        if not question_text and not file_url:
+            return render_template(
+                "admin-past-questions.html",
+                questions=UniversityPastQuestion.query.order_by(
+                    UniversityPastQuestion.id.desc()
+                ).all(),
+                error="Add either the question text or a file/document URL.",
+                form=request.form
+            ), 400
+
+        past_question = UniversityPastQuestion(
+            university=university,
+            faculty=faculty or None,
+            department=department or None,
+            course_code=course_code,
+            course_title=course_title or None,
+            level=level or None,
+            semester=semester or None,
+            session=session_name or None,
+            question_text=question_text or None,
+            file_url=file_url or None
+        )
+
+        db.session.add(past_question)
+        db.session.commit()
+
+        return redirect(url_for("admin_university_past_questions"))
+
+    questions = UniversityPastQuestion.query.order_by(
+        UniversityPastQuestion.id.desc()
+    ).all()
+
+    return render_template(
+        "admin-past-questions.html",
+        questions=questions,
+        error=None,
+        form={}
+    )
+
+
+@app.route(
+    "/admin/university/past-questions/<int:question_id>/delete",
+    methods=["POST"]
+)
+@admin_required
+def admin_delete_university_past_question(question_id):
+
+    question = UniversityPastQuestion.query.get_or_404(question_id)
+    db.session.delete(question)
+    db.session.commit()
+
+    return redirect(url_for("admin_university_past_questions"))
+
+
+@app.route("/admin/university/past-questions/search")
+@admin_required
+def admin_search_university_past_questions():
+
+    university = request.args.get("university", "").strip()
+    department = request.args.get("department", "").strip()
+    course_code = request.args.get("course_code", "").strip().upper()
+    level = request.args.get("level", "").strip()
+
+    query = UniversityPastQuestion.query
+
+    if university:
+        query = query.filter(
+            UniversityPastQuestion.university.ilike(f"%{university}%")
+        )
+
+    if department:
+        query = query.filter(
+            UniversityPastQuestion.department.ilike(f"%{department}%")
+        )
+
+    if course_code:
+        query = query.filter(
+            UniversityPastQuestion.course_code.ilike(f"%{course_code}%")
+        )
+
+    if level:
+        query = query.filter(
+            UniversityPastQuestion.level == level
+        )
+
+    questions = query.order_by(
+        UniversityPastQuestion.id.desc()
+    ).all()
+
+    return render_template(
+        "admin-past-questions.html",
+        questions=questions,
+        error=None,
+        form=request.args
+    )
+
+
 # =========================================================
 # LIBRARY
 # =========================================================
