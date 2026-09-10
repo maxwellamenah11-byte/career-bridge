@@ -1,661 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>University Hub | Career Bridge</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #020617;
-            color: white;
-            min-height: 100vh;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #0f172a, #172554);
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 42px;
-            margin-bottom: 15px;
-        }
-
-        .header p {
-            max-width: 700px;
-            margin: auto;
-            color: #cbd5e1;
-            font-size: 17px;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 40px 20px;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .section-title h2 {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
-
-        .section-title p {
-            color: #94a3b8;
-        }
-
-        .tools {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 22px;
-        }
-
-        .tool-card {
-            background: #0f172a;
-            border: 1px solid #1e293b;
-            border-radius: 16px;
-            padding: 28px;
-            transition: 0.3s;
-        }
-
-        .tool-card:hover {
-            transform: translateY(-5px);
-            border-color: #3b82f6;
-        }
-
-        .icon {
-            font-size: 40px;
-            margin-bottom: 18px;
-        }
-
-        .tool-card h3 {
-            font-size: 21px;
-            margin-bottom: 10px;
-        }
-
-        .tool-card p {
-            color: #94a3b8;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 11px 18px;
-            border-radius: 8px;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background: #1d4ed8;
-        }
-
-        .coming {
-            background: #334155;
-        }
-
-        .coming:hover {
-            background: #475569;
-        }
-
-        .cgpa-section {
-            margin-top: 55px;
-            background: #0f172a;
-            border: 1px solid #1e293b;
-            border-radius: 18px;
-            padding: 30px;
-        }
-
-        .cgpa-section h2 {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .cgpa-description {
-            text-align: center;
-            color: #94a3b8;
-            margin-bottom: 30px;
-        }
-
-        .course-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr auto;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 13px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            background: #020617;
-            color: white;
-            outline: none;
-        }
-
-        input:focus,
-        select:focus {
-            border-color: #3b82f6;
-        }
-
-        .remove-btn {
-            background: #dc2626;
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .remove-btn:hover {
-            background: #b91c1c;
-        }
-
-        .calculator-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .result {
-            margin-top: 30px;
-            padding: 25px;
-            border-radius: 12px;
-            background: #020617;
-            border: 1px solid #1e293b;
-            text-align: center;
-        }
-
-        .result h3 {
-            color: #94a3b8;
-            margin-bottom: 8px;
-        }
-
-        .gpa {
-            font-size: 45px;
-            font-weight: bold;
-            color: #60a5fa;
-        }
-
-        .result-details {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .result-details div {
-            color: #cbd5e1;
-        }
-
-        .result-details strong {
-            display: block;
-            color: white;
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 35px 20px;
-            margin-top: 50px;
-            background: #0f172a;
-            color: #64748b;
-        }
-
-        @media (max-width: 700px) {
-
-            .header h1 {
-                font-size: 32px;
-            }
-
-            .course-row {
-                grid-template-columns: 1fr;
-            }
-
-            .remove-btn {
-                width: 100%;
-            }
-
-            .cgpa-section {
-                padding: 20px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>University Hub | Career Bridge</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,sans-serif;background:#020617;color:#e5e7eb}.top{background:linear-gradient(135deg,#0f172a,#172554);padding:42px 20px}.wrap{max-width:1200px;margin:auto}.top h1{margin:0 0 8px;font-size:38px}.top p{margin:0;color:#cbd5e1;line-height:1.6}.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.nav a{color:#dbeafe;text-decoration:none;background:#1e293b;padding:9px 13px;border-radius:8px;font-size:14px}.nav a:hover{background:#2563eb}.section{margin:28px 0}.section h2{margin:0 0 8px;font-size:27px}.muted{color:#94a3b8;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:20px;box-shadow:0 8px 30px rgba(0,0,0,.16)}.card h3{margin:0 0 8px}.tool{min-height:170px}.icon{font-size:34px;margin-bottom:12px}.btn{display:inline-block;border:0;border-radius:8px;padding:11px 15px;background:#2563eb;color:#fff;font-weight:bold;text-decoration:none;cursor:pointer}.btn:hover{background:#1d4ed8}.btn.secondary{background:#334155}.btn.danger{background:#dc2626}.btn.small{padding:8px 11px;font-size:13px}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field label{display:block;font-size:13px;color:#94a3b8;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid #334155;border-radius:8px;background:#020617;color:#fff;outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#3b82f6}.full{grid-column:1/-1}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.stat{background:#020617;border:1px solid #1e293b;border-radius:12px;padding:16px}.stat strong{font-size:25px;display:block;color:#60a5fa;margin-bottom:5px}.stat span{font-size:13px;color:#94a3b8}.course-table{width:100%;border-collapse:collapse}.course-table th,.course-table td{padding:11px 8px;border-bottom:1px solid #1e293b;text-align:left}.course-table th{color:#94a3b8;font-size:13px}.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#1e293b;font-size:12px}.good{background:#14532d;color:#bbf7d0}.pending{background:#78350f;color:#fde68a}.bad{background:#7f1d1d;color:#fecaca}.planner-item,.exam-item,.pq-item{padding:15px;border:1px solid #1e293b;border-radius:12px;background:#020617;margin-top:10px}.planner-item.done{opacity:.65}.planner-item.done .topic{text-decoration:line-through}.row-between{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.topic{font-weight:bold}.calculator{margin-top:16px}.calc-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;margin-bottom:8px}.calc-row input,.calc-row select{padding:11px;border:1px solid #334155;border-radius:8px;background:#020617;color:#fff}.result-box{margin-top:18px;padding:20px;border-radius:12px;background:#020617;border:1px solid #1e293b}.big{font-size:42px;font-weight:bold;color:#60a5fa}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.empty{padding:22px;text-align:center;color:#94a3b8;border:1px dashed #334155;border-radius:12px}.filters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:15px}.filters input,.filters select{padding:11px;border:1px solid #334155;border-radius:8px;background:#020617;color:#fff}.resource a{color:#60a5fa}.footer{text-align:center;color:#64748b;padding:35px 20px;border-top:1px solid #1e293b;margin-top:45px}@media(max-width:750px){.top h1{font-size:30px}.form-grid,.two{grid-template-columns:1fr}.calc-row{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.course-table{font-size:13px;display:block;overflow-x:auto;white-space:nowrap}}
+</style>
 </head>
-
 <body>
-
-    <!-- HEADER -->
-
-    <div class="header">
-
-        <h1>🎓 University Hub</h1>
-
-        <p>
-            Everything you need to stay organized, improve your academic
-            performance, and succeed throughout university.
-        </p>
-
-    </div>
-
-
-    <div class="container">
-
-        <!-- UNIVERSITY TOOLS -->
-
-        <div class="section-title">
-
-            <h2>University Tools</h2>
-
-            <p>
-                Academic tools designed to make university life easier.
-            </p>
-
-        </div>
-
-
-        <div class="tools">
-
-            <div class="tool-card">
-
-                <div class="icon">📊</div>
-
-                <h3>CGPA Calculator</h3>
-
-                <p>
-                    Calculate your GPA and keep track of your academic
-                    performance.
-                </p>
-
-                <a href="#cgpa" class="btn">
-                    Calculate GPA
-                </a>
-
-            </div>
-
-
-            <div class="tool-card">
-
-                <div class="icon">📅</div>
-
-                <h3>Study Planner</h3>
-
-                <p>
-                    Create a personalized study timetable and organize
-                    your courses and study sessions.
-                </p>
-
-                <button class="btn coming">
-                    Coming Soon
-                </button>
-
-            </div>
-
-
-            <div class="tool-card">
-
-                <div class="icon">📚</div>
-
-                <h3>Past Questions</h3>
-
-                <p>
-                    Access university past questions and practice before
-                    your examinations.
-                </p>
-
-                <button class="btn coming">
-                    Coming Soon
-                </button>
-
-            </div>
-
-
-            <div class="tool-card">
-
-                <div class="icon">📖</div>
-
-                <h3>My Courses</h3>
-
-                <p>
-                    Keep a record of your current semester courses,
-                    credit units and grades.
-                </p>
-
-                <button class="btn coming">
-                    Coming Soon
-                </button>
-
-            </div>
-
-
-            <div class="tool-card">
-
-                <div class="icon">⏰</div>
-
-                <h3>Exam Countdown</h3>
-
-                <p>
-                    Keep track of upcoming examinations and never miss
-                    an important academic date.
-                </p>
-
-                <button class="btn coming">
-                    Coming Soon
-                </button>
-
-            </div>
-
-
-            <div class="tool-card">
-
-                <div class="icon">📈</div>
-
-                <h3>Academic Progress</h3>
-
-                <p>
-                    Monitor your GPA, CGPA, completed courses and overall
-                    academic progress.
-                </p>
-
-                <button class="btn coming">
-                    Coming Soon
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- CGPA CALCULATOR -->
-
-        <div class="cgpa-section" id="cgpa">
-
-            <h2>📊 CGPA / GPA Calculator</h2>
-
-            <p class="cgpa-description">
-                Enter your courses, credit units and grades to calculate
-                your semester GPA.
-            </p>
-
-
-            <div id="course-container">
-
-                <div class="course-row">
-
-                    <input
-                        type="text"
-                        placeholder="Course code (e.g. MTH 201)"
-                        class="course"
-                    >
-
-                    <input
-                        type="number"
-                        placeholder="Credit Unit"
-                        class="credit"
-                        min="1"
-                        max="20"
-                    >
-
-                    <select class="grade">
-
-                        <option value="">Grade</option>
-                        <option value="5">A</option>
-                        <option value="4">B</option>
-                        <option value="3">C</option>
-                        <option value="2">D</option>
-                        <option value="1">E</option>
-                        <option value="0">F</option>
-
-                    </select>
-
-                    <button
-                        class="remove-btn"
-                        onclick="removeCourse(this)"
-                    >
-                        Remove
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <div class="calculator-buttons">
-
-                <button
-                    class="btn"
-                    onclick="addCourse()"
-                >
-                    + Add Course
-                </button>
-
-                <button
-                    class="btn"
-                    onclick="calculateGPA()"
-                >
-                    Calculate GPA
-                </button>
-
-            </div>
-
-
-            <div class="result">
-
-                <h3>Your GPA</h3>
-
-                <div class="gpa" id="gpa">
-                    0.00
-                </div>
-
-
-                <div class="result-details">
-
-                    <div>
-
-                        <strong id="total-units">
-                            0
-                        </strong>
-
-                        Total Credit Units
-
-                    </div>
-
-
-                    <div>
-
-                        <strong id="total-points">
-                            0.00
-                        </strong>
-
-                        Total Grade Points
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="footer">
-
-        Career Bridge © 2026 — University Hub
-
-    </div>
-
-
-    <script>
-
-        function addCourse() {
-
-            const container =
-                document.getElementById("course-container");
-
-            const row =
-                document.createElement("div");
-
-            row.className = "course-row";
-
-            row.innerHTML = `
-
-                <input
-                    type="text"
-                    placeholder="Course code (e.g. MTH 201)"
-                    class="course"
-                >
-
-                <input
-                    type="number"
-                    placeholder="Credit Unit"
-                    class="credit"
-                    min="1"
-                    max="20"
-                >
-
-                <select class="grade">
-
-                    <option value="">Grade</option>
-
-                    <option value="5">A</option>
-
-                    <option value="4">B</option>
-
-                    <option value="3">C</option>
-
-                    <option value="2">D</option>
-
-                    <option value="1">E</option>
-
-                    <option value="0">F</option>
-
-                </select>
-
-                <button
-                    class="remove-btn"
-                    onclick="removeCourse(this)"
-                >
-                    Remove
-                </button>
-
-            `;
-
-            container.appendChild(row);
-
-        }
-
-
-        function removeCourse(button) {
-
-            const rows =
-                document.querySelectorAll(".course-row");
-
-            if (rows.length <= 1) {
-
-                alert("You need at least one course.");
-
-                return;
-
-            }
-
-            button.parentElement.remove();
-
-        }
-
-
-        function calculateGPA() {
-
-            const credits =
-                document.querySelectorAll(".credit");
-
-            const grades =
-                document.querySelectorAll(".grade");
-
-            let totalUnits = 0;
-
-            let totalPoints = 0;
-
-
-            for (let i = 0; i < credits.length; i++) {
-
-                const credit =
-                    parseFloat(credits[i].value);
-
-                const grade =
-                    parseFloat(grades[i].value);
-
-
-                if (
-                    isNaN(credit) ||
-                    isNaN(grade)
-                ) {
-
-                    continue;
-
-                }
-
-
-                totalUnits += credit;
-
-                totalPoints += credit * grade;
-
-            }
-
-
-            if (totalUnits === 0) {
-
-                alert(
-                    "Please enter your credit units and grades."
-                );
-
-                return;
-
-            }
-
-
-            const gpa =
-                totalPoints / totalUnits;
-
-
-            document.getElementById("gpa").textContent =
-                gpa.toFixed(2);
-
-            document.getElementById("total-units").textContent =
-                totalUnits;
-
-            document.getElementById("total-points").textContent =
-                totalPoints.toFixed(2);
-
-        }
-
-    </script>
-
+<div class="top"><div class="wrap">
+<h1>🎓 University Hub</h1>
+<p>Your academic command center — manage your courses, calculate GPA/CGPA, plan your studies, track exams and practice with past questions.</p>
+<div class="nav">
+<a href="#profile">My University</a><a href="#calculator">GPA / CGPA</a><a href="#courses">My Courses</a><a href="#planner">Study Planner</a><a href="#exams">Exam Countdown</a><a href="#past-questions">Past Questions</a><a href="#resources">Resources</a>
+</div>
+</div></div>
+
+<div class="wrap">
+<section class="section" id="profile">
+<div class="two">
+<div class="card"><h2>🏫 My University Profile</h2><p class="muted">Save your university details so the hub can be personalized later.</p>
+<form method="POST" action="{{ url_for('university_profile_save') }}">
+<div class="form-grid">
+<div class="field"><label>University</label><input name="university" value="{{ profile.university if profile else '' }}" placeholder="e.g. FUPRE"></div>
+<div class="field"><label>Faculty</label><input name="faculty" value="{{ profile.faculty if profile else '' }}" placeholder="e.g. Engineering"></div>
+<div class="field"><label>Department</label><input name="department" value="{{ profile.department if profile else '' }}" placeholder="e.g. Natural Gas Engineering"></div>
+<div class="field"><label>Level</label><select name="level"><option value="">Select level</option>{% for x in ['100 Level','200 Level','300 Level','400 Level','500 Level','600 Level'] %}<option value="{{x}}" {% if profile and profile.level==x %}selected{% endif %}>{{x}}</option>{% endfor %}</select></div>
+<div class="field"><label>Current Semester</label><select name="semester"><option value="">Select semester</option>{% for x in ['First Semester','Second Semester'] %}<option value="{{x}}" {% if profile and profile.semester==x %}selected{% endif %}>{{x}}</option>{% endfor %}</select></div>
+<div class="field"><label>Grading Scale</label><select name="grading_scale"><option value="5" {% if not profile or profile.grading_scale==5 %}selected{% endif %}>5.0 Scale</option><option value="4" {% if profile and profile.grading_scale==4 %}selected{% endif %}>4.0 Scale</option></select></div>
+</div><div class="actions"><button class="btn" type="submit">Save Profile</button></div>
+</form></div>
+<div class="card"><h2>📈 Academic Snapshot</h2><p class="muted">Your saved university data at a glance.</p>
+<div class="stats">
+<div class="stat"><strong id="overall-gpa">0.00</strong><span>Overall CGPA</span></div>
+<div class="stat"><strong id="graded-courses">0</strong><span>Graded Courses</span></div>
+<div class="stat"><strong id="course-count">{{ courses|length }}</strong><span>Total Courses</span></div>
+<div class="stat"><strong id="study-progress">0%</strong><span>Study Sessions Done</span></div>
+</div>
+</div>
+</div></section>
+
+<section class="section" id="calculator"><div class="card"><h2>📊 GPA & CGPA Calculator</h2><p class="muted">Add your courses below. GPA is calculated from credit units × grade points. A = 5, B = 4, C = 3, D = 2, E = 1, F = 0 on the 5-point scale. The 4-point option is also supported; classification on 4-point systems varies by institution.</p>
+<div id="calc-rows">
+{% for c in courses %}<div class="calc-row"><input class="ccode" value="{{ c.course_code }}" placeholder="Course code"><input class="ctitle" value="{{ c.course_title }}" placeholder="Course title"><input class="units" type="number" min="1" value="{{ c.credit_units }}" placeholder="Units"><select class="grade"><option value="">Grade</option>{% for g in ['A','B','C','D','E','F'] %}<option value="{{g}}" {% if c.grade==g %}selected{% endif %}>{{g}}</option>{% endfor %}</select><button type="button" class="btn danger small" onclick="this.parentElement.remove();calculateCGPA()">✕</button></div>{% endfor %}
+{% if not courses %}<div class="calc-row"><input class="ccode" placeholder="Course code"><input class="ctitle" placeholder="Course title"><input class="units" type="number" min="1" placeholder="Units"><select class="grade"><option value="">Grade</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select><button type="button" class="btn danger small" onclick="this.parentElement.remove();calculateCGPA()">✕</button></div>{% endif %}
+</div><div class="actions"><button class="btn secondary" type="button" onclick="addCalcRow()">+ Add Course</button><button class="btn" type="button" onclick="calculateCGPA()">Calculate</button></div>
+<div class="result-box"><div class="two"><div><div class="muted">Overall CGPA</div><div class="big" id="cgpa-value">0.00</div></div><div><div class="muted">Current GPA</div><div class="big" id="semester-gpa">0.00</div></div></div><div class="stats" style="margin-top:16px"><div class="stat"><strong id="calc-units">0</strong><span>Total Credit Units</span></div><div class="stat"><strong id="calc-points">0.00</strong><span>Total Grade Points</span></div><div class="stat"><strong id="class-result">—</strong><span>Classification</span></div></div></div>
+</div></section>
+
+<section class="section" id="courses"><div class="two"><div class="card"><h2>📖 Add Course</h2><p class="muted">Save your semester courses so Career Bridge can track your academic progress.</p>
+<form method="POST" action="{{ url_for('university_course_add') }}"><div class="form-grid"><div class="field"><label>Course Code</label><input name="course_code" required placeholder="MTH 201"></div><div class="field"><label>Course Title</label><input name="course_title" required placeholder="Mathematics II"></div><div class="field"><label>Credit Units</label><input name="credit_units" required type="number" min="1" max="30" value="3"></div><div class="field"><label>Grade (optional)</label><select name="grade"><option value="">Not graded yet</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></div><div class="field full"><label>Semester label</label><input name="semester" value="{{ profile.semester if profile and profile.semester else 'Current Semester' }}" placeholder="First Semester 2026/2027"></div></div><div class="actions"><button class="btn" type="submit">Save Course</button></div></form></div>
+<div class="card"><h2>📚 My Courses</h2>{% if courses %}<table class="course-table"><thead><tr><th>Code</th><th>Course</th><th>Units</th><th>Grade</th><th></th></tr></thead><tbody>{% for c in courses %}<tr><td>{{c.course_code}}</td><td>{{c.course_title}}</td><td>{{c.credit_units}}</td><td>{% if c.grade %}<span class="pill {% if c.grade in ['A','B'] %}good{% elif c.grade in ['E','F'] %}bad{% else %}pending{% endif %}">{{c.grade}}</span>{% else %}<span class="pill">Pending</span>{% endif %}</td><td><form method="POST" action="{{url_for('university_course_delete',course_id=c.id)}}"><button class="btn danger small" type="submit">Delete</button></form></td></tr>{% endfor %}</tbody></table>{% else %}<div class="empty">No courses saved yet.</div>{% endif %}</div></div></section>
+
+<section class="section" id="planner"><div class="two"><div class="card"><h2>📅 Study Planner</h2><p class="muted">Create focused study sessions and mark them complete when finished.</p>
+<form method="POST" action="{{url_for('university_study_add')}}"><div class="form-grid"><div class="field"><label>Course Code</label><input name="course_code" required placeholder="MTH 201"></div><div class="field"><label>Topic</label><input name="topic" required placeholder="Integration"></div><div class="field"><label>Date</label><input name="study_date" required type="date"></div><div class="field"><label>Start Time</label><input name="start_time" required type="time"></div><div class="field"><label>Duration (minutes)</label><input name="duration_minutes" type="number" min="15" max="720" value="60"></div></div><div class="actions"><button class="btn" type="submit">Add Study Session</button></div></form></div>
+<div class="card"><h2>📝 My Study Sessions</h2>{% if plans %}{% for p in plans %}<div class="planner-item {% if p.completed %}done{% endif %}"><div class="row-between"><div><div class="topic">{{p.course_code}} — {{p.topic}}</div><div class="muted">{{p.study_date.strftime('%d %b %Y')}} at {{p.start_time}} · {{p.duration_minutes}} minutes</div></div><div class="actions"><form method="POST" action="{{url_for('university_study_toggle',plan_id=p.id)}}"><button class="btn small" type="submit">{% if p.completed %}Undo{% else %}✓ Complete{% endif %}</button></form><form method="POST" action="{{url_for('university_study_delete',plan_id=p.id)}}"><button class="btn danger small" type="submit">Delete</button></form></div></div></div>{% endfor %}{% else %}<div class="empty">No study sessions yet.</div>{% endif %}</div></div></section>
+
+<section class="section" id="exams"><div class="two"><div class="card"><h2>⏰ Exam Countdown</h2><p class="muted">Add your exams and keep track of how much time remains.</p>
+<form method="POST" action="{{url_for('university_exam_add')}}"><div class="form-grid"><div class="field"><label>Course Code</label><input name="course_code" required placeholder="PHY 203"></div><div class="field"><label>Exam Title</label><input name="title" required placeholder="Physics III Examination"></div><div class="field"><label>Exam Date</label><input name="exam_date" required type="date"></div><div class="field"><label>Venue</label><input name="location" placeholder="Lecture Theatre 2"></div></div><div class="actions"><button class="btn" type="submit">Add Exam</button></div></form></div>
+<div class="card"><h2>🕐 Upcoming Exams</h2>{% if exams %}{% for e in exams %}<div class="exam-item" data-exam-date="{{e.exam_date.isoformat()}}"><div class="row-between"><div><div class="topic">{{e.course_code}} — {{e.title}}</div><div class="muted">{{e.exam_date.strftime('%d %B %Y')}}{% if e.location %} · {{e.location}}{% endif %}</div><strong class="countdown">Calculating...</strong></div><form method="POST" action="{{url_for('university_exam_delete',exam_id=e.id)}}"><button class="btn danger small" type="submit">Delete</button></form></div></div>{% endfor %}{% else %}<div class="empty">No exams added yet.</div>{% endif %}</div></div></section>
+
+<section class="section" id="past-questions"><div class="card"><h2>📚 University Past Questions</h2><p class="muted">Search the Career Bridge university question bank by institution, department, course and level.</p>
+<div class="filters"><input id="pq-university" placeholder="University"><input id="pq-faculty" placeholder="Faculty"><input id="pq-department" placeholder="Department"><input id="pq-course" placeholder="Course code"><select id="pq-level"><option value="">Any level</option><option>100 Level</option><option>200 Level</option><option>300 Level</option><option>400 Level</option><option>500 Level</option><option>600 Level</option></select><select id="pq-semester"><option value="">Any semester</option><option>First Semester</option><option>Second Semester</option></select></div><button class="btn" onclick="searchPastQuestions()">Search Past Questions</button><div id="pq-results" style="margin-top:15px">{% if past_questions %}{% for q in past_questions %}<div class="pq-item"><div class="row-between"><div><div class="topic">{{q.course_code}}{% if q.course_title %} — {{q.course_title}}{% endif %}</div><div class="muted">{{q.university}}{% if q.department %} · {{q.department}}{% endif %}{% if q.level %} · {{q.level}}{% endif %}{% if q.semester %} · {{q.semester}}{% endif %}{% if q.session %} · {{q.session}}{% endif %}</div></div>{% if q.file_url %}<a class="btn small" href="{{q.file_url}}" target="_blank" rel="noopener">Open File</a>{% endif %}</div>{% if q.question_text %}<p style="line-height:1.6">{{q.question_text}}</p>{% endif %}</div>{% endfor %}{% else %}<div class="empty">No university past questions have been uploaded yet. The question bank is ready for future uploads.</div>{% endif %}</div></div></section>
+
+<section class="section" id="resources"><div class="section-title"><h2>📂 University Resources</h2><p class="muted">Useful study and academic organization resources.</p></div><div class="grid"><div class="card resource"><h3>📘 Course Notes</h3><p class="muted">Keep your lecture notes organized in the Career Bridge Library.</p><a href="{{url_for('library')}}">Open Library →</a></div><div class="card resource"><h3>🧠 Practice</h3><p class="muted">Use practice questions to strengthen your exam preparation.</p><a href="{{url_for('exam_preparation')}}">Exam Preparation →</a></div><div class="card resource"><h3>💼 Career Skills</h3><p class="muted">Build practical skills alongside your university degree.</p><a href="{{url_for('courses')}}">Explore Courses →</a></div><div class="card resource"><h3>🤝 Mentorship</h3><p class="muted">Connect your academic journey with career guidance.</p><a href="{{url_for('mentors')}}">Find a Mentor →</a></div></div></section>
+</div>
+<div class="footer">Career Bridge © 2026 — University Hub</div>
+
+<script>
+const scale={{ profile.grading_scale if profile else 5 }}; const gradePoints=scale===4?{A:4,B:3,C:2,D:1,E:0,F:0}:{A:5,B:4,C:3,D:2,E:1,F:0};
+function addCalcRow(){const box=document.getElementById('calc-rows');const row=document.createElement('div');row.className='calc-row';row.innerHTML=`<input class="ccode" placeholder="Course code"><input class="ctitle" placeholder="Course title"><input class="units" type="number" min="1" placeholder="Units"><select class="grade"><option value="">Grade</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select><button type="button" class="btn danger small" onclick="this.parentElement.remove();calculateCGPA()">✕</button>`;box.appendChild(row)}
+function calculateCGPA(){const rows=[...document.querySelectorAll('.calc-row')];let units=0,points=0,graded=0;rows.forEach(r=>{const u=parseFloat(r.querySelector('.units')?.value);const g=r.querySelector('.grade')?.value;if(u>0&&g&&gradePoints[g]!==undefined){units+=u;points+=u*gradePoints[g];graded++}});const cgpa=units?points/units:0;document.getElementById('cgpa-value').textContent=cgpa.toFixed(2);document.getElementById('semester-gpa').textContent=cgpa.toFixed(2);document.getElementById('calc-units').textContent=units;document.getElementById('calc-points').textContent=points.toFixed(2);document.getElementById('graded-courses').textContent=graded;document.getElementById('overall-gpa').textContent=cgpa.toFixed(2);let cls='—';if(scale===5){if(cgpa>=4.5)cls='First Class';else if(cgpa>=3.5)cls='Second Class Upper';else if(cgpa>=2.4)cls='Second Class Lower';else if(cgpa>=1.5)cls='Third Class';else if(cgpa>0)cls='Below 3rd Class'}else if(cgpa>=3.5)cls='First Class*';else if(cgpa>=3.0)cls='Second Class*';else if(cgpa>=2.0)cls='Third Class*';else if(cgpa>0)cls='Below 2.0*';document.getElementById('class-result').textContent=cls}
+function updateStudyProgress(){const items=[...document.querySelectorAll('.planner-item')];const done=items.filter(x=>x.classList.contains('done')).length;document.getElementById('study-progress').textContent=items.length?Math.round(done/items.length*100)+'%':'0%'}
+function updateCountdowns(){document.querySelectorAll('.exam-item').forEach(item=>{const d=new Date(item.dataset.examDate+'T23:59:59');const diff=d-new Date();const el=item.querySelector('.countdown');if(diff<=0){el.textContent='Exam date reached';return}const days=Math.floor(diff/86400000);const hours=Math.floor(diff%86400000/3600000);el.textContent=days+' day'+(days===1?'':'s')+' '+hours+' hour'+(hours===1?'':'s')+' remaining';})}
+async function searchPastQuestions(){const p=new URLSearchParams({university:document.getElementById('pq-university').value,faculty:document.getElementById('pq-faculty').value,department:document.getElementById('pq-department').value,course_code:document.getElementById('pq-course').value,level:document.getElementById('pq-level').value,semester:document.getElementById('pq-semester').value});const box=document.getElementById('pq-results');box.innerHTML='<div class="empty">Searching...</div>';try{const r=await fetch('{{url_for("university_past_questions_api")}}?'+p.toString());const data=await r.json();if(!data.questions.length){box.innerHTML='<div class="empty">No matching past questions found.</div>';return}box.innerHTML=data.questions.map(q=>`<div class="pq-item"><div class="row-between"><div><div class="topic">${escapeHtml(q.course_code)}${q.course_title?' — '+escapeHtml(q.course_title):''}</div><div class="muted">${escapeHtml(q.university)}${q.department?' · '+escapeHtml(q.department):''}${q.level?' · '+escapeHtml(q.level):''}${q.semester?' · '+escapeHtml(q.semester):''}${q.session?' · '+escapeHtml(q.session):''}</div></div>${q.file_url?`<a class="btn small" href="${escapeAttr(q.file_url)}" target="_blank" rel="noopener">Open File</a>`:''}</div>${q.question_text?`<p style="line-height:1.6">${escapeHtml(q.question_text)}</p>`:''}</div>`).join('')}catch(e){box.innerHTML='<div class="empty">Could not load past questions. Please try again.</div>'}}
+function escapeHtml(v){return String(v||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}function escapeAttr(v){return escapeHtml(v)}
+calculateCGPA();updateStudyProgress();updateCountdowns();setInterval(updateCountdowns,60000);
+</script>
 </body>
 </html>
